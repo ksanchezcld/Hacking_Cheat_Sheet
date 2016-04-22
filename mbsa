@@ -1,0 +1,15 @@
+To detect missing updates using the MBSA command line interface
+
+-> mbsacli /i 127.0.0.1 /n OS+IIS+SQL+PASSWORD
+
+You can also specify a computer name. For example:
+
+-> mbsacli /c domain\machinename /n OS+IIS+SQL+PASSWORD
+
+You can also specify a range of computers by using the /r option. For example:
+
+-> mbsacli /r 192.168.0.1-192.168.0.254 /n OS+IIS+SQL+PASSWORD
+
+Finally, you can scan a domain by using the /d option. For example:
+
+-> mbsacli /d NameOfMyDomain /n OS+IIS+SQL+PASSWORD

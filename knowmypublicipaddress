@@ -1,0 +1,22 @@
+ How to know my public IP address from shell
+
+    dig +short myip.opendns.com @resolver1.opendns.com
+     curl -s http://whatismijnip.nl |cut -d " " -f 5
+    curl -s icanhazip.com
+    curl -s http://ifconfig.me
+    curl curlmyip.com 
+    curl ident.me
+    curl ifconfig.me
+    curl tnx.nl/ip
+    curl ipecho.net/plain
+    curl ip.appspot.com
+    curl whatismyip.akamai.com
+    curl icanhazip.com
+    curl wgetip.com
+    curl ip.tyk.nu
+    curl curlmyip.com 
+    curl corz.org/ip
+    url bot.whatismyipaddress.com
+    wget -O - -q http://whatismyip.org/ 
+    netcat icanhazip.com 80 <<< $'GET / HTTP/1.1\nHost: icanhazip.com\n\n' | tail -n1
+

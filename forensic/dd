@@ -1,0 +1,3 @@
+http://askubuntu.com/questions/147978/how-can-i-dump-all-physical-memory-to-a-file
+
+dd if=/dev/fmem of=/tmp/fmem_dump.dd bs=1MB count=10

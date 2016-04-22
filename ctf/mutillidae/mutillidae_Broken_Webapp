@@ -1,0 +1,109 @@
+The OWASP Mutillidae II Web Pen-Test (Jeremy Druin, jdruin@gmail.com)
+
+
+Mutillidae II 1 (Druin, 2011) is a free, open source, deliberately vulnerable web-application target for
+web-security training.
+
+
+Training Environment provides an environment to practice exploits against approximately forty documented vulnerabilities. Two vulnerabilities are exposed as web services.
+
+
+With dozens of vulnerabilities and hints to help the user, Mutillidae is an easy-to-use web hacking environment designed for labs, security enthusiast, classrooms, CTF, and vulnerability assessment tool targets. Recent enhancements include an augmented version of Damn Vulnerable Web Services (DVWS) (Johnson, Damn Vulnerable Web Services, 2011).
+
+Mutillidae began as version 1.x on irongeek.com (Crenshaw, Irongeek.com, 2013) as a web pen testing target for vulnerabilities in the OWASP Top 10. Version 1.x was created by Adrian  “irongeek”  Crenshaw (Crenshaw, Irongeek.com, 2009). Although version 1.x is no longer supported or actively developed, it is still available today (Crenshaw, Mutillidae-classic (Mutillidae versions 1.x), 2012). Rather than augment version 1.x, a new project, Mutillidae II, was written using object oriented architecture. The available functionality was ported. An expanded feature set and new classes of vulnerabilities were added.
+
+The redesign and development of Mutillidae 2.x was completed by Jeremy Druin who migrated both projects from irongeek.com to SourceForge (Druin, SourceForge: Mutillidae 2.x Download (Current Version), 2013). This aided in scaling distribution and consolidating documentation. Mutillidae 2.x recalls its roots by re-implementing the OWASP 2010 Top 10 vulnerabilities and redesigning Crenshaw’s “user  hint system”.
+
+================
+Vulnerabilities
+================
+
+Mutillidae implements a large variety of vulnerabilities with every category represented from the 
+
+- OWASP Top Ten 2007 (OWASP Foundation, 2010) and 
+- OWASP Top Ten 2010 (OWASP Foundation, 2010). 
+- SANS TOP 25 Most Dangerous Software Errors.
+- (SANS, 2011) are included 7. 
+
+Currently there are 43 types of vulnerabilities put into operation across multiple perspectives (Druin, Documentation: Listing of Vulnerabilities in Mutillidae 2.x, 2013). For critical categories such as cross site scripting (KirstenS, 2011) and SQL injection (KirstenS, SQL Injection, 2013), multiple contexts have been implemented for each. Types of Cross-site scripting vulnerabilities provided include HTML, JavaScript, and JSON injection 8 . Pages with SQL injection allow data extraction, upload of shells, and authentication bypass 9 . A listing of vulnerabilities organized by URL is available. 
+
+-Privilege Escalation
+-User-Agent Impersonation
+-Authentication Bypass
+-SSL Striping
+-“Capture the flag” support
+-Automated Data Capture
+
+
+Tools and web pen testing distributions supported
+--------------------------------------------------
+
+-sqlmap 
+-Nikto 2 web server scanner
+-Burp-Suite security testing platform
+-Web Application Attack and Audit Framework (w3af)
+-NetSparker Community web application security scanner
+-Cenzic Hailstorm web application vulnerability scanner
+-sslstrip HTTPS stripping attack tool
+-hydra network logon cracker
+-OWASP DirBuster
+-Samurai WTF
+-Rapid 7 Metasploitable 2
+-Offensive Security Kali Linux penetration testing distribution
+
+#A hints system offers two levels of assistance. By default no hints are displayed 21 . Clicking  the  “Toggle Hints”  button  on  the  menu  bar activates level-1 hints.
+
+#Video tutorials
+
+are available (Druin, webpwnized's channel, 2013) demonstrating discovery, testing, and exploiting vulnerabilities. New videos are added periodically and there are approximately 80 videos at the time of this writing (Druin, Query Results for Mutillidae on webpwnized channel, 2013).
+
+http://www.youtube.com/user/webpwnized/videos
+
+
+- Newly discovered vulnerabilities in security level 5 should be reported at http://sourceforge.net/p/mutillidae/bugs/
+Security level 0 is insecure. Security level 5 is secure as of this writing.
+The source code may be viewed at http://sourceforge.net/p/mutillidae/code/
+
+
+Preinstalled on Well-known distributions
+-----------------------------------------
+
+-Rapid7 Metasploitable 2
+-Samurai Web Testing Framework (Samurai-WTF)
+- OWASP Broken Web Apps (OWASP BWA)
+
+
+Samurai-WTF version 2
+----------------------
+
+A ready-to-use bootable ISO, has a particularly low entry barrier because this platform has both the Mutillidae project plus other excellent deliberately vulnerable web application like Damn Vulnerable Web Application (DVWA) (RandomStorm, 2013) included. Additionally, many tools used in the course of web pen testing are installed
+
+
+#Metasploitable 2 and Mutillidae
+	-http://colesec.inventedtheinternet.com/metasploitable-2-and-mutillidae/
+
+
+
+
+Download Zone
+-------------
+http://sourceforge.net/projects/mutillidae/files/mutillidae-project/
+svn checkout svn://svn.code.sf.net/p/mutillidae/code/ mutillidae
+git clone git://git.code.sf.net/p/mutillidae/git mutillidae
+
+
+
+OWASP Top 10 2010
+-----------------
+
+A1 - Injection (SQL and Command)
+A2 - Cross Site Scripting (XSS)
+A3 - Broken Authentication and Session Management
+A4 - Insecure Direct Object References
+A5 - Cross Site Request Forgery (CSRF)
+A6 - Security Misconfiguration
+A7 - Insecure Cryptographic Storage
+A8 - Failure to Restrict URL Access
+A9 - Insufficient Transport Layer Protection
+A10 - Unvalidated Redirects and Forwards
+

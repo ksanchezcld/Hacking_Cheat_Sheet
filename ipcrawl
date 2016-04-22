@@ -1,0 +1,7 @@
+-> ipcrawl 10.0.0.1 10.0.0.254
+-> ipcrawl -q -v -s <seconds> -f <outfile><startscript><endip>
+
+----Compiling----
+gcc ipcrawl.c -o ipcrawl
+chmod +x ipcrawl
+./ipcrawl <IP Range>

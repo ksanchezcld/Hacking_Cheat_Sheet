@@ -1,0 +1,34 @@
+BURP SUITE (Burp Suite Starter Book)
+
+- This tool allows you to intercept the web traffic between the browser (client) and the target application (server).
+- Burp Suite supports HTTP and HTTPS.
+- HTTP is encapsulated over an SSL/TLS layer.
+- HTTPS protects the transit of data against network sniffing and the so-called Man-in-the-Middle ( MitM ) attacks.
+- Burp Proxy allows you to set a color for that specific item. This is extremely helpful to highlight important requests or responses.
+
+
+At the top of Burp Proxy, you will notice the following three tabs:
+
+- intercept: HTTP requests and responses that are in transit can be inspected and modified from this window.
+- options: Proxy configurations and advanced preferences can be tuned from this window.
+- history: All intercepted traffic can be quickly analyzed from this window.
+
+-raw: This view allows you to display the web request in raw format within a simple text editor. 
+- params: In this view, the focus is on user-supplied parameters (GET/POST parameters, cookies). This is particularly important in case of complex requests as it allows to
+consider all entry points for potential vulnerabilities. Whenever applicable, Burp Proxy will also automatically perform URL decoding. In addition, Burp Proxy will attempt to
+parse commonly used formats, including JSON.
+
+- headers: Similarly, this view displays the HTTP header names and values in tabular form.
+- hex: In case of binary content, it is useful to inspect the hexadecimal representation of the resource.
+
+Using Burp Suite Step by Step
+
+- In the intercept tab, make sure that Burp Proxy is properly stopping all requests in transit by checking the intercept button. This should be marked as intercept is on.
+- In the browser, type http://www.webpage.com/ in the URL bar and press Enter .
+- Back in Burp Proxy, you should be able to see the HTTP request made by the browser. At this stage, the request is temporarily stopped in Burp Proxy waiting for the user to
+either forward or stop it.
+- press forward and return to the browser
+- Once the request is properly captured by Burp Proxy, the action button becomes active. Click on it to display the contextual menu. This is an important functionality
+as it allows you to import the current web request in any of the other Burp tools.
+- if we want to decode the request, we can simply click on send to decoder.
+

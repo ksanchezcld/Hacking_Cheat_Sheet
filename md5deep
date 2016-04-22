@@ -1,0 +1,28 @@
+Source: Wikipedia http://en.wikipedia.org/wiki/Md5deep
+http://www.forensicswiki.org/wiki/Md5deep
+
+md5deep is a software package used in the computer security, system administration and computer forensics communities for purposes of running large numbers of files through any of several different cryptographic digests.
+
+
+Explanation of the command
+
+    r = recursive operation
+    e = compute estimated time remaining for file name
+    l = print relative paths for file name
+    k = switch can be used to add an asterisk like
+    d = output in xml format
+
+
+# md5deep -rel "Folder" > results_file.md5
+# m5deep -d "Folder"
+# md5deep -r /data0 > data0md5.sum
+
+
+[MD5SUM]
+
+# md5sum filename > md5sums.md5 
+# md5sum -c md5sums.md5
+# md5deep -r /data0 > data0md5.sum
+# md5deep -rx data0md5.sum 
+
+

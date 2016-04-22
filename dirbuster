@@ -1,0 +1,64 @@
+DirBuster is a multi threaded java application designed to brute force directories and files names on web/application servers. Often is the case now of what looks like a web server in a state of default installation is actually not, and has pages and applications hidden within. DirBuster attempts to find these. 
+
+For more information about the project: 
+
+https://www.owasp.org/index.php/Category:OWASP_DirBuster_Project
+
+Using the command line interface
+
+	java -jar DirBuster-0.12.jar 
+    java -jar DirBuster-0.12.jar -h : Help information
+    java -jar DirBuster-0.12.jar -H -u https://127.0.0.1/ : Run DirBuster in headless mode
+    java -jar DirBuster-0.12.jar -u https://127.0.0.1/ : Start GUI with target prepopulated
+
+
+Features
+
+DirBuster provides the following features:
+
+    Multi threaded has been recorded at over 6000 requests/sec
+	    Works over both http and https
+    Scan for both directory and files
+    Will recursively scan deeper into directories it finds
+    Able to perform a list based or pure brute force scan
+    DirBuster can be started on any directory
+    Custom HTTP headers can be added
+    Proxy support
+    Auto switching between HEAD and GET requests
+    Content analysis mode when failed attempts come back as 200
+    Custom file extensions can be used
+    Performance can be adjusted while the program in running
+    Supports Basic, Digest and NTLM auth
+    Command line * GUI interface
+
+
+The DirBuster Lists
+
+DirBuster comes with a set of unique directory and files lists, these have been generated based on the file and directory names that are actually used by developers on internet sites. The order of the lists is based on the frequency of the item found. Therefore the most common items appear at the top. These lists are what make DirBuster.
+
+NOTE: It will come as no surprise to you all that the internet is full of porn, thus it not surprising that the spider used to generate the lists visited a few along the way. Thus there are explicit words contained within the lists. My stand point on this is simple, this tool was designed to used as part of legitimate security testing, and if there are directories/files based on explicit words, clients would want to know!!
+
+The following lists are included with DirBuster, or as a separate download:
+
+    directory-list-2.3-small.txt - (87650 words) - Directories/files that where found on at least 3 different hosts
+    directory-list-2.3-medium.txt - (220546 words) - Directories/files that where found on at least 2 different hosts
+    directory-list-2.3-big.txt - (1273819 words) - All directories/files that where found
+    directory-list-lowercase-2.3-small.txt - (81629 words) - Case insensitive version of directory-list-2.3-small.txt
+    directory-list-lowercase-2.3-medium.txt - (207629 words) - Case insensitive version of directory-list-2.3-medium.txt
+    directory-list-lowercase-2.3-big.txt - (1185240 words) - Case insensitive version of directory-list-2.3-big.txt
+    directory-list-1.0.txt - (141694 words) - Original unordered list
+    apache-user-enum-1.0.txt - (8916 usernames) - Used for guessing system users on apache with the userdir module enabled, based on a username list I had lying around (unordered)
+    apache-user-enum-2.0.txt - (10341 usernames) - Used for guessing system users on apache with the userdir module enabled, based on ~XXXXX found during list generation (Ordered)
+
+A download of just the lists can be obtained from here: DirBuster-Lists.tar.bz2
+
+
+
+
+Requirements
+
+    DirBuster requires Java 1.6 or above. This can be obtained from http://java.sun.com/.
+    NOTE: DirBuster will run under java 1.5, but some minor function are disabled
+        Sorting of the Results table
+
+

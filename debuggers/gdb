@@ -1,0 +1,55 @@
+gcc -ggdb -o apptoexec apptoexec.c
+
+-> gdb ./apptoexec
+
+-> (gdb) list 1 # Line number of the source size
+
+-> (gdb) run [arg1]
+
+-> (gdb) disassemble main
+
+-> (gdb) disassemble add   #function
+
+-> (gdb) break 8  #Line number to break
+
+-> (gdb) help break
+
+-> (gdb) run [arg]
+
+-> (gdb) print [var]
+
+-> (gdb) info registers
+
+-> (gdb) help x
+
+-> (gdb) x/10xb 0xbffff450
+
+-> (gdb) s     #Run the next instruction
+
+-> (gdb) continue (c)     #Continue executing the program
+
+-> (gdb) disassemble main
+
+-> (gdb) 
+
+(gdb) help
+List of classes of commands:
+ 
+aliases -- Aliases of other commands
+breakpoints -- Making program stop at certain points
+data -- Examining data
+files -- Specifying and examining files
+internals -- Maintenance commands
+obscure -- Obscure features
+running -- Running the program
+stack -- Examining the stack
+status -- Status inquiries
+support -- Support facilities
+tracepoints -- Tracing of program execution without stopping the program
+user-defined -- User-defined commands
+
+
+ 
+Type "help" followed by a class name for a list of commands in that class.
+Type "help all" for the list of all commands.
+Type "help" followed by command name for full documentation.

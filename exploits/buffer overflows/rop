@@ -1,0 +1,17 @@
+ROP (Return Oriented Proragmming ) Attack
+
+This type of attack was introduced by Hovav Shacham of Stanford University in his paper “The Geometry of Innocent Flesh on the Bone:Return-into-libc without Function Calls (on the x86).” 
+
+That means this type of attack is able to perform arbitrary computation without the necessary use of library functions by reusing code chunks which he calls GADGETS.
+
+ROP Attacks (Loading and Storing Data)
+
+There are certain gadgets that allows us to store and load data from one place to another. Modes of transfer include:
+
+1: register to register
+
+2: register to memory
+
+3:memory to register
+
+http://resources.infosecinstitute.com/return-oriented-programming-rop-attacks/

@@ -1,0 +1,45 @@
+Kennedy Sanchez <ksanchez@cldeveloper.com>
+
+To add a new user account on the local computer:
+
+-> net user username password /ADD
+-> net user John fadf24as /ADD
+
+Adds the user to the Local Administrators Group
+
+-> net localgroup administrators [username] /add
+
+To add a new user account to the domain:
+
+-> net user username password /ADD /DOMAIN
+-> net user John fadf24as /ADD /DOMAIN
+
+To set user full name while creating the user account
+
+-> net user username password /ADD /FULLNAME:"User_Fullname"
+
+To allow user to change password:
+
+-> net user username password /ADD /PASSWORDCHG:Yes
+
+To restrict user not to change the password:
+
+-> net user username userpasswd /ADD /PASSWORDCHG:NO
+
+
+If you do not want the password to be visible while adding new user account, you can use ‘*’
+
+----------------
+Summary Samples
+----------------
+
+-> net user /add John *
+-> net user username password *
+-> net user username password /ADD /DOMAIN
+-> net group "Domain Admins" username /ADD /DOMAIN
+-> net localgroup Administrators username /ADD
+
+
+
+URLs:
+- http://www.windows-commandline.com/add-user-from-command-line/

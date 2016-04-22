@@ -1,0 +1,5 @@
+openssl s_client --connect <IP:443> :: HTTPS 
+
+openssl s_client --connect <IP:993> :: IMAPS
+
+openssl s_client --connect <IP:995> :: POP3S

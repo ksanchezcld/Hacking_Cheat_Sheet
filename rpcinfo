@@ -1,0 +1,9 @@
+rpcinfo -p 10.0.0.10
+
+- rpcinfo [-m | -s ] [ host ]
+- rpcinfo ־P [ host ]
+- rpcinfo -T transport host prognum [ versnum ]
+- rpcinfo -1 [ -T transport ] host prognum versnum rpcinfo ] ־n portnum ] -u host prognum [ versnum ] - rpcinfo ] -n portnum ] -t host prognum [ versnum ] 
+- rpcinfo -a serv address ? transport prognum [ versnum P Forces quick output format, which is similar to short format except that only the login name, term inal, and login tim e are printed.
+rpcinfo -b [ -T transport ] prognum versnum 
+rpcinfo -d [ -T transport ] prognum versnum 

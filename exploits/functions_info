@@ -1,0 +1,3 @@
+gets
+
+The stdio gets() function does not check for buffer length and always results in a vulnerability.

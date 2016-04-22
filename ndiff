@@ -1,0 +1,3 @@
+ndiff -v nmap-file1 nmap-file2
+
+ndiff -verbose nmap-file1 nmap-file2

@@ -1,0 +1,53 @@
+#ISR_popup_container {
+    background-color:#FFFFFF;
+    border-width: 1px;
+    border-style: default;
+    border-color: #808080;
+    border-radius: 0px;
+}
+#ISR_popup {
+    color: #000000;
+    font-size: 13px;
+    font-family: inherit;
+}
+#ISR_popup h3 {
+    color: #204A80;
+    font-weight: bold;
+    font-style: normal;
+    text-decoration: none;
+    font-size: 18px;
+}
+#ISR_popup h4 {
+    color: #000000;
+    font-weight: normal;
+    font-style: normal;
+    text-decoration: none;
+    font-size: 18px;
+}
+#ISR_popup label {
+    color: #000000;
+    font-size: 13px;
+}
+#ISR_popup_description {
+    color: #4B4B4B;
+    font-size: 12px;
+}
+#ISR_form_submit {
+    background-color: #224880;
+    border-width: 1px;
+    border-style: solid;
+    border-color: #EFEFEF;
+    border-radius: 3px;
+    color: #EFEFEF;
+    font-size: 14px;
+    font-weight: bold;
+    font-style: normal;
+    text-decoration: none;
+    font-family: inherit;
+}
+#ISR_powered a:link,
+#ISR_powered a:hover,
+#ISR_powered a:visited
+{
+    color: #000000;
+}

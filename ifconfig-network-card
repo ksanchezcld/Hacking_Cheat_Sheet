@@ -1,0 +1,1 @@
+ifconfig wlan0mon |grep inet |awk '{print $2}'

@@ -1,0 +1,10 @@
+"Crack Me If You Can" - DEFCON 2010
+		-http://contest-2010.korelogic.com/wordlists.html
+
+
+
+curl http://contest-2010.korelogic.com/wordlists/RockYou-MostPopular500000PassesLetters_less50000.dic.gz > rock.dic.gz
+
+curl https://samsclass.info/123/proj10/RockYou-MostPopular500000PassesLetters_less50000.dic.gz > rock.dic
+
+curl https://samsclass.info/123/proj10/win2.hash > win2.hash

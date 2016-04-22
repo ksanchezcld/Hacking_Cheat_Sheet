@@ -1,0 +1,3 @@
+gcc
+
+gcc -ggdb -o apptoexec apptoexec.c

@@ -1,0 +1,15 @@
+/usr/share/beef-xss/config.yaml
+
+to use with metasploit change from false to true.
+
+[CONFIG]
+
+Port = 3000
+user = beef
+passwd = beef
+db_port = 5432
+db_name = beef
+db_passed = beef123
+
+Hook File = /hook.js
+

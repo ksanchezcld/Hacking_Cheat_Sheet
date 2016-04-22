@@ -1,0 +1,1 @@
+mount -o nolock -t nfs [IP]:/home/ksanchez /media/ksanchez_folder

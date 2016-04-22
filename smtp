@@ -1,0 +1,8 @@
+SMTP ENUM
+
+
+SMTP Enumeration allows you to determine valid users on the SMTP server. This is accomplished with the help of three built-in SMTP commands. The three commands are:
+
+> VRFY - This command is used for validating users
+> EXPN - This command tells the actual delivery address of aliases and mailing lists
+> RCPT TO - It defines the recipients of the message

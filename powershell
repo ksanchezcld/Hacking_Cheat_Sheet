@@ -1,0 +1,12 @@
+-Get-Item
+-Get-Children
+-Get-ItemProperty
+
+To edit/create/rename values in registry
+
+-Set-Item
+-Set-ItemProperty
+-New-Item
+-Rename-Item
+-New-Item-Property
+-Rename-Itemproperty

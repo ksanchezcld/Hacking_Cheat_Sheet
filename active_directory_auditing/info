@@ -1,0 +1,20 @@
+Password Auditing on Active Directory Databases
+
+http://resources.infosecinstitute.com/password-auditing-on-active-directory-databases/
+
+
+http://code.google.com/p/quarkspwdump/
+
+NTDSXtract - A framework for offline forensic analysis of NTDS.DIT
+
+http://www.ntdsxtract.com/
+ 	- https://github.com/csababarta/ntdsxtract.git
+	- http://www.ntdsxtract.com/downloads/ntdsxtract/ntdsxtract_v1_3_beta.zip
+	- http://www.ntdsxtract.com/downloads/ntdsxtract/ntdsxtract_v1_2_beta.zip
+	- http://www.ntdsxtract.com/downloads/ntdsxtract/ntdsxtract_v1_2_beta.zip
+
+Quarkspwdump
+
+Dump various types of Windows credentials without injecting in any process.
+
+	-https://github.com/quarkslab/quarkspwdump

@@ -1,0 +1,4 @@
+http://www.fastandeasyhacking.com/
+
+msfpd -f -U msf -P msf_password -a 127.0.0.1 -p 5554 -S
+

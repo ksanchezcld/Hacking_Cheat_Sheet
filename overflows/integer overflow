@@ -1,0 +1,77 @@
+integer overflow occurs when an arithmetic operation attempts to create a numeric value that is too large to be represented within the available storage space.
+
+-------------------
+What is an integer?
+-------------------
+
+An integer, in the context of computing, is a variable capable of representing a real number with no fractional part.  Integers are typically the same size as a pointer on the system they are compiled Consequences.
+
+Integers, like all variables are just regions of memory.
+
+we usually represent them in decimal, as that is the numbering system humans are most used to.  Computers, being digital, cannot
+deal with decimal, so internally to the computer integers are stored in binary.
+
+As well as binary and decimal, hexadecimal (base sixteen) is often used in computing as it is very easy to convert between binary and hexadecimal.
+
+it is often necessary to store negative numbers, there needs to be a mechanism to represent negative numbers using only binary.  The way this is accomplished is by using the most significant bit (MSB) of a variable to determine the sign: if the MSB is set to 1, the variable is interpreted as negative; if it is set to 0, the variable is positive.
+
+Since an integer is a fixed size there is a fixed maximum value it can store.  When an attempt is made to store a value greater than this maximum value it is known as an integer overflow.
+
+integer overflow causes "undefined behaviour", meaning that compilers conforming to the standard may do anything they like from completely ignoring the overflow to aborting the program. 
+
+Integer overflows cannot be detected after they have happened, so there is not way for an application to tell if a result it has calculated previously is in fact correct. 
+
+ They do not allow direct overwriting of memory or direct execution flow control, but are much more subtle.  The root of the problem lies in the fact that there is no way for a process to check the result of a computation after it has happened, so there may be a discrepancy between the stored result and the correct result. 
+
+
+An integer overflow condition exists when an integer, which has not been properly sanity checked, is used in the determination of an offset or size for memory allocation, copying, concatenation, or similarly. If the integer in question is incremented past the maximum possible value, it may wrap to become a very small, or negative number, therefore providing a very incorrect value.
+
+
+Availability: Integer overflows generally lead to undefined behavior and therefore crashes. In the case of overflows involving loop index variables, the likelihood of infinite loops is also high.
+
+Integrity: If the value in question is important to data (as opposed to flow), simple data corruption has occurred. Also, if the integer overflow has resulted in a buffer overflow condition, data corruption will most likely take place.
+
+Access control (instruction processing): Integer overflows can sometimes trigger buffer overflows which can be used to execute arbitrary code. This is usually outside the scope of a program's implicit security policy.
+
+
+-----------
+Example 1:
+-----------
+    /* width1.c - exploiting a trivial widthness bug */
+    #include <stdio.h>
+    #include <string.h>
+
+    int main(int argc, char *argv[]){
+            unsigned short s;
+            int i;
+            char buf[80];
+
+            if(argc < 3){
+                    return -1;
+            }
+
+            i = atoi(argv[1]);
+            s = i;
+
+            if(s >= 80){            /* [w1] */
+                    printf("Oh no you don't!\n");
+                    return -1;
+            }
+
+            printf("s = %d\n", s);
+
+            memcpy(buf, argv[2], i);
+            buf[i] = '\0';
+            printf("%s\n", buf);
+
+            return 0;
+    }
+
+
+--------
+Sources
+--------
+https://en.wikipedia.org/wiki/Integer_overflow
+https://www.owasp.org/index.php/Integer_overflow
+https://www.cs.utah.edu/~regehr/papers/overflow12.pdf
+http://phrack.org/issues/60/10.html

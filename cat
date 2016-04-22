@@ -1,0 +1,1 @@
+# cat nm_sweep.txt |grep Host|cut -d " " -f2

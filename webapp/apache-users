@@ -1,0 +1,3 @@
+http://tools.kali.org/web-applications/apache-users
+
+apache-users -h 192.168.1.202 -l /usr/share/wordlists/metasploit/unix_users.txt -p 80 -s 0 -e 403 -t 10

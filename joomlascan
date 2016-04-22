@@ -1,0 +1,8 @@
+joomlascan -u victim.com -x localhost:9050
+joomlascan check  --> Check for available updates
+joomlascan update --> update the local db
+joomlascan download --> download the latest version as a single zip file.
+
+
+[Verify Joomla Version]
+/administrator/manifest/files/joomla.xml

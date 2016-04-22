@@ -1,0 +1,1 @@
+netdiscover -i wlan0mon -r [IP]

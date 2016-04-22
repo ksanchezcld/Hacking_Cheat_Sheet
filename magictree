@@ -1,0 +1,19 @@
+Ihttp://www.gremwell.com/node/928
+
+host	 	//host
+finding 	descendant::finding
+output 		descendant::output
+
+
+Title Expression
+host //host
+finding descendant::finding[id="66334"]
+output descendant::output
+
+
+Host  		//host[text()='192.188.173.104']
+
+All			parent::All[text()='']
+
+
+{{mt:join(mt:unique(//finding[@title = $_0]/affects),' ')|leaf}}

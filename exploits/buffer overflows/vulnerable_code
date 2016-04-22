@@ -1,0 +1,136 @@
+Kennedy Sanchez<ksanchez@cldeveloper.com>
+
+Common vulnerabilities guide for C programmers
+
+Most vulnerabilities in C are related to buffer overflows external link and string manipulation. In most cases, this would result in a segmentation fault, but specially crafted malicious input values, adapted to the architecture and environment could yield to arbitrary code execution. 
+
+-------------
+Function gets
+-------------
+The stdio gets() function does not check for buffer length and always results in a vulnerability.
+
+----------------
+Vulnerable code
+----------------
+
+#include <stdio.h>
+int main () {
+    char username[8];
+    int allow = 0;
+    printf external link("Enter your username, please: ");
+    gets(username); // user inputs "malicious"
+    if (grantAccess(username)) {
+        allow = 1;
+    }
+    if (allow != 0) { // has been overwritten by the overflow of the username.
+        privilegedAction();
+    }
+    return 0;
+}
+
+-----------
+Mitigation
+-----------
+#include <stdio.h>
+#include <stdlib.h>
+#define LENGTH 8
+int main () {
+    char* username, *nlptr;
+    int allow = 0;
+ 
+    username = malloc(LENGTH * sizeof(*username));
+    if (!username)
+        return EXIT_FAILURE;
+    printf external link("Enter your username, please: ");
+    fgets(username,LENGTH, stdin);
+    // fgets stops after LENGTH-1 characters or at a newline character, which ever comes first.
+    // but it considers \n a valid character, so you might want to remove it:
+    nlptr = strchr(username, '\n');
+    if (nlptr) *nlptr = '\0';
+ 
+    if (grantAccess(username)) {
+        allow = 1;
+    }
+    if (allow != 0) {
+        priviledgedAction();
+    }
+ 
+    free(username);
+ 
+    return 0;
+}
+
+
+----------------
+Function strcpy
+----------------
+
+strcpy
+
+The strcpy built-in function does not check buffer lengths and may very well overwrite memory zone contiguous to the intended destination. In fact, the whole family of functions is similarly vulnerable: strcpy, strcat and strcmp.
+
+----------------
+Vulnerable code
+----------------
+
+char str1[10];
+char str2[]="abcdefghijklmn";
+strcpy(str1,str2);
+
+-----------
+Mitigation
+-----------
+
+The best way to mitigate this issue is to use strlcpy if it is readily available (which is only the case on BSD systems). However, it is very simple to define it yourself, as shown below:
+
+#include <stdio.h>
+ 
+#ifndef strlcpy
+#define strlcpy(dst,src,sz) snprintf((dst), (sz), "%s", (src))
+#endif
+ 
+enum { BUFFER_SIZE = 10 };
+ 
+int main() {
+    char dst[BUFFER_SIZE];
+    char src[] = "abcdefghijk";
+ 
+    int buffer_length = strlcpy(dst, src, BUFFER_SIZE);
+ 
+    if (buffer_length >= BUFFER_SIZE) {
+        printf external link("String too long: %d (%d expected)\n",
+                buffer_length, BUFFER_SIZE-1);
+    }
+ 
+    printf external link("String copied: %s\n", dst);
+ 
+    return 0;
+}
+
+Another and may be slightly less convenient way is to use strncpy, which prevents buffer overflows, but does not guarantee '\0'-termination.
+
+enum { BUFFER_SIZE = 10 };
+char str1[BUFFER_SIZE];
+char str2[]="abcdefghijklmn";
+ 
+strncpy(str1,str2, BUFFER_SIZE); /* limit number of characters to be copied */
+// We need to set the limit to BUFFER_SIZE, so that all characters in the buffer
+// are set to '\0'. If the source buffer is longer than BUFFER_SIZE, all the '\0'
+// characters will be overwritten and the copy will be truncated.
+ 
+if (str1[BUFFER_SIZE-1] != '\0') {
+    /* buffer was truncated, handle error? */
+}
+
+For the other functions in the family, the *n* variants exist as well: strncpm and strncat
+
+----------------
+Function sprintf
+----------------
+
+sprintf
+Just as the previous functions, sprintf does not check the buffer boundaries and is vulnerable to overflows.
+
+
+https://security.web.cern.ch/security/recommendations/en/codetools/c.shtml
+http://pubs.opengroup.org/onlinepubs/009695399/functions/printf.html

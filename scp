@@ -1,0 +1,95 @@
+Z:\owendadmin>pscp
+PuTTY Secure Copy client
+Release 0.60
+Usage: pscp [options] [user@]host:source target
+       pscp [options] source [source...] [user@]host:target
+       pscp [options] -ls [user@]host:filespec
+Options:
+  -V        print version information and exit
+  -pgpfp    print PGP key fingerprints and exit
+  -p        preserve file attributes
+  -q        quiet, don't show statistics
+  -r        copy directories recursively
+  -v        show verbose messages
+
+  -load sessname  Load settings from saved session
+  -P port   connect to specified port
+  -l user   connect with specified username
+  -pw passw login with specified password
+  -1 -2     force use of particular SSH protocol version
+  -4 -6     force use of IPv4 or IPv6
+  -C        enable compression
+  -i key    private key file for authentication
+  -noagent  disable use of Pageant
+  -agent    enable use of Pageant
+  -batch    disable all interactive prompts
+  -unsafe   allow server-side wildcards (DANGEROUS)
+  -sftp     force use of SFTP protocol
+  -scp      force use of SCP protocol
+
+pscp [options] [user@]host:source target
+pscp fred@example.com:/etc/hosts c:\temp\example-hosts.txt
+
+pscp [options] source [source...] [user@]host:target
+pscp c:\documents\foo.txt fred@example.com:/tmp/foo
+
+pscp c:\documents\*.doc fred@example.com:docfiles
+pscp fred@example.com:source/*.c c:\source
+
+pscp -unsafe fred@example.com:source/*.c c:\source
+
+pscp fred@example.com:/home/tom/.emacs .
+
+
+http://the.earth.li/~sgtatham/putty/0.60/htmldoc/Chapter5.html
+
+==================
+Secure Copy (scp)
+==================
+
+What is Secure Copy?
+
+scp allows files to be copied to, from, or between different hosts. It uses ssh for data transfer and provides the same authentication and same level of security as ssh.
+Examples
+Copy the file "foobar.txt" from a remote host to the local host
+
+    $ scp your_username@remotehost.edu:foobar.txt /some/local/directory 
+
+Copy the file "foobar.txt" from the local host to a remote host
+
+    $ scp foobar.txt your_username@remotehost.edu:/some/remote/directory 
+
+Copy the directory "foo" from the local host to a remote host's directory "bar"
+
+    $ scp -r foo your_username@remotehost.edu:/some/remote/directory/bar 
+
+Copy the file "foobar.txt" from remote host "rh1.edu" to remote host "rh2.edu"
+
+    $ scp your_username@rh1.edu:/some/remote/directory/foobar.txt \
+    your_username@rh2.edu:/some/remote/directory/ 
+
+Copying the files "foo.txt" and "bar.txt" from the local host to your home directory on the remote host
+
+    $ scp foo.txt bar.txt your_username@remotehost.edu:~ 
+
+Copy the file "foobar.txt" from the local host to a remote host using port 2264
+
+    $ scp -P 2264 foobar.txt your_username@remotehost.edu:/some/remote/directory 
+
+Copy multiple files from the remote host to your current directory on the local host
+
+    $ scp your_username@remotehost.edu:/some/remote/directory/\{a,b,c\} . 
+
+    $ scp your_username@remotehost.edu:~/\{foo.txt,bar.txt\} . 
+
+scp Performance
+
+By default scp uses the Triple-DES cipher to encrypt the data being sent. Using the Blowfish cipher has been shown to increase speed. This can be done by using option -c blowfish in the command line.
+
+    $ scp -c blowfish some_file your_username@remotehost.edu:~ 
+
+It is often suggested that the -C option for compression should also be used to increase speed. The effect of compression, however, will only significantly increase speed if your connection is very slow. Otherwise it may just be adding extra burden to the CPU. An example of using blowfish and compression:
+
+    $ scp -c blowfish -C local_file your_username@remotehost.edu:~ 
+
+http://www.hypexr.org/linux_scp_help.php

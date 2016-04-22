@@ -1,0 +1,37 @@
+Reference 	Class 	Description
+u 	user 	the owner of the file
+g 	group 	users who are members of the file's group
+o 	others 	users who are neither the owner of the file nor members of the file's group
+a 	all 	all three of the above, same as ugo
+
+
+Operator 	Description
++ 	adds the specified modes to the specified classes
+- 	removes the specified modes from the specified classes
+= 	the modes specified are to be made the exact modes for the specified classes
+
+Mode 	Name 	Description
+r 	read 	read a file or list a directory's contents
+w 	write 	write to a file or directory
+x 	execute 	execute a file or recurse a directory tree
+X 	special execute 	which is not a permission in itself but rather can be used instead of x. It applies execute permissions to directories regardless of their current permissions and applies execute permissions to a file which already has at least one execute permission bit already set (either user, group or other). It is only really useful when used with '+' and usually in combination with the -R option for giving group or other access to a big directory tree without setting execute permission on normal files (such as text files), which would normally happen if you just used "chmod -R a+rx .", whereas with 'X' you can do "chmod -R a+rX ." instead
+s 	setuid/gid 	details in Special modes section
+t 	sticky 	details in Special modes section
+
+
+command 	explanation
+
+chmod a+r publicComments.txt 			read is added for all classes (i.e. User, Group and Others).
+chmod +r publicComments.txt 			omitting the class defaults to all classes, but the resultant permissions are dependent on umask
+chmod a-x publicComments.txt 			execute permission is removed for all classes.
+chmod a+rx viewer.sh		 		add read and execute for all classes.
+chmod u=rw,g=r,o= internalPlan.txt 		user(i.e. owner) can read and write, group can read, Others cannot access.
+chmod -R u+w,go-w docs 				add write permissions to the directory docs and all its contents (i.e. Recursively) for user and deny write access for everybody else.
+chmod ug=rw groupAgreements.txt 		User and Group members can read and write (update the file).
+chmod 664 global.txt 				sets read and write and no execution access for the user and group, and read, no write, no execute for all others.
+chmod 0744 myCV.txt 				equivalent to u=rwx (400+200+100),go=r (40+ 4). The 0 specifies no special modes.
+chmod 1755 findReslts.sh 			the 1000 specifies set sticky bit and the rest is equivalent to u=rwx (400+200+100),go=rx (40+10 + 4+1) This suggests that the script be retained in memory.
+chmod 4755 SetCtrls.sh 				the 4 specifies set user ID and the rest is equivalent to u=rwx (400+200+100),go=rx (40+10 + 4+1).
+chmod 2755 SetCtrls.sh 				the 2 specifies set group ID and the rest is equivalent to u=rwx (400+200+100),go=rx (40+10 + 4+1).
+chmod -R u+rwX,g-rwx,o-rx PersonalStuff 	Recursively set a directory tree to rwx for owner directories, rw for owner files, --- (i.e. no access) for group and others.
+chmod -R a-x+X publicDocs 			remove the execute permission on all files in a directory tree (i.e. Recursively), while allowing for directory browsing.

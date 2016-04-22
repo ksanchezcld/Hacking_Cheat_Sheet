@@ -1,0 +1,102 @@
+http://www.wtcs.org/snmp4tpc/testing.htm#SNMPUTIL
+
+GETting a few Windows NT OIDs:
+
+Gets Current Anon. HTTP Users: - Won't work unless you had SNMP installed before you added IIS.
+snmputil get 127.0.0.1 public  .1.3.6.1.4.1.311.1.7.3.1.6.0
+
+Gets Total Anon. HTTP Users: - Won't work unless you had SNMP installed before you added IIS.
+snmputil get 127.0.0.1 public  .1.3.6.1.4.1.311.1.7.3.1.8.0
+
+Gets Maximum Anon. HTTP Users: - Won't work unless you had SNMP installed before you added IIS.
+snmputil get 127.0.0.1 public  .1.3.6.1.4.1.311.1.7.3.1.10.0
+
+Gets NT CPU % Usage:
+snmputil get 127.0.0.1 public  .1.3.6.1.4.1.311.1.1.3.1.1.2.1.3.0
+
+Gets C: Space remaining (MB):
+snmputil get 127.0.0.1 public  .1.3.6.1.4.1.311.1.1.3.1.1.5.1.4.0
+
+Gets RAM free (Bytes): (see snmputil image above)
+snmputil get 127.0.0.1 public  .1.3.6.1.4.1.311.1.1.3.1.1.1.1.0
+
+
+Walking the Windows NT OID trees:
+
+Lists all memory and processor OIDs:
+snmputil walk 127.0.0.1 public  .1.3.6.1.4.1.311.1.1.3.1.1.1
+
+Lists all processor OIDs:
+snmputil walk 127.0.0.1 public  .1.3.6.1.4.1.311.1.1.3.1.1.2
+
+Lists all network interface OIDs:
+snmputil walk 127.0.0.1 public  .1.3.6.1.4.1.311.1.1.3.1.1.3
+
+Lists all physicaldisk OIDs:
+snmputil walk 127.0.0.1 public  .1.3.6.1.4.1.311.1.1.3.1.1.4
+
+Lists all logicaldisk OID:
+snmputil walk 127.0.0.1 public  .1.3.6.1.4.1.311.1.1.3.1.1.5
+
+Lists all process OIDs:
+snmputil walk 127.0.0.1 public  .1.3.6.1.4.1.311.1.1.3.1.1.7
+
+Lists all paging file OIDs:
+snmputil walk 127.0.0.1 public  .1.3.6.1.4.1.311.1.1.3.1.1.9
+
+Lists all the HTTP Server OIDs: - Won't work unless you had SNMP installed before you added IIS.
+snmputil walk 127.0.0.1 public  .1.3.6.1.4.1.311.1.7.3.1
+
+You can then "drill down" to the OID you need to access! Try it!
+
+GETting a few NetWare Server OIDs:
+
+Getting Server Name:
+snmputil get 127.0.0.1 public  .1.3.6.1.4.1.23.2.28.1.1.0
+
+Getting Server Serial Number:
+snmputil get 127.0.0.1 public  .1.3.6.1.4.1.23.2.28.1.2.0
+
+Getting IPX Internal Net Number:
+snmputil get 127.0.0.1 public  .1.3.6.1.4.1.23.2.28.1.3.0
+
+Getting Current Number of Open Files:
+snmputil get 127.0.0.1 public  .1.3.6.1.4.1.23.2.28.1.7.0
+
+Getting Values for DOS Memory :
+snmputil get 127.0.0.1 public  .1.3.6.1.2.1.25.2.3.1.6.1
+
+Alloc Memory Pool:
+snmputil get 127.0.0.1 public  .1.3.6.1.2.1.25.2.3.1.6.2
+
+Cache Buffers (you need to multiply the returned value by 4096 to get the actual value)...
+snmputil get 127.0.0.1 public  .1.3.6.1.2.1.25.2.3.1.6.3
+
+Cache Moveable Memory (you need to multiply the returned value by 4096 to get the actual value)...
+snmputil get 127.0.0.1 public  .1.3.6.1.2.1.25.2.3.1.6.4
+
+Cache Non-Moveable Memory (you need to multiply the returned value by 4096 to get the actual value)...
+snmputil get 127.0.0.1 public  .1.3.6.1.2.1.25.2.3.1.6.5
+
+Code and Data Memory:
+snmputil get 127.0.0.1 public  .1.3.6.1.2.1.25.2.3.1.6.6
+
+SYS:
+snmputil get 127.0.0.1 public  .1.3.6.1.2.1.25.2.3.1.6.7
+
+FIRST VOL: (will be SYS on NetWare 3.1x/4/4.1x and NSS_ADMIN on NetWare 5)...
+snmputil get 127.0.0.1 public  .1.3.6.1.2.1.25.2.3.1.6.8
+
+SECOND VOL: 
+snmputil get 127.0.0.1 public  .1.3.6.1.2.1.25.2.3.1.6.9
+
+THIRD VOL:
+snmputil get 127.0.0.1 public  .1.3.6.1.2.1.25.2.3.1.6.10
+
+Walking the NetWare Server OID trees:
+
+Walking the NetWare Server (nwSystem) tree:
+snmputil walk 127.0.0.1 public  .1.3.6.1.4.1.23.2.28.1.
+
+Walking Memory Usage Tree:
+snmputil walk 127.0.0.1 public  .1.3.6.1.2.1.25.2.3.1.6

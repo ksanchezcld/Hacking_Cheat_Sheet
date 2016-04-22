@@ -1,0 +1,18 @@
+net view \\victim 
+net use \\victim\ipc$ /u:"" "" 
+net view /domain:nombredominio
+
+nbtstat -a remote machine
+
+
+enum -U -M -S -P -G -L victima 
+
+
+http://technet.microsoft.com
+
+Netbios Enumeration Tool: 
+
+	- Superscan(www.mcafee.com)
+    - Hyena (http://www.systemtools.com)
+    - WinFingerprint(http://www.winfir1gerprint.com)
+    - NetBios Enumerator(http://nbtenum.sourceforge.net)

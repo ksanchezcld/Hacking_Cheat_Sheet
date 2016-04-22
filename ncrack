@@ -1,0 +1,1 @@
+ncrack -vv -u administrator -P /usr/wordlist.txt <IP:PORT>

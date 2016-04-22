@@ -1,0 +1,5 @@
+GET / HTTP/1.1
+
+echo "HEAD / HTTP/1.1\r\nHost: vulnerable\r\nConnection: close\r\n\r\n" | netcat
+vulnerable 80
+

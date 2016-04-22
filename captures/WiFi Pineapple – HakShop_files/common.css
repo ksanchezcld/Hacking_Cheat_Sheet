@@ -1,0 +1,255 @@
+#ISR_button {display: none}
+.ISR_button_spurit {
+    cursor: pointer;
+    position: fixed;
+    width: auto;
+    height: auto;
+    text-align: center;
+    /*box-shadow: 0 3px 7px #A8A8A8;*/
+    z-index: 3100100100;
+    display: none;
+}
+.ISR_button_spurit img {vertical-align: middle;}
+
+#ISR_popup * {
+    margin: 0;
+    padding: 0;
+}
+#ISR_popup {
+    overflow: hidden;
+    padding-bottom: 10px;
+    /*display: none;*/
+
+    color: #FFFFFF;
+    font-family: Arial,sans-serif;
+}
+#ISR_popup h3,
+#ISR_popup h4
+{
+    color: #FFFFFF;
+    font-weight: normal;
+    margin: 0 0 0.5em;
+}
+#ISR_popup h3 {
+    margin: 21px 0 0;
+    text-align: center;
+    line-height: 1.2em;
+
+    font-size: 18px;
+}
+#ISR_popup h4 {
+    text-align: left;
+    line-height: 1.1em;
+    border-bottom: medium none;
+    border-top: medium none;
+    font-size: 18px;
+}
+#ISR_popup label {color: #ffffff}
+#ISR_popup_description {
+    padding: 10px 15px;
+    text-align: left;
+
+    color: #EFEFEF;
+    font-size: 1em;
+}
+#ISR_popup_content {padding: 10px 30px;}
+#ISR_popup_content #ISR_form > div {margin-bottom: 19px; text-align: left; overflow: hidden;}
+#ISR_popup_content #ISR_form select {
+    font-size: 14px;
+    height: auto;
+    padding: 3px;
+    margin: 0 0 0 0;
+    width: 235px;
+    display: inline-block;
+}
+#ISR_popup_photo {
+    float: left;
+    text-align: center;
+    max-width: 145px;
+    width: 145px;
+    margin-left: -20px;
+    margin-bottom: 10px;
+}
+#ISR_popup_price {margin-left: 125px; text-align: left;}
+
+#ISR_form > div {clear: both;}
+#ISR_form label {display: inline-block; font-weight: bold; width: 125px}
+#ISR_form input {
+    margin: 0 0 0 0;
+    display: inline-block;
+    width: 235px;
+    height: auto;
+    padding: 4px 4px;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -ms-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+
+    background-color: #ffffff;
+    color: #333333;
+}
+#ISR_form .ISR-variant {display: none; text-align: left; margin-left: 125px; margin-top: 8px;}
+
+#ISR_popup_content #ISR_form #ISR_form_variant-wrapper {margin: 20px 0 50px 125px; clear: right; overflow: hidden;}
+#ISR_form_email-wrapper {clear: both;}
+#ISR_form_discount-wrapper {}
+#ISR_form_customPrice-wrapper,
+#ISR_form_customPeriod-wrapper
+{display: none}
+#ISR_form_customPeriod-wrapper select#ISR_form_customPeriodType {width: 100px}
+#ISR_form_customPrice-wrapper input {width: 50px; margin-left: 5px;}
+#ISR_form_customPeriod-wrapper input {width: 50px; margin-right: 10px}
+
+#ISR_form_period-wrapper {}
+#ISR_form_submit {
+    float: right;
+    padding: 5px 10px;
+    margin: 0;
+    cursor: pointer;
+
+    background-color: #678234;
+    border: 1px solid #EFEFEF;
+    color: #EFEFEF;
+    font-size: 14px;
+    font-weight: bold;
+    border-radius: 3px;
+}
+
+
+#ISR_result {
+    background-color: #AEAEAE;
+    border: 1px solid #FFFFFF;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    display: none;
+    padding: 20px 10px;
+    text-align: center;
+
+    font-size: 15px;
+    -moz-box-sizing: border-box;
+    -o-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -ms-box-sizing: border-box;
+    box-sizing: border-box;
+}
+#ISR_result a,
+#ISR_result a:hover
+{color: #333333; text-decoration: underline;}
+#ISR_result a:hover { text-decoration: none; cursor: pointer;}
+#ISR_result.ISR-result-success {
+    color: #008000;
+    display: block;
+}
+#ISR_result.ISR-result-error {
+    color: #AA0000;
+    display: block;
+}
+
+#ISR_powered {
+    clear: both;
+    margin-top: -20px;
+    font-size: 0.86em;
+    text-align: center;
+}
+#ISR_powered a:link,
+#ISR_powered a:hover,
+#ISR_powered a:visited
+{
+    color: #FFFFFF;
+}
+
+
+#ISR_popup_overlay {background-color:#000; z-index: 100100;}
+#ISR_popup_container {
+    -moz-box-sizing: content-box;
+	-o-box-sizing: content-box;
+	-webkit-box-sizing: content-box;
+	-ms-box-sizing: content-box;
+	box-sizing: content-box !important;
+    background-color:#333; 
+    border:2px solid #444; 
+    padding:0px;
+    z-index: 110000; 
+    opacity: 0.9; 
+    border-radius: 5px;
+    position:absolute;
+}
+#ISR_popup_container .modalCloseImg {
+    border-radius: 5px 5px 5px 5px;
+    color: #FF4444;
+    display: block;
+    font-size: 16px;
+    font-weight: bold;
+    height: 16px;
+    line-height: 16px;
+    position: absolute;
+    right: 0;
+    text-align: center;
+    text-decoration: none;
+    top: 0;
+    width: 16px;
+    /*background-color: #444444;*/
+}
+#ISR_popup_container .modalCloseImg:hover {color: #ffffff; background-color: #ff4444;}
+
+/*** Inline Form ***/
+#ISR-form-wrapper {display: none; margin-top: 10px}
+#ISR-form-wrapper #ISR_popup {
+    display: block;
+    position: relative;
+}
+
+/*** Submit button spinner ***/
+#ISR_form_submit.isr-spinner {
+  text-align: center;
+}
+
+.isr-spinner > div {
+  width: 12px;
+  height: 12px;
+  background-color: #333;
+  margin-left: 2px !important;
+  margin-right: 2px !important;
+  border-radius: 100%;
+  display: inline-block;
+  -webkit-animation: isr-sk-bouncedelay 1.4s infinite ease-in-out both;
+  animation: isr-sk-bouncedelay 1.4s infinite ease-in-out both;
+}
+
+.isr-spinner .isr-bounce1 {
+  -webkit-animation-delay: -0.32s;
+  animation-delay: -0.32s;
+}
+
+.isr-spinner .isr-bounce2 {
+  -webkit-animation-delay: -0.16s;
+  animation-delay: -0.16s;
+}
+
+@-webkit-keyframes isr-sk-bouncedelay {
+  0%, 80%, 100% { -webkit-transform: scale(0) }
+  40% { -webkit-transform: scale(1.0) }
+}
+
+@keyframes isr-sk-bouncedelay {
+  0%, 80%, 100% { 
+    -webkit-transform: scale(0);
+    transform: scale(0);
+  } 40% { 
+    -webkit-transform: scale(1.0);
+    transform: scale(1.0);
+  }
+}
+
+@media only screen and (max-width : 480px) {
+    #ISR_popup_container { width:305px !important; position: absolute;}
+    #ISR_popup_content {padding: 10px 15px;}
+    #ISR_popup_content #ISR_form select {width: 150px;}
+    #ISR_form input {width: 150px;}
+    #ISR_form_customPrice-wrapper input {width: 50px;}
+    #ISR_form_customPeriod-wrapper input {width: 50px;}
+    #ISR_form_customPeriod-wrapper select#ISR_form_customPeriodType {width: 80px}
+}
+
+

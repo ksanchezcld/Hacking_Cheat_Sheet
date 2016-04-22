@@ -1,0 +1,27 @@
+Kennedy Sanchez <ksanchez@cldeveloper.com>
+
+The hashcat family of software is a set of professional tools provided at no charge to the community. Hashcat is intended to be used LEGALLY as a tool to recover plain text strings for a variety of hashing methods including:
+
+• MD5 (and variations)
+• SHA1 (and variations)
+• MySQL
+• SSHA-1
+• MD4
+• NTLM
+• Domain Cached Credentials (DCC)
+• MSSQL
+• SHA256
+• SHA-512
+• Oracle 11G
+• DES(Unix)
+
+
+hashcat -m 1000 -a 0 -o winpass1.txt --remove win1.hash rock.dic
+
+
+
+http://doc.callmematthi.eu/static/webArticles/hashcat_user_manual.pdf
+
+http://hashcat.net
+or on IRC at
+irc.rizon.net #hashcat

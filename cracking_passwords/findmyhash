@@ -1,0 +1,35 @@
+ python /usr/bin/findmyhash JUNIPER -h "\$9\$LbHX-wg4Z"  
+
+
+ Cracking hash: $9$LbHX-wg4Z                                                                       
+                                                                                                  
+Analyzing with password-decrypt (http://password-decrypt.com)...                                  
+                                                                                                  
+************ 
+HASH CRACKED!! ************                                                                        
+The original string is: lc
+
+
+The following hashes were cracked:
+----------------------------------
+
+$9$LbHX-wg4Z -> lc
+
+
+
+
+
+Examples:
+---------
+
+  -> Try to crack only one hash.
+     python /usr/bin/findmyhash MD5 -h 098f6bcd4621d373cade4e832627b4f6
+     
+  -> Try to crack a JUNIPER encrypted password escaping special characters.
+     python /usr/bin/findmyhash JUNIPER -h "\$9\$LbHX-wg4Z"
+  
+  -> If the hash cannot be cracked, it will be searched in Google.
+     python /usr/bin/findmyhash LDAP_SHA1 -h "{SHA}cRDtpNCeBiql5KOQsKVyrA0sAiA=" -g
+   
+  -> Try to crack multiple hashes using a file (one hash per line).
+     python /usr/bin/findmyhash MYSQL -f mysqlhashesfile.txt

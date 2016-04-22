@@ -1,0 +1,285 @@
+====
+news
+====
+
+Joomla SQL Injection Vulnerability Exploit Results in Full Administrative Access (October 22, 2015)
+
+https://www.trustwave.com/Resources/SpiderLabs-Blog/Joomla-SQL-Injection-Vulnerability-Exploit-Results-in-Full-Administrative-Access/?page=1&year=0&month=0
+
+Trustwave SpiderLabs researcher Asaf Orpani has discovered an SQL injection vulnerability in versions 3.2 through 3.4.4 of Joomla, a popular open-source Content Management System (CMS). Combining that vulnerability with other security weaknesses, our Trustwave SpiderLabs researchers are able to gain full administrative access to any vulnerable Joomla site.
+
+Joomla had a 6.6 percent share of the market for website CMSs as of October 20, 2015 according to W3Techs—second only to WordPress. Internet services company BuiltWith estimates that as many as 2.8 million websites worldwide use Joomla.
+
+CVE-2015-7297, CVE-2015-7857, and CVE-2015-7858 cover the SQL injection vulnerability and various mutations related to it.
+
+Trustwave recommends that you upgrade immediately to Joomla 3.4.5. Please note that this vulnerability is only exploitable while an administrator is logged into the site. If you must delay your upgrade, log out of any administrator accounts not in use. In addition, if you must log in as administrator, do so for only short periods of time.
+
+CVE-2015-7857 enables an unauthorized remote user to gain administrator privileges by hijacking the administrator session. Following exploitation of the vulnerability, the attacker may gain full control of the web site and execute additional attacks.
+
+The vulnerability can be exploited in Joomla versions 3.2 (released in November 2013) through version 3.4.4.
+Because the vulnerability is found in a core module that doesn't require any extensions, all websites that use Joomla versions 3.2 and above are vulnerable.
+The related vulnerabilities CVE-2015-7858 and CVE-2015-7297 were also uncovered as part of this research.
+Notes For Trustwave Customers and ModSecurity Users
+
+Trustwave WAF's "Blind SQL Injection" rule detects this attack provided the rule is enabled. A dedicated, fine-tuned rule will be issued in an upcoming signature update (CorSigs 4.39).
+
+If it's enabled, OWASP ModSecurity Core Rule Set rule 95007 blocks attempts to exploit this vulnerability. For Commercial Rule Set customers, a virtual patch will also be issued soon.
+Technical Overview
+
+We discovered that the following code in /administrator /components /com_contenthistory/ models/history.php is vulnerable to SQL injection:
+
+Figure 1
+
+Figure 1: Joomla Core SQL Injection Vulnerable code
+
+Several other code elements of Joomla contribute to the exploitation of this vulnerability. They are described in our detailed analysis. The following request is the final blow, as it returns the first active session key from the session table, found in the website database (considering the database Joomla tables name prefix are 'jml_'):
+
+FIgure 2
+
+Figure 2 : Exploiting the vulnerability to gain the administrator session key
+
+Executing this request on the Joomla site returns the following page:
+
+Figure 3
+
+Figure 3: Executing the request returns the admin session key
+
+Bingo! We've extracted the session ID from the database (we explain how below in our detailed analysis). By pasting the session ID we've extracted—that of an administrator in this case—to the cookie section in the request to access the /administrator/ folder, we're granted administrator privileges and access to the administrator Control Panel:
+
+Figure 4
+
+Figure 4: Using the admin key to hijack the session - we are in!
+
+TECHNICAL DETAILS
+
+The Road to the Joomla Admin Panel
+
+Joomla is written in PHP and uses object-oriented programming (OOP) techniques and software design patterns. It stores data in a MySQL, MS SQL, or PostgreSQL database. Joomla's features include page caching, RSS feeds, printable versions of pages, news flashes, blogs, search and support for language internationalization. Joomla is also used for e-commerce via a popular shopping cart template. Virtuemart.com is an e-commerce solution built on Joomla. Because the vulnerability is located in Joomla's core module, e-commerce sites using VirtueMart are also vulnerable to exploit.
+
+Figure 7
+
+Figure 7: VirtueMart online shops - Developed over Joomla
+
+The Exploit
+
+The code vulnerable to SQL injection is found in /administrator/components/com_contenthistory/models/history.php and highlighted below:
+
+Figure 8
+
+Figure 8: The code in Joomla vulnerable to SQL Injection
+
+ContenthistoryModelHistory represents a model of the content history module. This model is designed to be only for ADMINS USE. How I gained access is another story, but you'll understand by the end of this blog post.
+
+The class ContenthistoryModelHistory inherits from JModelList, which is the parent class for all types of models that handle lists of items. Components will usually use different models to serve the specific functioning of the component within the application. This specific one states what it does in its declaration below:
+
+Figure 9
+
+Figure 9: Documentation of the vulnerable model 'ContenthistoryModelHistory'
+
+To start, I found this piece of code "requiring" a PHP file that contains the content history module controller. The code was located in the administrator folder and, surprisingly, accessible by guests of the website. To execute this code, an attacker only needs to send a request with a parameter stating 'contenthistory' as the component he wants to access.
+
+In other words, as a guest I can access this even though it requires a file from JPATH_COMPONENT_ADMINISTRATOR, obviously an item in the admin folder. Any access to the 'admin zone' will always draw a hacker's attention.
+
+Figure 10
+
+Figure 10: A 'require_once' of a file located in the Administrator folder
+
+In the contenthistory.php file found in the admin components folders, we can see that once contenthistory loads, a controller for the content history module is created allowing us to generate the view we want to see:
+
+FIgure 11
+
+Figure 11: The file required in figure 10, creating an instance of the content history controller
+
+In the first line the code gets an instance of the content history module controller, and then on the second line it calls a function of the controller called execute and a parameter. The execute function leads us closer to our vulnerable model.
+
+Below you see the execute function's code:
+
+Figure 12
+
+Figure 12: 'execute' function called by the content history controller at figure 11
+
+Remember the parameter task that was passed as an argument to the execute function? Well, if you don't pass any value, the default value is display. That code shows us that the function display is being called in the controller.
+
+And here's that function:
+
+Figure 13
+
+Figure 13: 'display' function of the content history controller, called in figure 12
+
+In the display function I find a getModel function. Digging further into this function makes me realize that a model is created there according to user-supplied parameters. As you can see at the beginning of the display function, the viewName parameter, which is passed to the getModel function, is coming from user input.
+
+So after supplying the component('option') and view parameters in the URL as described in the POC, we've got our hands on the vulnerable model. Since there was a require_once call to the admins folder where the model is found, it's easy to guide Joomla in creating the desired model, and that model has now been setModel-ed into the configuration.
+
+Now that I can control the model the following question arises, can I also force the execution of the vulnerable code with which we started?
+
+From personal experience and after researching Joomla, I understood something regarding models in Joomla.
+
+Here's the vulnerable code again:
+
+Figure 14
+
+Figure 14: The code in Joomla! vulnerable to SQL injection
+
+The getListQuery function is an auxiliary function of the model that helps build an SQL query whenever the 'items' of that model need to be retrieved from the database. One objective of the display function is to create the requested page content. The initial assumption of the displaying process is that model 'items' are being retrieved from the database because they are an essential part of the requested page content. That's why the getListQuery function is called as part of this long process.
+
+Now that we understand why that function is executed, there is still something that needs explaining. The query is being 'made', and the highlighted area (where we inject SQL) is at the 'SELECT' part of the SQL query. Common sense tells us that this SQL query will be executed later—and so it does when testing the exploit on a test site of Joomla on a local computer.
+
+But, what is the expression $this->getState('list.select',…)? And how do we control it? After all, this is a potential place in which to inject the SQL query.
+
+First of all, note that the second long parameter in the getState() function is just a 'default value' parameter. This means that if no value is given in 'list.select' then this will be the value.
+
+Here you see the getState() function implementation:
+
+Figure 15
+
+Figure 15: 'getState' function returning the value injected to the SQL query
+
+The return value of the getState() function in our case is the return value of a get() function, returning a value indexed to the configuration entry provided in $property parameter, which in our case is 'list.select'.
+
+An interesting function populateState() draws my attention because of its name and the fact that it's only called the first time getState() is executed.
+
+And here's that populateState() function:
+
+Figure 16
+
+Figure 16: 'populateState' function of the ContenthistoryModelHistory model class
+
+In examining this flow I see that the setState() function calls, setting different values of entries in the model configuration. Although no control of the state 'list.select' entry is found! This is a bad situation, we need to control it because this is what's injected into the SQL query after all.
+
+There's still hope! A call for the parent function of populateState is seen here:
+
+Figure 17
+
+Figure 17: 'populateState' function of the JModelList class
+
+You'll see the function getUserStateFromRequest(), which stores its return value in the $list variable. GetUserStateFromRequest() is a function that returns the user's input. It takes the variable 'list' passed in the request and treats it as an array, looping on it and dividing it to the array key stored in $name and corresponding value stored in $value.
+
+It does some filtering and handling for the keys fullordering, ordering and limit. Those three keys do not relate to our case at all. However, looking at the default case, we can see how simple our attack is going to be! We find that $value is kept as it was as if it's none of the above switch{} cases (fullordering, ordering or limit), and then it sets the state (setState()) of 'list.select' to the value we passed, which means our input is left untouched! And all we've got to do is simply pass the list array in the request with a key name of 'select' and the SQL expression we want to inject!
+
+Bravo! We executed a successful SQL injection attack in one of the most-popular web CMS applications out there—Joomla! Now onto doing something interesting with that…
+
+ 
+
+SQL INJECTION Proof of Concept
+
+Figure 18
+
+Figure 18: The Proof of Concept
+
+Finish him!
+
+The road from our SQL injection to "game over" is very short.
+
+Since our SQL injection exploits a SELECT type of query we will only be able to extract data from the database and not insert any data, which is limiting. After all, not all of the data in the database is interesting. In the users table the password is hashed, and since MD5 can't really be reverted we're kind of stuck. Then, an interesting table in Joomla caught my eye:
+
+Figure 19
+
+Figure 19: #__session table in the database
+
+I chose the prefix 'jml_' for the tables in the database when I installe Joomla. To my surprise, there is a table called jml_session that handles all live sessions on the website. This means that if an administrator is currently part of a live session, it would be listed.
+
+There is also this table:
+
+Figure 20
+
+Figure 20: #__user_usergroup_map table in the database
+
+An easy way to determine if an admin is logged in is to take the client_id that we extract from jml_session, look for the same user_id in the table jml_user_usergroup_map and check the group id of that user.
+
+The number eight, for example, represents a Super User, as shown in this table in the Joomla Administration Panel:
+
+Figure 21
+
+Figure 21: User groups list as shown in the Joomla! Administrator Panel
+
+Sending a normal request, like we did with the POC, including a parameter "1" in list[select] presents this page in Joomla:
+
+(GET index.php?option=com_contenthistory&view=history&list[select]=1)
+
+Figure 22
+
+Figure 22: Joomla error page generated when sending the URL above
+
+This is weird as all we did is enter 1, so logically it should do SELECT 1 which will always work no matter what the rest of the query is. But, we still get an error of "Unknown colum 'Array'". Hmm, OK…
+
+We can't really work like that! We need to know what full query is being executed. In order to know how to work with it, we'll debug our vulnerable code and see what query is generated.
+
+This resulted in the following:
+
+Figure 23
+
+Figure 23: The SQL query executed when accessing the page mentioned in figure 22
+
+Ok, so the part we inject will be colored in yellow and we notice something else that is quite annoying about the query and will make us have to work harder. But no worries, we like challenges!
+
+The query is multi-lined, meaning that we can't just comment it all out. All we can comment is everything after the 'SELECT' word at the first line. Then we need to figure out how to address the other 4 lines.
+
+Okay, so that gives us the following issues we have to deal with:
+
+The query will only pull data from the table jml_ucm_history (meh…)
+We have to learn how to get rid of that "ORDER BY Array" or how to make the query according to that.
+The query will execute ONLY if there will be a row in the database at jml_ucm_history where `ucm_item_id` will be equal to 0 AND `ucm_type_id` will be equal to 0.
+These seem like some tough and annoying conditions, but we soon find that we can overcome them easily.
+
+If you have some experience with SQL injection, you can already solve the first issue. After thinking about it I decided upon an Error-based SQLi! Since we saw that Joomla prints SQL errors on their page, an error-based SQLi will be successful here. We can run multiple queries to cause an error that will extract data from the database.
+
+Alright now, about that last line "ORDER BY Array", we have previously gotten an error "Unknown column Array", well, that's the line giving us trouble. Researching the code a little bit more and following the build of the query, I figured out that to address this line you should give another input in the URL which will be a part of our 'list' array. It is list[ordering]= (equals nothing). Setting it equal to nothing will put an order by command as default that will not interrupt our error-based SQLi session. That takes care of the second issue.
+
+For last obstacle, the ucm_item_id and ucm_type_id, well, what is it?
+
+I checked out the jml_ucm_history table to see:
+
+Figure 24
+
+Figure 24: #__ucm_history table in the database
+
+There are more columns in the table, but I've only included the relevant ones above.
+
+Let's not forget purpose of the component in which we found the injection. It's a content management history component after all—every piece of content that managed or modified in some way is recorded here.
+
+Obviously we would have to supply the modified content's ID and type because Joomla needs to know on what content to pull out information. If one of those conditions are false the query will not execute. I found out it's not hard at all to supply correct IDs—it involves some guesswork, but the range is very small (although there is a better solution within the website itself, which we'll cover in a bit).
+
+ucm_type_id relates to the item's content type's id, content types usually range from 1-20+ identifying the type of content (e.g., article, gallery, video, etc).
+ucm_item_id relates to the item's id. For example, a new article is assigned an item id. The range for item ids is small as well because every article you create has its item id incremented from the last content item. The numbering always starts from one, which can be seen from a normal Joomla installation's populated database, or an empty Joomla installation after creating an article or piece of content.
+After researching the code flow for building the query a little more, we find that to supply both parameters we need to pass the following parameters in the request:
+
+type_id – The item's content type ID
+item_id­ – The item's ID
+Accessing the content component of the Joomla-based website (?option=com_content), would usually give you a list of all contents available on the site. If it doesn't, you can simply look for an article or some gallery found on the website and click on it.
+
+Then you'd see you're visiting a URL that looks something like this:
+
+Figure 25
+
+Figure 25: The vulnerability security announcement from the official Joomla! Website
+
+Here you see a new post released on the Joomla! Website. As I explained above, this means that it must be recorded in the jml_ucm_history table of the database. By examining the URL you can see that the item_id of that post is 5633. Half of our work is done. Guessing the type_id should be easy. We could insert a sleep() function within our SQL injection. That way if we guess the correct item_id and the type_id is true, the loading of the page will be delayed.
+
+That solves third and last issue. We know it's not so hard to reach all requirements for the SQL query to work, and we can easily understand by the website's behavior if we're on the right path to full website compromise.
+
+Now, let's pull out the first row from the session table just to test using the error-based SQLi discussed earlier.
+
+After some attempts to get the query to run we might see this:
+
+GET index.php?option=com_contenthistory&view=history&list[ordering]=&item_id=75&type_id=1 &list[select]= (select 1 FROM(select count(*),concat((select (select concat(session_id)) FROM jml_session LIMIT 0,1),floor(rand(0)*2))x FROM information_schema.tables GROUP BY x)a)
+
+The SQL query that will execute would look like this:
+
+Figure 26
+
+Figure 26: The SQL query executed when sending the request mentioned above
+
+This is the result page we get:
+
+Figure 27
+
+Figure 27: Extracting a session key from the DB using the SQL Injection
+
+Bingo! We have the session ID we wanted extracted from the database. Using the technique earlier using the jml_user_usergroup_map table, we could target an administrator's session ID. Pasting the session ID we've extracted (which happens to be of an Administrator in our case) to the cookie section in the GET request allows us to access the /administrator/ folder. We've also been granted administrator privileges and access to the administrator panel and a view of the control panel.
+
+And that's it—we've compromised the website!
+
+Figure 28
+
+
+Figure 28: Administrator Control Panel in a Joomla-based website

@@ -1,0 +1,11 @@
+PHPSESSID=3018aa53f5bbc5133ae7b862b5656905
+
+
+TRACE /bWAPP HTTP/1.1
+SQUEEM1SH: OSS1FR4GE
+Accept-Encoding: gzip,deflate
+Host: 192.168.1.134
+Connection: Keep-Alive
+User-Agent: UserAgent
+Cookie: PHPSESSID=3018aa53f5bbc5133ae7b862b5656905
+Cookie2: $Version=1

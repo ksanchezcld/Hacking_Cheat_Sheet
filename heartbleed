@@ -1,0 +1,11 @@
+The Heartbleed Bug is a serious vulnerability in the popular OpenSSL cryptographic software library and was introduced in 31 December on 2011 and released in March 2012. This weakness allows stealing the information protected by the SSL/TLS encryption used to secure the internet. The official name for Heartbleed is CVE-2014-0160. A fix has been released and deployed by many OS and application vendors but when a vulnerable version of OpenSSL is used or applications haven’t been patched, the bug can be abused. 
+
+Many software applications, web applications and web services have been affected by Heartbleed. These applications include: multiple VMware product, Yahoo, Filemaker, Cisco Routers, HP server applications, Sourceforge and Github. Even governments have temporarily shut down online services, like the Canada Revenue Agency (CRA). Many websites instructed their users to change passwords after a fix had been implemented.
+
+With Nmap’s SSL-Heartbleed script it takes a couple seconds to check for this vulnerability and should be part of any penetration test.
+
+The Heartbleed SSL bug was discovered by Neel Mehta from Google Security and announced to the public by the OpenSSL project on April 7th 2014. After companies like Yahoo, Google and Microsoft had a chance to fix Heartbleed on their applications. Researchers at AVG’s Virus Labs said they scanned Alexa’s league table of the top 800,000 sites in the world and found 12,043 (1.5 per cent) are still vulnerable.
+
+# nmap -d –script ssl-heartbleed –script-args vulns.showall -sV [host]
+
+http://www.hackingtutorials.org/scanning-tutorials/heartbleed-scanning-using-nmap/

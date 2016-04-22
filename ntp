@@ -1,0 +1,27 @@
+NTP ENUMERATION
+
+- ntptrace :: Traces a chain of NTP Servers back to the primery source.
+    - ntptrace [-vdn] [-r retries ] [-t timeout] [servername/IP_address]
+
+	- ntptrace [ -Vdn ] [host 1] | [IP]
+
+	- ntptrace localhost: stratum 4, offset 0.0019529, synch distance 0.143235
+
+	192.168.0.1: stratum 2, offset 0.0114273, synch distance 0.115554 
+
+	192.168.1.1: stratum 1, offset 0.0017698, synch distance 0.011193
+
+- ntpdc :: Monitors operation of the NTP daemon, ntpd.
+			- /usr/bin/ntpdc [-n] [-v] [host1] | [IP]
+
+			- ntpdc [-iln p s ] [-c command] [hostnam e/!P_address]
+
+- ntpq :: Monitors NTP daemon ntpd operations and determines performance.
+	- ntpq [-inp] [-c command] [host] 
+
+	- ntpq [-inp] [-c command] [host/!P_address]
+
+	- ntpq> version
+      ntpq 4.2.0a@l.1196-r Mon May 07 14:14:14 EDT 2006 (1) 
+    - ntpq> host
+	  current host is 192.168.0.1

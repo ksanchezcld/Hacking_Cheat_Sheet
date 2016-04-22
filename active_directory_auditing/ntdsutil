@@ -1,0 +1,28 @@
+C:\Documents and Settings\ksanchez>ntdsutil
+ntdsutil: help
+
+ ?                             - Show this help information
+ Authoritative restore         - Authoritatively restore the DIT database
+ Configurable Settings         - Manage configurable settings
+ Domain management             - Prepare for new domain creation
+ Files                         - Manage NTDS database files
+ Group Membership Evaluation   - Evaluate SIDs in token for a given user or group
+ Help                          - Show this help information
+ LDAP policies                 - Manage LDAP protocol policies
+ Metadata cleanup              - Clean up objects of decommissioned servers
+ Popups %s                     - (en/dis)able popups with "on" or "off"
+ Quit                          - Quit the utility
+ Roles                         - Manage NTDS role owner tokens
+ Security account management   - Manage Security Account Database - Duplicate SID Cleanup
+ Semantic database analysis    - Semantic Checker
+ Set DSRM Password             - Reset directory service restore mode administra
+tor account password
+
+
+[PARAMS]
+
+- snapshot
+
+
+
+http://blog.quarkslab.com/quarks-pwdump.html
