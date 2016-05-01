@@ -1,0 +1,41 @@
+Xplico is an open source network forensic tool, which can extract various data from network traffic, it can either work from a capture file or do a capture itself. It can extract images, emails, web pages, VoIP streams, chat (MSN, IRC,...), telnet, ftp data, etc... It has a command line and a graphical interface
+
+admin port :: 9876
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+http://www.xplico.org/download
+VirtualBox Image:
+
+Download OVA here.
+Based on  Free VirtualBox Image.
+user: ubuntu
+password: reverse
+Source code:
+
+Download here.
+Installation instructions are in the INSTALL file and in the Wiki.
+Ubuntu 12.10 32bit:
+
+Download here.
+Ubuntu Server 12.10 64bit:
+
+Download here.
+Deafult Users
+
+user: admin, xplico
+password: xplico, xplico
+
