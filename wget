@@ -15,12 +15,25 @@ GNU Wget is a free utility for non-interactive download of files from the Web.  
 
 Using the commands:
 
-wget -O - -q http://whatismyip.org/ 
+- wget -O - -q http://whatismyip.org/ 
 
+- wget -r http://linuxreviews.org/
 
+- wget  -r -p -U Mozilla http://www.stupidsite.com/restricedplace.html
 
+- wget --wait=20 --limit-rate=20K -r -p -U Mozilla http://www.stupidsite.com/restricedplace.html
+
+- wget -E -H -k -K -p http://example.com
+
+[Notes]
+
+- wget -p successfully downloads all of the web page's prerequisites (css, images, js)
+
+- Some servers will response with a 403 code if you use wget without an User Agent, you can add -U 'Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.8.1.6) Gecko/20070802 SeaMonkey/1.1.4'
 
 
 http://dev4sec.blogspot.com/search?q=wget
+http://stackoverflow.com/questions/6348289/download-a-working-local-copy-of-a-webpage
 
 
+See also ::: htttrack

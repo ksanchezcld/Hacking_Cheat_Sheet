@@ -2,12 +2,13 @@ Xplico is an open source network forensic tool, which can extract various data f
 
 admin port :: 9876
 
+/opt/xplico/pol_1   ::: Pcap files
 
 
 
 
-
-
+http://wiki.xplico.org/doku.php?id=pcap:pcap
+http://wiki.xplico.org/doku.php?id=tutorial:0.7.0
 
 
 

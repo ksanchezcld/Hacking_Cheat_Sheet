@@ -1,0 +1,64 @@
+ --auto-mount=<str>         	Auto mount device-hosted/favorite volumes
+  --backup-headers           	Backup volume headers
+  --background-task          	Start Background Task
+  -C, --change               	Change password or keyfiles
+  -c, --create               	Create new volume
+  --create-keyfile           	Create new keyfile
+  --delete-token-keyfiles    	Delete security token keyfiles
+  -d, --dismount             	Dismount volume
+  --display-password         	Display password while typing
+  --encryption=<str>         	Encryption algorithm
+  --explore                  	Open explorer window for mounted volume
+  --export-token-keyfile     	Export keyfile from security token
+  --filesystem=<str>         	Filesystem type
+  -f, --force                	Force mount/dismount/overwrite
+  --fs-options=<str>         	Filesystem mount options
+  --hash=<str>               	Hash algorithm
+  -h, --help                 	Display detailed command line help
+  --import-token-keyfiles    	Import keyfiles to security token
+  -k, --keyfiles=<str>       	Keyfiles
+  -l, --list                 	List mounted volumes
+  --list-token-keyfiles      	List security token keyfiles
+  --load-preferences         	Load user preferences
+  --mount                    	Mount volume interactively
+  -m, --mount-options=<str>  	TrueCrypt volume mount options
+  --new-keyfiles=<str>       	New keyfiles
+  --new-password=<str>       	New password
+  --non-interactive          	Do not interact with user
+  -p, --password=<str>       	Password
+  --protect-hidden=<str>     	Protect hidden volume
+  --protection-keyfiles=<str>	Keyfiles for protected hidden volume
+  --protection-password=<str>	Password for protected hidden volume
+  --random-source=<str>      	Use file as source of random data
+  --restore-headers          	Restore volume headers
+  --save-preferences         	Save user preferences
+  --quick                    	Enable quick format
+  --size=<str>               	Size in bytes
+  --slot=<str>               	Volume slot number
+  --test                     	Test internal algorithms
+  -t, --text                 	Use text user interface
+  --token-lib=<str>          	Security token library
+  -v, --verbose              	Enable verbose output
+  --version                  	Display version information
+  --volume-properties        	Display volume properties
+  --volume-type=<str>        	Volume type
+
+
+
+  Examples
+
+- truecrypt -c ::: To create a volume
+
+Mount the volume d:\myvolume as the first free drive letter, using the password prompt (the main program window will not be displayed):
+
+truecrypt /q /v d:\myvolume
+
+Dismount a volume mounted as the drive letter X (the main program window will not be displayed):
+
+truecrypt /q /dx
+
+Mount a volume called myvolume.tc using the password MyPassword, as the drive letter X. TrueCrypt will open an explorer window and beep; mounting will be automatic:
+
+truecrypt /v myvolume.tc /lx /a /p MyPassword /e /b
+
+https://dougvitale.wordpress.com/2013/11/18/using-truecrypt-on-linux-and-windows/

