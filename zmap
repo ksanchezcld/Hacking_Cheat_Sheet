@@ -1,0 +1,149 @@
+ICMP Echo Request Scans
+- zmap --probe-module=icmp_echoscan
+
+UDP Datagram Scans
+
+- zmap -M udp -p 5632 --probe-args=text:ST -N 100 -f saddr,data -o -
+- zmap -M udp -p 1434 --probe-args=hex:02 -N 100 -f saddr,data -o -
+- zmap -M udp -p 1434 --probe-args=file:netbios_137.pkt -N 100 -f saddr,data -o -
+- zmap -M udp -p 1434 --probe-args=file:sip_options.tpl -N 100 -f saddr,data -o -
+
+Common Options
+
+These options are the most common options when performing a simple scan. We note that some options are dependent on the probe module or output module used (e.g. target port is not used when performing an ICMP Echo Scan).
+
+-p, --target-port=port
+    TCP port number to scan (e.g. 443)
+-o, --output-file=name
+    Write results to this file. Use - for stdout
+-b, --blacklist-file=path
+    File of subnets to exclude, in CIDR notation (e.g. 192.168.0.0/16), one-per line. It is recommended you use this to exclude RFC 1918 addresses, multicast, IANA reserved space, and other IANA special-purpose addresses. An example blacklist file is provided in conf/blacklist.example for this purpose.
+
+Scan Options
+
+-n, --max-targets=n
+    Cap the number of targets to probe. This can either be a number (e.g. -n 1000) or a percentage (e.g. -n 0.1%) of the scannable address space (after excluding blacklist)
+-N, --max-results=n
+    Exit after receiving this many results
+-t, --max-runtime=secs
+    Cap the length of time for sending packets
+-r, --rate=pps
+    Set the send rate in packets/sec
+-B, --bandwidth=bps
+    Set the send rate in bits/second (supports suffixes G, M, and K (e.g. -B 10M for 10 mbps). This overrides the --rate flag.
+-c, --cooldown-time=secs
+    How long to continue receiving after sending has completed (default=8)
+-e, --seed=n
+    Seed used to select address permutation. Use this if you want to scan addresses in the same order for multiple ZMap runs.
+--shards=n
+    Split the scan up into N shards/partitions among different instances of zmap (default=1). When sharding, --seed is required
+--shard=n
+    Set which shard to scan (default=0). Shards are indexed in the range [0, N), where N is the total number of shards. When sharding --seed is required.
+-T, --sender-threads=n
+    Threads used to send packets (default=1)
+-P, --probes=n
+    Number of probes to send to each IP (default=1)
+-d, --dryrun
+    Print out each packet to stdout instead of sending it (useful for debugging)
+
+Network Options
+
+-s, --source-port=port|range
+    Source port(s) to send packets from
+-S, --source-ip=ip|range
+    Source address(es) to send packets from. Either single IP or range (e.g. 10.0.0.1-10.0.0.9)
+-G, --gateway-mac=addr
+    Gateway MAC address to send packets to (in case auto-detection does not work)
+-i, --interface=name
+    Network interface to use
+
+Probe Options
+
+ZMap allows users to specify and write their own probe modules for use with ZMap. Probe modules are responsible for generating probe packets to send, and processing responses from hosts.
+
+--list-probe-modules
+    List available probe modules (e.g. tcp_synscan)
+-M, --probe-module=name
+    Select probe module (default=tcp_synscan)
+--probe-args=args
+    Arguments to pass to probe module
+--list-output-fields
+    List the fields the selected probe module can send to the output module
+
+Output Options
+
+ZMap allows users to specify and write their own output modules for use with ZMap. Output modules are responsible for processing the fieldsets returned by the probe module, and outputing them to the user. Users can specify output fields, and write filters over the output fields.
+
+--list-output-modules
+    List available output modules (e.g. tcp_synscan)
+-O, --output-module=name
+    Select output module (default=csv)
+--output-args=args
+    Arguments to pass to output module
+-f, --output-fields=fields
+    Comma-separated list of fields to output
+--output-filter
+    Specify an output filter over the fields defined by the probe module
+
+Additional Options
+
+-C, --config=filename
+    Read a configuration file, which can specify any other options.
+-q, --quiet
+    Do not print status updates once per second
+-g, --summary
+    Print configuration and summary of results at the end of the scan 
+-v, --verbosity=n
+    Level of log detail (0-5, default=3)
+-h, --help
+    Print help and exit
+-V, --version
+    Print version and exit 
+--------------
+TCP SYN Scans
+--------------
+
+When performing a TCP SYN scan, ZMap requires a single target port and supports specifying a range of source ports from which the scan will originate.
+
+-p, --target-port=port
+    TCP port number to scan (e.g. 443)
+-s, --source-port=port|range
+    Source port(s) for scan packets (e.g. 40000-50000) 
+
+The following template fields are currently implemented:
+
+    SADDR: Source IP address in dotted-quad format
+    SADDR_N: Source IP address in network byte order
+    DADDR: Destination IP address in dotted-quad format
+    DADDR_N: Destination IP address in network byte order
+    SPORT: Source port in ascii format
+    SPORT_N: Source port in network byte order
+    DPORT: Destination port in ascii format
+    DPORT_N: Destination port in network byte order
+    RAND_BYTE: Random bytes (0-255), length specified with =(length) parameter
+    RAND_DIGIT: Random digits from 0-9, length specified with =(length) parameter
+    RAND_ALPHA: Random mixed-case letters from A-Z, length specified with =(length) parameter
+    RAND_ALPHANUM: Random mixed-case letters from A-Z and digits from 0-9, length specified with =(length) parameter
+
+--------------------
+Configuration Files
+--------------------
+ZMap supports configuration files instead of requiring all options to be specified on the command-line.
+
+interface "eth1"
+source-ip 1.1.1.4-1.1.1.8
+gateway-mac b4:23:f9:28:fa:2d # upstream gateway
+cooldown-time 300 # seconds
+blacklist-file /etc/zmap/blacklist.conf
+output-file ~/zmap-output
+quiet
+summary
+
+- zmap --config=~/.zmap.conf --target-port=443
+
+https://zmap.io/
+https://zmap.io/documentation.html#bestpractices
+https://scans.io/
+https://scans.io/study/umich-heartbleed
+http://www.elladodelmal.com/2015/10/conquistar-el-mundo-con-osint-known_17.html
+ 
