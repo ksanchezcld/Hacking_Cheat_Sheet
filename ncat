@@ -4,6 +4,8 @@ ncat <host> [<port>]
 
 # Listen mode (ncat is server) | default port is 31337
 ncat -l [<host>] [<port>]
+ncat -lvvp 4444
+nc -lvpp 4444
 
 # Transfer file (closes after one transfer)
 ncat -l [<host>] [<port>] < file
@@ -33,3 +35,7 @@ ncat -l --chat [<host>] [<port>]
 # ncat 192.168.75.14 80
 # nc 192.168.75.14 80
 	- HEAD / HTTP 1.1
+
+
+
+http://www.geekyshows.com/2013/07/how-to-use-ncat-in-kali-linux.html

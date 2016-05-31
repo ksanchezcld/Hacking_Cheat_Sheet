@@ -1,0 +1,8 @@
+Crowbar is brute forcing tool that can be used during penetration tests. It is developed to support protocols that are not currently supported by thc-hydra and other popular brute forcing tools.
+
+1- export DISPLAY=:0.0
+2- ./crowbar.py -b rdp -s 200.200.200.200/32 -U user_wordlist.txt -C passwd_wordlist.txt -v
+
+
+https://github.com/galkan/crowbar
+https://www.youtube.com/watch?v=i_byBBlpZoE&index=2&list=PL1BVM6VWlmWZOv9Hv8TV2v-kAlUmvA5g7

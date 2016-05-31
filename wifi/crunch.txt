@@ -1,3 +1,19 @@
+- crunch <min> max<max> <characterset> -t <pattern> -o <output filename>
+
+    min = The minimum password length.
+    max = The maximum password length.
+    characterset = The character set to be used in generating the passwords.
+    -t <pattern> = The specified pattern of the generated passwords. For instance, if you knew that the target's birthday was 0728 (July 28th) and you suspected they used their birthday in their password (people often do), you could generate a password list that ended with 0728 by giving crunch the pattern @@@@@@@0728. This word generate passwords up to 11 characters (7 variable and 4 fixed) long that all ended with 0728.
+    -o <outputfile> = This is the file you want your wordlist written to.
+
+What if we knew that the target always used number passwords between 6 and 8 characters? We could generate a complete list of password possibilities meeting this criteria and send them to a file in the root user's directory called numericwordlist.lst by typing:
+
+- crunch 6 8 1234567890 -o /root/numericwordlist.lst
+- crunch 4 8 :: passwords between 4 and 8 characters.
+- crunch 6 8 1234567890 -o /root/numericwordlist.lst
+- crunch 10 10 -t @@@@@@0728 -o /root/birthdaywordlist.lst
+- crunch 8 8 -f /usr/share/rainbowcrack/charset.txt mixalpha -o /root/alphawordlist.lst
+
 CRUNCH(1)                                                            CRUNCH(1)
 
 
@@ -396,3 +412,6 @@ CCOOPPYYRRIIGGHHTT
 
 
 Version 3.6                        May 2014                          CRUNCH(1)
+
+
+http://null-byte.wonderhowto.com/how-to/hack-like-pro-crack-passwords-part-4-creating-custom-wordlist-with-crunch-0156817/

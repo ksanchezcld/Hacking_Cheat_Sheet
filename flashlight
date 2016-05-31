@@ -1,0 +1,39 @@
+Automated Information Gathering Tool for Penetration Testers
+
+- apt-get install nmap tshark tcpdump dsniff
+- ./flashlight.py -s passive -p passive-pro-01 -i eth0 -o /root/Desktop/flashlight_test -l /root/Desktop/log –v
+- ./flashlight.py -s passive -p passive-project-02 -i eth0 -g 192.168.74.2 -m -k 50 -v
+- ./flashlight.py -s passive -p passive-pro-03 -i eth0 -g 192.168.74.2 -m -k 50 -o /root/Desktop/flashlight_passive_full -l /root/Desktop/log -v
+- ./flashlight.py -p active-project -s active -d 192.168.74.0/24 –t 30 -a -v
+- ./flashlight.py -p project -s screen -d 192.168.74.0/24 -r /usr/local/rasterize.js -t 10 -v ```
+
+
+
+
+Parameters for the usage of this application can be listed below
+
+-h, --help: It shows the information about using the Flashlight application.
+-p <ProjectName> or --project < ProjectName>: It sets project name with the name given. This paramater can be used to save different projects in different workspaces.
+-s <ScanType> or –scan_type < ScanType >: It sets the type of scans. There are four types of scans: Active Scan , Passive Scan, Screenshot Scan and Filtering. These types of scans will be examined later in detail.
+-d < DestinationNetwork>, --destination < DestinationNetwork >: It sets the network or IP where the scan will be executed against.
+-c <FileName>, --config <FileName>: It specifies the configuration file. The scanning is realized according to the information in the configuration file.
+-u <NetworkInterface>, --interface < NetworkInterface>: It sets the network interface used during passive scanning.
+-f <PcapFile>, --pcap_file < PcapFile >: It sets cap File that will be filtered.
+-r <RasterizeFile>, --rasterize < RasterizeFile>: It sets the specific location of Rasterize JavaScript file which will be used for taking screenshots.
+-t <ThreadNumber>, --thread <Threadnember>: It sets the number of Threads. This parameter is valid only on screenshot scanning (screen scan) mode.
+-o <OutputDiectory>, --output < OutputDiectory >: It sets the directory in which the scan results can be saved. The scan results are saved in 3 sub-directories : For Nmap scanning results, "nmap" subdirectory, for PCAP files "pcap" subdirectory and for screenshots "screen" subdirectories are used. Scan results are saved in directory, shown under the output directories by this parameter. If this option is not set, scan results are saved in the directory that Flashlight applications are running.
+-a, --alive: It performs ping scan to discover up IP addresses before the actual vulnerability scan. It is used for active scan.
+-g <DefaultGateway>, --gateway < DefaultGateway >: It identifies the IP address of the gateway. If not set, interface with “-I” parameter is chosen.
+-l <LogFile>, --log < LogFile >: It specifies the log file to save the scan results. If not set, logs are saved in “flashlight.log” file in working directory.
+-k <PassiveTimeout>, --passive_timeout <PassiveTimeout>: It specifies the timeout for sniffing in passive mode. Default value is 15 seconds. This parameter is used for passive scan.
+-m, --mim: It is used to perform MITM attack.
+-n, --nmap-optimize: It is used to optimize nmap scan.
+-v, --verbose: It is used to list detailed information.
+-V, --version: It specifies version of the program.
+
+
+
+https://www.youtube.com/watch?v=EUMKffaAxzs&list=PL1BVM6VWlmWZOv9Hv8TV2v-kAlUmvA5g7&index=4 https://www.youtube.com/watch?v=qCgW-SfYl1c&list=PL1BVM6VWlmWZOv9Hv8TV2v-kAlUmvA5g7&index=5 https://www.youtube.com/watch?v=98Soe01swR8&list=PL1BVM6VWlmWZOv9Hv8TV2v-kAlUmvA5g7&index=6 https://www.youtube.com/watch?v=9wft9zuh1f0&list=PL1BVM6VWlmWZOv9Hv8TV2v-kAlUmvA5g7&index=7
+
+
+https://github.com/galkan/flashlight

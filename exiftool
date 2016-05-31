@@ -1,5 +1,6 @@
-exiftool "-comment<=shell.php" malicious.png
+- ./exiftool /files/file.pdf
 
+- exiftool "-comment<=shell.php" malicious.png
 
 :: Testing ::
 

@@ -1,0 +1,41 @@
+
+KeySweeper is a stealthy Arduino-based device, camouflaged as a functioning USB wall charger, that wirelessly and passively sniffs, decrypts, logs and reports back all keystrokes from any Microsoft wireless keyboards (which use a proprietary 2.4GHz RF protocol) in the area.
+
+Keystrokes are sent back to the KeySweeper operator over the Internet via an optional GSM chip, or can be stored on a flash chip and delivered wirelessly when a secondary KeySweeper device comes within wireless range of the target KeySweeper. A web based tool allows live keystroke monitoring.
+
+KeySweeper has the capability to send SMS alerts upon certain keystrokes being typed, e.g. "www.bank.com". If KeySweeper is removed from AC power, it appears to shut off, however it continues to operate covertly using an internal battery that is automatically recharged upon reconnecting to AC power.
+
+KeySweeper extends the work of Travis Goodspeed on the goodfet.nrf project and of Thorsten Schröder and Max Moser of the KeyKeriki v2.0 project.
+
+Arduino / Teensy microcontroller
+
+$3 - 30: An Arduino or Teensy microcontroller can be used. In my build, I use an 3.3v Arduino Pro Mini due to its very thin profile.
+nRF24L01+ 2.4GHz RF Chip
+
+$1: I use a $1 nRF24L01+ RF chip which communicates using GFSK over 2.4GHz. More details are available below, and these chips can be purchased for as low as $1 on eBay. These chips can only communicate using proprietary protocols, and are not meant for sniffing, however we will see below they can be used in clever ways to promiscuously sniff.
+AC USB Charger
+
+$6: I use an inexpensive AC USB charger (rectifier) which converts AC power to 5v DC, and this one I link to happens to have a screw which makes it easy to open (I've destroyed a few others in the process of opening). If using the GSM version of KeySweeper, I actually use two USB chargers -- the internals of a small charger (similar to that of an iPhone charger), and the external case from a larger USB charger.
+SPI Serial Flash Chip
+
+OPTIONAL ($2): An optional SPI Serial Flash chip can be used to store keystrokes on. If you use the FONA GSM board below, this is not necessary as keystrokes can be stored through the internet live, however if you wish to have a lower cost option, you can store keystrokes onto this chip within KeySweeper, and obtain the keystrokes later by getting within 2.4GHz wireless range of the device with a secondary device which will siphon the keystrokes from it.
+
+Most microcontrollers have very limited memory or EEPROM to store data on, thus the advantage of having a flash chip to store these keystrokes on.
+Adafruit FONA
+
+OPTIONAL ($45): Adafruit has created a board called the FONA which allows you to use a 2G SIM card to send/receive SMS's, phone calls, and use the Internet directly from the device.
+
+Using this, no flash chip is necessary as keystrokes are immediately sent to a backend server for proper data collection. Additionally, if specific keywords are ever typed by the target keyboards, an SMS message can be sent to a specified number to alert the operative of the fact.
+SIM Card
+
+OPTIONAL ($3, only if using FONA): The FONA requires a mini-SIM card (not a micro-SIM). I use a T-Mobile prepaid SIM card. I suggest use of T-Mobile as they support 2G, where most other carriers have or are deprecating their 2G network, and the FONA only supports 2G for Internet. Make sure you get the right size of SIM card -- more details on FONA SIM requirements here.
+3.7V Lithium-Ion (LiOn or LiPo) Battery
+
+OPTIONAL ($5 and up, only if using FONA): The FONA provides on-board LiPo/LiOn battery recharging, and while KeySweeper is connected to AC power, the battery will be kept charged, but is required nonetheless. Additionally, KeySweeper continues to operate covertly from battery power when pulled from AC power, and begins to recharge upon reconnecting to AC power.
+
+
+By @SamyKamkar
+
+http://samy.pl/keysweeper/
+https://www.youtube.com/watch?v=WqkmGG0biXc
+http://travisgoodspeed.blogspot.co.uk/2011/02/promiscuity-is-nrf24l01s-duty.html
