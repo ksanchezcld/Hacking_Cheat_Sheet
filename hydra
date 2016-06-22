@@ -17,8 +17,11 @@
 
 :: Samples ::
 
+- hydra 192.168.1.26 ssh2 -s 22 -P pass.txt -L users.txt -e ns -t 10
+
 - hydra -t 1 -l admin -P [path to password.lst] -vV [IPaddress] ftp
 - hydra -l ksanchez -P [path to wordlist] smtp://10.0.0.10
 - hydra -l ksanchez -e nsr [IP] ssh -V -f
 - hydra -l ksanchez -P /root/wordlist/rockyour.lst 10.0.0.10 ssh
 - hydra -L dict.txt -P wordlist.lst [IP] ssh
+

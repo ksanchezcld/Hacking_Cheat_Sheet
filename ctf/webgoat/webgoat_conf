@@ -1,0 +1,74 @@
+
+
+WebGoat is, according to its home on OWASP, “WebGoat is a deliberately insecure J2EE web application maintained by OWASP designed to teach web application security lessons.” (<https://www.owasp.org/index.php/Category:OWASP_WebGoat_Project>) I find it particularly useful for (as it states) learning some good web hacking techniques, but also for demonstrating those techniques to other people who are trying to learn. My concern with WebGoat, however, is that it “is a deliberately insecure J2EE web application” and I’m extremelyhesitant to install it on my computer for fear of it opening up my machine to attack. As I recall, WebGoat even comes with a disclaimer that warns you about doing so. I also hate cluttering up my machine with random software. Solution: put WebGoat in a VM and run it there.
+
+I’m sure there have to be some VM’s out there that already have this in place. I can’t be the first person to have thought of this. (I’m stunned, frankly, that this isn’t the default way to ship WebGoat.) However, I was unable to quickly find a simple one that suited my needs, so I just built one. Here’s my abbreviated instructions that might help you do the same thing quickly.
+
+In my case, I used Virtual Box as the platform for building the VM. This could just as easily have been done with VMWare or any of the other popular VM products.
+
+    Download ISO for Ubuntu server 12.04 LTS (easy to find)
+    Create a new Virtual Machine in Virtual Box with approximately 745MB RAM and 8 GB new disk.
+        Use “Ubuntu-server.iso” file as CD
+        Network: I chose to have a couple network adapters for various uses
+            Network 1: host-only (this will allow you to connect to it from your host machine)
+            Network 2: NAT (this will allow you to enable it so you can fetch software to install)
+    Start the new VM to begin installing Ubuntu server
+        Select eth1 (second network with NAT) as primary.
+        Hostname: webgoat
+        Add a username: ‘Joe User’ with ‘user’ as the name, ‘user’ as password. Since this will be a locally accessible machine that’s already insecure, I could care less about user security.
+        Accept the weak password, do not encrypt home directories.
+        Use entire disk (without LVM) for partition (KISS)
+        Install server software when prompted:
+            OpenSSH server (for SSH login)
+            Do NOT install LAMP or Tomcat (these will likely be the wrong versions.)
+        Boot new machine
+        Login as “user/user”, test ‘sudo ls’
+    Install other packages we need:
+        sudo apt-get install unzip
+    Configure network and connect with SSH and use the host-only and NAT networks properly (https://help.ubuntu.com/10.04/serverguide/network-configuration.html)
+        Enable host-only interface
+            sudo vi /etc/network/interfaces
+            Add text to enable the local host-only interface:
+                auto eth0
+                iface eth0 inet dhcp
+            sudo ifup eth0
+        ‘ifconfig’ should show you a 192.168.56.x address or similar depending on what Virtual Box picked for your local host-only addresses.
+        Start PuTTY or other SSH client from your host, connect to that address as “user/user.” This will prove that you can reach the machine so you can use scp later.
+    (optional) Install Guest additions for VirtualBox. This didn’t actually make anything work better, so I’m questionable about how useful it actually is without running a full X11 interface.
+        sudo mount /dev/cdrom   /media/cdrom
+        sudo ./VBoxLinuxAdditions.run –nox11
+    Download other packages you need for WebGoat. Specifically: Java. You need to do this from a “real” machine with a web browser because Java JDK makes you accept a license.
+        Java SE Development Kit 6 – got to Oracle Java SE downloads page (http://www.oracle.com/technetwork/java/javase/downloads/jdk6u35-downloads-1836443.html) and download the binary for Linux x86 (jdk-6u35-linux-1586.bin)
+        scp jdk-6u35-linux-i586.bin user@192.168.56.102:
+        Install Java:
+        cd /usr/local/java;
+        sudo ~/downloads/jdk-6u35-linux-i586.bin
+        export JAVA_HOME=/usr/local/jdk1.6u35
+    Download web package for WebGoat. Yeah, I know it says “Win32” but it’s actually the complete one that has Tomcat and all the related Java stuff you need in it.
+        wget http://webgoat.googlecode.com/files/WebGoat-5.4-OWASP_Standard_Win32.zip
+    Start with instructions to actually install WebGoat (https://www.owasp.org/index.php/WebGoat_Installation). WebGoat 5.x and newer are all largely self contained, so you should not need Tomcat or anything else.
+        Unzip WebGoat-5.4-OWASP_Standard_Win32.zip into a directory
+        Edit webgoat.sh
+            Add JAVA_HOME=/usr/local/jdk1.6u35 to top
+            Check whether it cares about Java 1.5 vs. 1.6. Edit appropriately. You are using 1.6, so it might be necessary to put that where 1.5 appears.
+        Edit conf/server_8080.xml to allow us to connect from outside the VM.
+            Remove the “address=127.0.0.1” from the Connector entry. This will allow you to connect from the host-only address from your main host machine that has the web browser.
+        sudo ./webgoat.sh start8080 > webgoat.log &
+    That’s it. You’re done. (Use “sudo ./webgoat.sh stop” to kill it later.)
+
+WebGoat should now be fully functional on your new VM.
+
+OPTIONAL: You may want to take a snapshot of your VM so you can easily reset back to this state after you work through any of the lessons. WebGoat has some internal mechanisms for this, but I always like being able to refresh back to clean start copies of things.
+
+You can test it by using your browser to visit server:port/WebGoat/attack (or whatever your guest IP address is) and log in with guest/guest per standard WebGoat instructions. Begin working through the lessons and you’re good to go.
+
+I’ll leave it as a future topic or exercise to the reader to add some of the following features:
+
+    Automatically start WebGoat on boot-up.
+    Automatically display the host IP and attack address of  WebGoat on boot-up.
+    Disable the NAT interface unless needed.
+    Determine whether you need WebScarab or any other tools to actually complete the WebGoat lessons.
+
+Enjoy hacking away at WebGoat.
+
+https://github.com/WebGoat/WebGoat/blob/develop/README.MD

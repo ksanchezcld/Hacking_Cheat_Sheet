@@ -1,0 +1,22 @@
+You have access to all the files in the wghl/challenge2 directory. Try to break the access control mechanism and access a resource that is not in the listed directory. An interesting file to try and obtain is secret.txt
+Requirements
+
+    Browser
+    Access to On-Demand Docker service (see below) 
+
+Goal
+
+    Find the file secret.txt in the web directories.
+
+ 
+Solution
+
+Please add the following information to your solution
+
+    explain the vulnerability
+    show exploit / hacking journal
+    explain mitigation (remedy)
+
+
+
+https://www.hacking-lab.com/cases/8029-owasp-webgoat-challenge-2/8029_webgoat_challenge_2_wargame.html?event=557&case=782

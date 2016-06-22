@@ -40,6 +40,38 @@ Summary Samples
 -> net localgroup Administrators username /ADD
 
 
+---------
+ Samples
+---------
+
+E:\>net user hackedbyksanchez
+net user hackedbyksanchez
+User name                    hackedbyksanchez
+Full Name                    
+Comment                      
+User's comment               
+Country code                 000 (System Default)
+Account active               Yes
+Account expires              Never
+
+Password last set            6/3/2016 7:08:12 PM
+Password expires             7/15/2016 7:08:12 PM
+Password changeable          6/3/2016 7:08:12 PM
+Password required            Yes
+User may change password     Yes
+
+Workstations allowed         All
+Logon script                 
+User profile                 
+Home directory               
+Last logon                   Never
+
+Logon hours allowed          All
+
+Local Group Memberships      *Administrators       *Users                
+Global Group memberships     *None                 
+The command completed successfully.
+
 
 URLs:
 - http://www.windows-commandline.com/add-user-from-command-line/

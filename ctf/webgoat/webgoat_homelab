@@ -1,0 +1,66 @@
+WebGoat uses the Apache Tomcat server but can run in any application server. It is configured to run on localhost although this can be easily changed, see the "Tomcat Configuration" section in the Introduction. 
+
+[The WebGoat Interface]
+
+1. Lesson Categories in WebGoat. Click on a Category to see specific Lessons.
+2. This will show the underlying Java source code.
+3. This will show the complete solution of the selected lesson.
+4. This will show goals and objectives of the lesson.
+5. This will show technical hints to solve the lesson.
+6. This shows the HTTP request data
+7. If you want to restart a lesson you can use this link.
+
+Always start with the lesson plan. Then try to solve the lesson and if necessary, use the hints. The last hint is the solution text if applicable. If you cannot solve the lesson using the hints, you may view the solution for complete details.
+
+To read and edit parameters and cookies you need a local proxy like OWASP ZAP to intercept the HTTP request. 
+
+Usually WebGoat only requires logging in with the user:guest and password:guest. But maybe in laboratory you have made a setup with one server and a lot of clients. In this case you might want to have a user for every client, you will have to alter /WEB-INF/spring-security.xml to add additional users. We recommend not to use real passwords as the passwords are stored in plain text in this file!
+
+[Configuring new WebGoat users]
+
+WebGoat uses spring-security.xml to configure users.
+
+<!-- Authentication Manager -->
+<authentication-manager alias="authenticationManager">
+  <authentication-provider>
+    <user-service>
+      <user name="guest" password="guest" authorities="ROLE_WEBGOAT_USER" />
+      <user name="webgoat" password="webgoat" authorities="ROLE_WEBGOAT_ADMIN" />
+      <user name="server" password="server" authorities="ROLE_SERVER_ADMIN" />
+    </user-service>
+  </authentication-provider>
+</authentication-manager>
+
+
+
+[LAB]
+
+http://10.0.0.23:8080/WebGoat/login.mvc
+
+Account	User	Password
+
+Webgoat User	guest	guest
+Webgoat Admin	webgoat	webgoat
+
+
+Cross Site Scripting Module (XSS)
+---------------------------------
+
+- xss reflected attack
+
+It is always a good practice to scrub all input, especially those inputs that will later be used as parameters to OS commands, scripts, and database queries. It is particularly important for content that will be permanently stored somewhere in the application. Users should not be able to create message content that could cause another user to load an undesireable page or undesireable content when the user's message is retrieved. 
+
+
+- <script>alert("XSS found by Ksanchez");</script> 
+
+
+
+
+
+[The CHALLENGE]
+
+ Your mission is to break the authentication scheme, steal all the credit cards from the database, and then deface the website. You will have to use many of the techniques you have learned in the other lessons. The main webpage to deface for this site is 'webgoat_challenge_webgoat.jsp'
+
+
+
+https://youtu.be/5L6UYZgmcjk

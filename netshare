@@ -1,0 +1,55 @@
+ ShareName   : Specifies the network name of the shared resource. Type net share with a ShareName to display information about that share only.
+
+Drive : Path   : Specifies the absolute path of the directory to be shared.
+
+/users: number   : Sets the maximum number of users who can simultaneously access the shared resource.
+
+/unlimited   : Specifies an unlimited number of users who can simultaneously access the shared resource.
+
+/remark: " text "   : Adds a descriptive comment about the resource. Enclose the text in quotation marks.
+
+/cache:automatic   : Enables offline client caching with automatic reintegration.
+
+/cache:manual   : Enables offline client caching with manual reintegration.
+
+/cache:no   : Advises the client that offline caching is inappropriate.
+
+/delete   : Stops sharing the shared resource.
+
+net help   command   : Displays Help for the specified net command. 
+
+
+---------
+ SAMPLES
+---------
+
+- net share DataShare=c:\Data /remark:"For department 123."
+- net share DataShare /delete
+- net share list="c:\art lst" 
+
+--------------
+ More Samples
+--------------
+
+E:\>net share DataShared2=c:\ /remark:"Hacked By Ksanchez"
+net share DataShared2=c:\ /remark:"Hacked By Ksanchez"
+DataShared2 was shared successfully.
+
+
+E:\>net share
+net share
+
+Share name   Resource                        Remark
+
+-------------------------------------------------------------------------------
+C$           C:\                             Default share                     
+IPC$                                         Remote IPC                        
+ADMIN$       C:\Windows                      Remote Admin                      
+Datashare    c:\                             
+DataShared2  c:\                             Hacked By Ksanchez                
+The command completed successfully.
+
+
+https://technet.microsoft.com/en-us/library/bb490712.aspx
+
+

@@ -1,0 +1,2 @@
+
+mysqldump -u admin -p'Cu$t0m3rT!0V!c3Syriana'  psa > db-psa-backup$NOW.sql;

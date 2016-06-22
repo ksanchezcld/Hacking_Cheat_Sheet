@@ -1,6 +1,30 @@
+Some of the vulnerabilities included in bWAPP:
+
+- SQL, HTML, iFrame, SSI, OS Command, XML, XPath, LDAP and SMTP injections
+- Blind SQL and Blind OS Command injection
+- Bash Shellshock (CGI) and Heartbleed vulnerability (OpenSSL)
+- Cross-Site Scripting (XSS) and Cross-Site Tracing (XST)
+- Cross-Site Request Forgery (CSRF)
+- AJAX and Web Services vulnerabilities (JSON/XML/SOAP/WSDL)
+- Malicious, unrestricted file uploads and backdoor files
+- Authentication, authorization and session management issues
+- Arbitrary file access and directory traversals
+- Local and remote file inclusions (LFI/RFI)
+- Configuration issues: Man-in-the-Middle, cross-domain policy files, information disclosures,...
+- HTTP parameter pollution and HTTP response splitting
+- Denial-of-Service (DoS) attacks: Slow HTTP and XML Entity Expansion
+- Insecure distcc, FTP, NTP, Samba, SNMP, VNC, WebDAV configurations
+- HTML5 ClickJacking, Cross-Origin Resource Sharing (CORS) and web storage issues
+- Unvalidated redirects and forwards, and cookie poisoning
+- Cookie poisoning and insecure cryptographic storage
+- Server Side Request Forgery (SSRF)
+- XML External Entity attacks (XXE)
+
+
 =======
 SQLi 1
-=======------------------
+=======
+-------------------------
 
 SQL INJECTION (SEARCH)
 -------------------------

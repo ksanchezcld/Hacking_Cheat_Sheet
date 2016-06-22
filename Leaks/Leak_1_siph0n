@@ -1,0 +1,444 @@
+http://siph0n.in/exploits.php?id=4631
+
+Original: http://psbdmp.com/vWFfYN82
+
+Informations from Syria Government server
+
+Syria Government server hacked many .gov.sy website 10GB compressed data leaked!
+
+https://mega.nz/#!KIFk3bgD!NchARmD94EllQRGa38PxfY97ZJSPYkG_1aBmSamJuXw
+
+#سوريا #أسد‎
+
+#Syria #Assad #SyrianRevolution
+
+
+
+Linux .gov.sy 2.6.18-274.12.1.el5PAE #1 SMP Tue Nov 29 14:16:58 EST 2011 i686 i686 i386 GNU/Linux
+
+
+
+root:x:0:0:root:/root:/bin/bash
+
+bin:x:1:1:bin:/bin:/sbin/nologin
+
+daemon:x:2:2:daemon:/sbin:/sbin/nologin
+
+adm:x:3:4:adm:/var/adm:/sbin/nologin
+
+lp:x:4:7:lp:/var/spool/lpd:/sbin/nologin
+
+sync:x:5:0:sync:/sbin:/bin/sync
+
+shutdown:x:6:0:shutdown:/sbin:/sbin/shutdown
+
+halt:x:7:0:halt:/sbin:/sbin/halt
+
+mail:x:8:12:mail:/var/spool/mail:/sbin/nologin
+
+news:x:9:13:news:/etc/news:
+
+uucp:x:10:14:uucp:/var/spool/uucp:/sbin/nologin
+
+operator:x:11:0:operator:/root:/sbin/nologin
+
+games:x:12:100:games:/usr/games:/sbin/nologin
+
+gopher:x:13:30:gopher:/var/gopher:/sbin/nologin
+
+ftp:x:14:50:FTP User:/var/ftp:/sbin/nologin
+
+nobody:x:99:99:Nobody:/:/sbin/nologin
+
+nscd:x:28:28:NSCD Daemon:/:/sbin/nologin
+
+vcsa:x:69:69:virtual console memory owner:/dev:/sbin/nologin
+
+pcap:x:77:77::/var/arpwatch:/sbin/nologin
+
+dbus:x:81:81:System message bus:/:/sbin/nologin
+
+rpc:x:32:32:Portmapper RPC user:/:/sbin/nologin
+
+mailnull:x:47:47::/var/spool/mqueue:/sbin/nologin
+
+smmsp:x:51:51::/var/spool/mqueue:/sbin/nologin
+
+sshd:x:74:74:Privilege-separated SSH:/var/empty/sshd:/sbin/nologin
+
+rpcuser:x:29:29:RPC Service User:/var/lib/nfs:/sbin/nologin
+
+nfsnobody:x:65534:65534:Anonymous NFS User:/var/lib/nfs:/sbin/nologin
+
+haldaemon:x:68:68:HAL daemon:/:/sbin/nologin
+
+avahi-autoipd:x:100:102:avahi-autoipd:/var/lib/avahi-autoipd:/sbin/nologin
+
+distcache:x:94:94:Distcache:/:/sbin/nologin
+
+ntp:x:38:38::/etc/ntp:/sbin/nologin
+
+avahi:x:70:70:Avahi daemon:/:/sbin/nologin
+
+apache:x:48:48:Apache:/var/www:/sbin/nologin
+
+webalizer:x:67:67:Webalizer:/var/www/usage:/sbin/nologin
+
+named:x:25:25:Named:/var/named:/sbin/nologin
+
+squid:x:23:23::/var/spool/squid:/sbin/nologin
+
+xfs:x:43:43:X Font Server:/etc/X11/fs:/sbin/nologin
+
+gdm:x:42:42::/var/gdm:/sbin/nologin
+
+dovecot:x:97:97:dovecot:/usr/libexec/dovecot:/sbin/nologin
+
+sabayon:x:86:86:Sabayon user:/home/sabayon:/sbin/nologin
+
+sw-cp-server:x:501:501::/:/bin/true
+
+mysql:x:27:27:MySQL Server:/var/lib/mysql:/bin/bash
+
+psaadm:x:502:502:Plesk user:/usr/local/psa/admin:/sbin/nologin
+
+popuser:x:110:31:POP3 service user:/var/qmail/popuser:/sbin/nologin
+
+mhandlers-user:x:30:31:mail handlers user:/:/sbin/nologin
+
+postfix:x:89:89::/var/spool/postfix:/sbin/nologin
+
+psaftp:x:503:504:anonftp psa user:/:/sbin/nologin
+
+postgres:x:26:26:PostgreSQL Server:/var/lib/pgsql:/bin/bash
+
+mailman:x:41:41:GNU Mailing List Manager:/usr/lib/mailman:/sbin/nologin
+
+drweb:x:101:507:DrWeb system account:/var/drweb:/bin/false
+
+kluser:x:504:508:Kaspersky AntiVirus scanner user:/var/db/kav:/sbin/nologin
+
+jpic-ftp:x:10005:506::/var/www/vhosts/jpic.gov.sy:/bin/false
+
+oti:x:10007:506::/home/www/vhosts/oti.sy:/bin/false
+
+ftptaminmash:x:10008:506::/home/www/vhosts/taminmash.sy:/bin/false
+
+ftpnerc:x:10011:506::/home/www/vhosts/nerc.gov.sy:/bin/false
+
+ftpscit:x:10012:506::/home/www/vhosts/scit.sy:/bin/false
+
+ftphosobs:x:10013:506::/var/www/vhosts/hos-obs-damas.edu.sy:/bin/false
+
+ftpsyrianpost:x:10010:506::/home/www/vhosts/syrianpost.gov.sy:/bin/false
+
+hm:x:10002:506::/var/www/vhosts/nans.gov.sy:/bin/false
+
+ftpdamasdh:x:10003:506::/var/www/vhosts/damasdh.sy:/bin/false
+
+ftpsytra:x:10009:506::/home/www/vhosts/sytra.gov.sy:/bin/false
+
+ftptartousport:x:10015:506::/home/www/vhosts/tartousport.gov.sy:/bin/false
+
+ftpsondus:x:10016:506::/var/www/vhosts/sondus.com.sy:/bin/false
+
+ftpoumc:x:10014:506::/var/www/vhosts/oumc.gov.sy:/bin/false
+
+ftpjablehsy:x:10017:506::/var/www/vhosts/jablehsy.com.sy:/bin/false
+
+ftpnmcadmin:x:10021:506::/var/www/vhosts/nmc.sy:/bin/false
+
+wafaa:x:10022:506::/var/www/vhosts/tartousport.gov.sy/web_users/wafaa:/bin/false
+
+ftpedpa:x:10023:506::/home/www/vhosts/edpa.gov.sy:/bin/false
+
+asmara:x:10024:0::/home/asmara:/bin/bash
+
+dcuser:x:10025:10025::/home/dcuser:/bin/bash
+
+ftpsisc:x:10026:506::/home/www/vhosts/sisc.sy:/bin/false
+
+ftpbrc:x:10030:506::/home/www/vhosts/brc.sy:/bin/false
+
+ftphec:x:10031:506::/var/www/vhosts/hec.gov.sy:/bin/false
+
+admin1:x:10032:506::/home/www/vhosts/brc.sy/web_users/admin1:/bin/false
+
+ftpswo:x:10034:506::/home/www/vhosts/swo.gov.sy:/bin/false
+
+ftptishreen:x:10019:506::/var/www/vhosts/tishreen-uhl.edu.sy:/bin/false
+
+ftpkenan:x:10037:506::/var/www/vhosts/arabunionre.sy:/bin/false
+
+umonitor:x:10040:10026::/var/log:/bin/bash
+
+ftpscot:x:10004:506::/home/www/vhosts/scot.gov.sy:/bin/false
+
+ftphospital:x:10028:506::/home/www/vhosts/children-hospital.edu.sy:/bin/false
+
+ftpauhd:x:10041:506::/home/www/vhosts/auhd.edu.sy:/bin/false
+
+mhd:x:10042:506::/var/www/vhosts/nans1.nans.gov.sy:/bin/false
+
+safwan:x:10044:506::/var/www/vhosts/tartousport.gov.sy/web_users/safwan:/bin/false
+
+ftpzhospital:x:10045:506::/home/www/vhosts/alzahrawi.edu.sy:/bin/false
+
+montajab:x:10047:10047::/home/montajab:/bin/bash
+
+ftpmashroue:x:10048:506::/var/www/vhosts/Mashroue.sy:/bin/false
+
+ftpagriidlb:x:10049:506::/home/www/vhosts/agri-idlb.sy:/bin/false
+
+ftpichoms:x:10020:506::/home/www/vhosts/ic-homs.sy:/bin/false
+
+ftpalbasselfair:x:10050:506::/home/www/vhosts/albasselfair.gov.sy:/bin/false
+
+ftpspo:x:10051:506::/home/www/vhosts/spo.gov.sy:/bin/false
+
+ftpdcip:x:10052:506::/home/www/vhosts/dcip.gov.sy:/bin/false
+
+ahred1:x:10053:10053::/home/ahred1:/bin/bash
+
+raram2:x:10054:10054::/home/raram2:/bin/bash
+
+hmez3:x:10055:10055::/home/hmez3:/bin/bash
+
+ftpdeireezzor:x:10059:506::/var/www/vhosts/deirezzor.gov.sy:/bin/false
+
+ftpmins:x:10056:506::/var/www/vhosts/pministry.gov.sy:/bin/false
+
+mamsoft:x:10062:506::/home/www/vhosts/brc.sy/web_users/mamsoft:/bin/false
+
+ftpmopw:x:10064:506::/var/www/vhosts/mopw.gov.sy:/bin/false
+
+ftpcompetition:x:10063:506::/home/www/vhosts/competition.gov.sy:/bin/false
+
+ftpsyrsilo:x:10065:506::/home/www/vhosts/syrsilo.com.sy:/bin/false
+
+ftpgcb:x:10066:506::/home/www/vhosts/gcb.gov.sy:/bin/false
+
+e-government:x:10067:506::/var/www/vhosts/egov.sy:/bin/false
+
+ftptiai:x:10068:506::/var/www/vhosts/tiai-homs.sy:/bin/false
+
+ftpmitcp:x:10069:506::/home/www/vhosts/mitcp.gov.sy:/bin/false
+
+ftpmpr:x:10039:506::/home/www/vhosts/mopmr.gov.sy:/bin/false
+
+ftpomayad:x:10071:506::/home/www/vhosts/omayad.sy:/bin/false
+
+ftpdzwssa:x:10072:506::/var/www/vhosts/dz-water.gov.sy:/bin/false
+
+ftphidsr:x:10038:506::/home/www/vhosts/hidsr.edu.sy:/bin/false
+
+mazen:x:10073:10073::/home/mazen:/bin/bash
+
+ftpalepelec:x:10058:506::/home/www/vhosts/alepelec.sy:/bin/false
+
+ftpalfalahen:x:10001:506::/home/www/vhosts/alfalahen.org.sy:/bin/false
+
+ftpncbt:x:10074:506::/home/www/vhosts/ncbt.gov.sy:/bin/false
+
+ftpgecisy:x:10076:506::/home/www/vhosts/geci.gov.sy:/bin/false
+
+a.alzuabi:x:10077:506::/var/www/vhosts/syrianpost.gov.sy/web_users/a.alzuabi:/bin/false
+
+ftpsasmo:x:10075:506::/home/www/vhosts/sasmo.org.sy:/bin/false
+
+ftpgppc:x:10078:506::/home/www/vhosts/gppc-aleppo.sy:/bin/false
+
+ftpmouwasat:x:10079:506::/home/www/vhosts/almouwasat.sy:/bin/false
+
+ftpsyrianbrd:x:10080:506::/home/www/vhosts/syrianboard.sy:/bin/false
+
+ftpgcbc:x:10082:506::/home/www/vhosts/gcbc.sy:/bin/false
+
+alepchamftp:x:10083:506::/home/www/vhosts/aleppochamber.sy:/bin/false
+
+morhaf:x:10084:10084::/home/morhaf:/bin/bash
+
+birrsocftp:x:10085:506::/home/www/vhosts/birrsociety.org.sy:/bin/false
+
+admine:x:10088:506::/home/www/vhosts/hidsr.edu.sy/web_users/admine:/bin/false
+
+arabictiftp:x:10089:506::/home/www/vhosts/arabic-ti.sy:/bin/false
+
+maher:x:10091:10091::/home/maher:/bin/bash
+
+ftbaathpartyp:x:10060:506::/home/www/vhosts/baathparty.sy:/bin/false
+
+ftphama:x:10043:506::/home/www/vhosts/hama.org.sy:/bin/false
+
+aryanftp:x:10061:506::/home/www/vhosts/aryan.sy:/bin/false
+
+ftptartous:x:10006:506::/home/www/vhosts/tartouscement.sy:/bin/false
+
+nerc:x:10035:506::/home/www/vhosts/nerc.gov.sy/web_users/nerc:/bin/false
+
+ftpauh:x:10090:506::/home/www/vhosts/auh.edu.sy:/bin/false
+
+industftp:x:10086:506::/home/www/vhosts/industrialbank.gov.sy:/bin/false
+
+ftpbaniash:x:10092:506::/home/www/vhosts/baniashosp.sy:/bin/false
+
+basem:x:10093:506::/home/www/vhosts/industrialbank.gov.sy/web_users/basem:/bin/false
+
+ftpsep:x:10094:506::/home/www/vhosts/sep.com.sy:/bin/false
+
+ftpmofsyr:x:10033:506::/home/www/vhosts/mofsyr.gov.sy:/bin/false
+
+ftphamagsc:x:10087:506::/home/www/vhosts/hamagsc.gov.sy:/bin/false
+
+aothm4:x:10095:10095::/home/aothm4:/bin/bash
+
+ftpinvest:x:10096:506::/home/www/vhosts/sia.gov.sy:/bin/false
+
+thamecoftp:x:10057:506::/home/www/vhosts/thameco.com.sy:/bin/false
+
+ayham:x:10097:506::/home/www/vhosts/sondus.com.sy/web_users/ayham:/bin/false
+
+icit:x:10098:506::/home/www/vhosts/icit.sy:/bin/false
+
+ftpsweida:x:10100:506::/home/www/vhosts/sweida-edu.sy:/bin/false
+
+lubna:x:10101:10101::/home/lubna:/bin/bash
+
+peegftp:x:10029:506::/home/www/vhosts/peeg.gov.sy:/bin/false
+
+ftpscitco:x:10102:506::/home/www/vhosts/scitco.sy:/bin/false
+
+ftpitradecp:x:10018:506::/home/www/vhosts/itradecp-sweida.gov.sy:/bin/false
+
+ftpmoaar:x:10027:506::/home/www/vhosts/moaar.gov.sy:/bin/false
+
+ftplatwater:x:10036:506::/home/www/vhosts/latwater.sy:/bin/false
+
+motftp:x:10070:506::/home/www/vhosts/mot.gov.sy:/bin/false
+
+ftphamaelc:x:10099:506::/home/www/vhosts/hamaelc.gov.sy:/bin/false
+
+ftpsyriatel:x:10046:506::/home/www/vhosts/rand.sy:/bin/false
+
+hanan:x:10081:506::/home/www/vhosts/hanan.sy:/bin/false
+
+
+
+USER='asmara'             #This is the FTP user that has access to the server.
+
+PASS2='$100fslhggi'
+
+
+
+#==============================================================
+
+#===========Backup the datbase psa database of plesk===========
+
+#==============================================================
+
+#Database information: dbuser: admin dbname:psa db password:web@plsk_w2
+
+cd $Backuppath
+
+mysqldump -u admin -p'Cu$t0m3rT!0V!c3Syriana'  psa > db-psa-backup$NOW.sql;
+
+
+
+netstat -nl
+
+Active Internet connections (only servers)
+
+Proto Recv-Q Send-Q Local Address               Foreign Address             State      
+
+tcp        0      0 0.0.0.0:993                 0.0.0.0:*                   LISTEN      
+
+tcp        0      0 0.0.0.0:995                 0.0.0.0:*                   LISTEN      
+
+tcp        0      0 127.0.0.1:199               0.0.0.0:*                   LISTEN      
+
+tcp        0      0 127.0.0.1:10025             0.0.0.0:*                   LISTEN      
+
+tcp        0      0 0.0.0.0:3306                0.0.0.0:*                   LISTEN      
+
+tcp        0      0 127.0.0.1:10026             0.0.0.0:*                   LISTEN      
+
+tcp        0      0 0.0.0.0:106                 0.0.0.0:*                   LISTEN      
+
+tcp        0      0 127.0.0.1:10027             0.0.0.0:*                   LISTEN      
+
+tcp        0      0 0.0.0.0:110                 0.0.0.0:*                   LISTEN      
+
+tcp        0      0 0.0.0.0:143                 0.0.0.0:*                   LISTEN      
+
+tcp        0      0 0.0.0.0:111                 0.0.0.0:*                   LISTEN      
+
+tcp        0      0 0.0.0.0:80                  0.0.0.0:*                   LISTEN      
+
+tcp        0      0 0.0.0.0:8880                0.0.0.0:*                   LISTEN      
+
+tcp        0      0 0.0.0.0:465                 0.0.0.0:*                   LISTEN      
+
+tcp        0      0 127.0.0.1:10001             0.0.0.0:*                   LISTEN      
+
+tcp        0      0 0.0.0.0:884                 0.0.0.0:*                   LISTEN      
+
+tcp        0      0 172.17.10.102:53            0.0.0.0:*                   LISTEN      
+
+tcp        0      0 127.0.0.1:53                0.0.0.0:*                   LISTEN      
+
+tcp        0      0 0.0.0.0:21                  0.0.0.0:*                   LISTEN      
+
+tcp        0      0 0.0.0.0:22                  0.0.0.0:*                   LISTEN      
+
+tcp        0      0 127.0.0.1:631               0.0.0.0:*                   LISTEN      
+
+tcp        0      0 127.0.0.1:3000              0.0.0.0:*                   LISTEN      
+
+tcp        0      0 127.0.0.1:5432              0.0.0.0:*                   LISTEN      
+
+tcp        0      0 127.0.0.1:953               0.0.0.0:*                   LISTEN      
+
+tcp        0      0 0.0.0.0:25                  0.0.0.0:*                   LISTEN      
+
+tcp        0      0 0.0.0.0:443                 0.0.0.0:*                   LISTEN      
+
+tcp        0      0 0.0.0.0:8443                0.0.0.0:*                   LISTEN      
+
+udp        0      0 0.0.0.0:161                 0.0.0.0:*                               
+
+udp        0      0 0.0.0.0:60203               0.0.0.0:*                               
+
+udp        0      0 172.17.10.102:53            0.0.0.0:*                               
+
+udp        0      0 127.0.0.1:53                0.0.0.0:*                               
+
+udp        0      0 0.0.0.0:5353                0.0.0.0:*                               
+
+udp        0      0 0.0.0.0:878                 0.0.0.0:*                               
+
+udp        0      0 0.0.0.0:111                 0.0.0.0:*                               
+
+udp        0      0 0.0.0.0:881                 0.0.0.0:*                               
+
+udp        0      0 0.0.0.0:631                 0.0.0.0:*                               
+
+raw        0      0 0.0.0.0:1                   0.0.0.0:*                   7
+
+
+
+FTPSERVER='172.17.10.10'  #This is the FTP server IP address_ NAS STORAGE_.
+
+USER='asmara'             #This is the FTP user that has access to the server.
+
+PASS='fslhggi$100' #This is the FTP user's password to access to the server.
+
+PASS2='$100fslhggi'
+
+PATHFILE="/var/www/vhosts" #This is path of the floder or the files that will be archived.
+
+Backuppath="/backup/backuphosting"
+
+NOW=$(date +"%m-%d-%Y")
+
+# siph0n [2016-04-08]
+
