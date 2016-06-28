@@ -1,0 +1,80 @@
+List of ICMP types
+
+The following list is taken from http://www.iana.org/, ICMP Parameters.
+
+Type	Name	Reference
+0	Echo Reply	[RFC792]
+1	Unassigned	[JBP]
+2	Unassigned	[JBP]
+3	Destination Unreachable	[RFC792]
+4	Source Quench	[RFC792]
+5	Redirect	[RFC792]
+6	Alternate Host Address	[JBP]
+7	Unassigned	[JBP]
+8	Echo	[RFC792]
+9	Router Advertisement	[RFC1256]
+10	Router Solicitation	[RFC1256]
+11	Time Exceeded	[RFC792]
+12	Parameter Problem	[RFC792]
+13	Timestamp	[RFC792]
+14	Timestamp Reply	[RFC792]
+15	Information Request	[RFC792]
+16	Information Reply	[RFC792]
+17	Address Mask Request	[RFC950]
+18	Address Mask Reply	[RFC950]
+19	Reserved (for Security)	[Solo]
+20-29	Reserved (for Robustness Experiment)	[ZSu]
+
+
+
+ICMP codes
+
+Some ICMP types have codes attached.
+
+ICMP type	Name	Code	Description
+0	Echo Reply	0	No Code
+1	Unassigned	 	 
+2	Unassigned	 	 
+3	Destination Unreachable	0	Net Unreachable
+ 	 	1	Host Unreachable
+ 	 	2	Protocol Unreachable
+ 	 	3	Port Unreachable
+ 	 	4	Fragmentation Needed and Don't Fragment was Set
+ 	 	5	Source Route Failed
+ 	 	6	Destination Network Unknown
+ 	 	7	Destination Host Unknown
+ 	 	8	Source Host Isolated
+ 	 	9	Communication with Destination Network is Administratively Prohibited
+ 	 	10	Communication with Destination Host is Administratively Prohibited
+ 	 	11	Destination Network Unreachable for Type of Service
+ 	 	12	Destination Host Unreachable for Type of Service
+4	Source Quench	0	No Code
+5	Redirect	0	Redirect Datagram for the Network (or subnet)
+ 	 	1	Redirect Datagram for the Host
+ 	 	2	Redirect Datagram for the Type of Service and Network
+ 	 	3	Redirect Datagram for the Type of Service and Host
+6	Alternate Host Address	0	Alternate Address for Host
+7	Unassigned	 	 
+8	Echo	0	No Code
+9	Router Advertisement	0	No Code
+10	Router Selection	0	No Code
+11	Time Exceeded	0	Time to Live exceeded in Transit
+ 	 	1	Fragment Reassembly Time Exceeded
+12	Parameter Problem	0	Pointer indicates the error
+ 	 	1	Missing a Required Option
+ 	 	2	Bad Length
+13	Timestamp	0	No Code
+14	Timestamp Reply	0	No Code
+15	Information Request	0	No Code
+16	Information Reply	0	No Code
+17	Address Mask Request	0	No Code
+18	Address Mask Reply	0	No Code
+19	Reserved (for Security)	 	 
+20-29	Reserved (for Robustness Experiment)	 	 
+30	Traceroute	 	 
+31	Datagram Conversion Error	 	 
+32	Mobile Host Redirect	 	 
+33	IPv6 Where-Are-You	 	 
+34	IPv6 I-Am-Here	 	 
+35	Mobile Registration Request	 	 
+36	Mobile Registration Reply

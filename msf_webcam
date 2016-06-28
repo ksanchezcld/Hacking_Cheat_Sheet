@@ -1,0 +1,15 @@
+This module will allow the user to detect installed webcams (with the LIST action), take a snapshot (with the SNAPSHOT action), or record a webcam and mic (with the RECORD action)
+
+:: post/osx/manage/webcam ::
+   
+
+msf > use post/osx/manage/webcam
+msf post(webcam) > sessions
+            ...sessions...
+msf post(webcam) > set SESSION <session-id>
+msf post(webcam) > show options
+            ...show and set options...
+msf post(webcam) > run
+
+
+ https://www.rapid7.com/db/modules/post/osx/manage/webcam

