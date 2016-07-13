@@ -35,7 +35,7 @@ SAMKey : 1287c538b54d85967dfaf4035f48c742
 RID  : 000001f4 (500)
 User : Administrator
 LM   : 
-NTLM : 31d6cfe0d16ae931b73c59d7e0c089c0
+NTLM : 31d6cfe0d16ae931b73c00d7e0c000c0
 
 RID  : 000001f5 (501)
 User : Guest
@@ -45,7 +45,7 @@ NTLM :
 RID  : 000003e8 (1000)
 User : w7
 LM   : 
-NTLM : 819bf5b3240a3a66ee5cb82917ff1dd2
+NTLM : 81d6cfe0d16ae931b73c00d7e0c000c0
 
 RID  : 000003e9 (1001)
 User : ksanchez
