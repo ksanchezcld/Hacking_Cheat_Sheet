@@ -1,0 +1,9 @@
+- netdom resetpwd /s:server /ud:domain\User /pd:*
+- Netdom resetpwd
+
+
+A description of this command is:
+
+/s:server is the name of the domain controller to use for setting the machine account password. This is the server where the KDC is running.
+/ud:domain\User is the user account that makes the connection with the domain you specified in the /s parameter. This must be in domain\User format. If this parameter is omitted, the current user account is used.
+/pd:* specifies the password of the user account that is specified in the /ud parameter. Use an asterisk (*) to be prompted for the password.

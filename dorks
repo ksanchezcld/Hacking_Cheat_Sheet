@@ -1,3 +1,10 @@
+- filetype:php inurl:phpinfo :: Search for a file extention php into url phpinfo.php
+- filetype:axd
+- filetype:aspx inurl:article.aspx
+- filetype:php
+- inurl:.php?id=
+- inurl:hello.txt filetype:txt
+
 - site:madrid.org ext:pdf intitle:"C Users"
 - site:com.do ext:pdf intitle:"C Users"
 - site:gov.do ext:pdf intitle:"C Users"

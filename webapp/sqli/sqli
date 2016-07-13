@@ -1,4 +1,4 @@
-uKennedy Sanchez <ksanchez@cldeveloper.com>
+Kennedy Sanchez <ksanchez@cldeveloper.com>
 --------------------------------------------------------------------------------
 This article is part of the new OWASP Testing Guide v4.
 
@@ -42,17 +42,6 @@ The very first test usually consists of adding a single quote (') or a semicolon
 SINTAX 
  - select title, text from news where id=$id
  - select title, text from news where id=10 or 1=1
-
-====
-URLS
-====
-- https://github.com/fuzzdb-project/fuzzdb/blob/master/attack/sql-injection/detect/MySQL.txt
-
-=============
-Video Samples
-==========1'or
-
- - https://www.youtube.com/watch?v=4LM_EIehbsU
 
 
 ====================================
@@ -188,3 +177,9 @@ SELECT field1, field2, field3 FROM Users WHERE Id='$Id'
 
 
 [Error based Exploitation technique]
+
+
+
+Video Samples
+
+ - https://www.youtube.com/watch?v=4LM_EIehbsU

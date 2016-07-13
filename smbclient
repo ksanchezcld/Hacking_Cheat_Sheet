@@ -1,7 +1,76 @@
-# smbclient -L 192.168.75.14 -N
+- smbclient -L 1.2.3.4
+- smbclient -L 1.2.3.4 -N
+- smbclient \\\\3.4.5.6\\www
+- smbclient \\\\1.2.3.4\\MEMORY_CARD
+- smbget -R smb://3.4.5.6/www/oops
+- ./SambaVuln10 -v -d 0 -S 1.2.3.4
+- ./SambaVuln10 -b 0 -v 1.2.3.4
+- perl enum4linux.pl -S 3.4.5.6
 
 
+[Sample #1]
 
-./SambaVuln10 -v -d 0 -S 192.168.75
+Enter root's password: 
+Anonymous login successful
+Domain=[MSHOME] OS=[VxWorks] Server=[NQ 4.32]
 
-./SambaVuln10 -b 0 -v 192.168.75.14
+        Sharename       Type      Comment
+        ---------       ----      -------
+        IPC$            IPC       
+        MEMORY_CARD     Disk      FLASH MEMORY PHOTO
+Anonymous login successful
+Domain=[MSHOME] OS=[VxWorks] Server=[NQ 4.32]
+
+        Server               Comment
+        ---------            -------
+
+        Workgroup            Master
+
+        ---------            -------
+
+
+[Sample #2]
+
+Enter root's password: 
+Anonymous login successful
+Domain=[DEMO] OS=[Unix] Server=[Samba 3.6.23-20.el6]
+smb: \> l
+  .                                   D        0  Wed Nov  4 02:42:15 2015
+  ..                                  D        0  Mon Oct 12 20:38:40 2015
+  input.csv                           A     2024  Mon Nov  2 22:13:18 2015
+
+59400 blocks of size 2097152. 19612 blocks available
+
+
+[Sample #3]
+
+Starting enum4linux v0.8.9 ( http://labs.portcullis.co.uk/application/enum4linux/ ) on Tue Dec 15 22:34:52 2015
+
+ ==========================
+|    Target Information    |
+ ==========================
+Target ........... 3.4.5.6   
+RID Range ........ 500-550,1000-1050
+Username ......... ''
+Password ......... ''
+Known Usernames .. administrator, guest, krbtgt, domain admins, root, bin, none
+
+ ========================================== 
+|    Share Enumeration on 3.4.5.6    |
+ ========================================== 
+Domain=[MYGROUP] OS=[Unix] Server=[Samba 4.1.12]
+Domain=[MYGROUP] OS=[Unix] Server=[Samba 4.1.12]
+
+        Sharename       Type      Comment
+        ---------       ----      -------
+        www             Disk      Public Stuff
+        IPC$            IPC       IPC Service (Samba Server Version 4.1.12)
+
+        Server               Comment
+        ---------            -------
+
+        Workgroup            Master
+        ---------            -------
+
+
+http://carnal0wnage.attackresearch.com/2015/12/more-with-smbclient-smbget-enum4linux.html

