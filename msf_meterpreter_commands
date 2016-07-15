@@ -23,6 +23,6 @@
 
 - webcam_list
 - webcam_snap -h
--  webcam_snap -i 1 -v false
+- webcam_snap -i 1 -v false
 
 https://www.offensive-security.com/metasploit-unleashed/meterpreter-basics/

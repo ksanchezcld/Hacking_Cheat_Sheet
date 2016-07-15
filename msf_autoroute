@@ -1,0 +1,22 @@
+-  run autoroute -h
+- run autoroute -s 10.1.13.0/24
+-  run autoroute -p
+
+
+- run autoroute -s 192.168.55.11/24
+[*] Adding a route to 192.168.55.11/255.255.255.0...
+[+] Added route to 192.168.55.11/255.255.255.0 via 192.168.50.72
+[*] Use the -p option to list all active routes
+
+meterpreter > run autoroute -p
+
+Active Routing Table
+====================
+
+   Subnet             Netmask            Gateway
+   ------             -------            -------
+   192.168.55.11      255.255.255.0      Session 4
+
+
+
+  https://www.offensive-security.com/metasploit-unleashed/pivoting/

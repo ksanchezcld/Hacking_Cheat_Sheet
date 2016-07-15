@@ -1,0 +1,30 @@
+– SIPVicious v0.2.3 – VoIP/SIP Auditing Toolkit.
+
+It currently consists of five tools:
+
+svmap – this is a sip scanner. Lists SIP devices found on an IP range
+svwar – identifies active extensions on a PBX
+svcrack – an online password cracker for SIP PBX
+svreport – manages sessions and exports reports to various formats
+svcrash – attempts to stop unauthorized svwar and svcrack scans
+
+- tcpdump -s0 -w sip.pcap tcp or udp
+- tshark -r sip.pcap -Tfields -e sip.auth | grep username
+- smap 192.168.1.130/24
+- svwar.py -e100-400 192.168.1.104
+- svwar.py -e100-400 192.168.1.104 -m INVITE -v
+- enumiax -v -m3 -M3 192.168.1.104
+- enumiax -d dict -v 192.168.1.104
+
+
+VoIPong is a utility which detects all Voice over IP calls on a pipeline, and for those which are G711 encoded, dumps actual conversation to separate wave files. It supports SIP, H323, Cisco's Skinny Client Protocol, RTP and RTCP. 
+
+- voipong -c etc/voipong.conf -d4 -f
+
+Vomit converts a Cisco IP phone RTP conversation into a wave file that can be played with ordinary sound players. Vomit requires a tcpdump output file.
+
+- vomit-r sip.dump | waveplay -S8000 -B16 -C1
+
+
+http://www.backtrack-linux.org/wiki/index.php/Pentesting_VOIP
+

